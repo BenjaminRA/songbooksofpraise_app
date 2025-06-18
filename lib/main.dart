@@ -22,6 +22,19 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: const Color.fromRGBO(248, 245, 237, 1.0),
         appBarTheme: const AppBarTheme(backgroundColor: Colors.white),
         iconTheme: const IconThemeData(color: primaryColor),
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+        textTheme: TextTheme(
+          labelLarge: TextStyle(
+            color: Colors.grey[700],
+          ),
+          labelMedium: TextStyle(
+            color: Colors.grey[700],
+          ),
+          labelSmall: TextStyle(
+            color: Colors.grey[700],
+          ),
+        ),
         inputDecorationTheme: InputDecorationTheme(
           hintStyle: const TextStyle(
             color: Color.fromRGBO(140, 147, 159, 1),
@@ -55,6 +68,26 @@ class MyApp extends StatelessWidget {
           selectedLabelStyle: TextStyle(fontSize: 14.0),
           // selectedIconTheme: IconThemeData(size: 28.0),
           // unselectedIconTheme: IconThemeData(size: 24.0),
+        ),
+        dropdownMenuTheme: DropdownMenuThemeData(
+          textStyle: TextStyle(
+            // color: Colors.grey[700],
+            fontSize: 14.0,
+            fontWeight: FontWeight.w500,
+          ),
+          inputDecorationTheme: InputDecorationTheme(
+            isDense: true,
+            constraints: BoxConstraints.expand(height: 40.0),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 12.0),
+          ),
+          menuStyle: MenuStyle(
+            maximumSize: WidgetStateProperty.all<Size>(const Size(double.infinity, double.infinity)),
+            minimumSize: WidgetStateProperty.all<Size>(const Size(double.infinity, 0)),
+            backgroundColor: WidgetStateProperty.all<Color>(Colors.white),
+            shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+            ),
+          ),
         ),
       ),
       home: const HomePage(),

@@ -63,11 +63,11 @@ class _PopularThisWeekSectionState extends State<PopularThisWeekSection> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(item.title, style: const TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold)),
+                Text(item.title, style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold)),
                 const SizedBox(height: 2),
                 Text(
                   '${item.category} • ${item.timesPlayed} plays',
-                  style: TextStyle(fontSize: 12.0, color: Colors.grey[700]),
+                  style: Theme.of(context).textTheme.labelSmall,
                 ),
               ],
             ),
@@ -93,9 +93,9 @@ class _PopularThisWeekSectionState extends State<PopularThisWeekSection> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 'Popular This Week',
-                style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
               ),
               GestureDetector(
                 onTap: () {
@@ -103,7 +103,7 @@ class _PopularThisWeekSectionState extends State<PopularThisWeekSection> {
                 },
                 child: Text(
                   'View All',
-                  style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.w500, fontSize: 14.0),
+                  style: Theme.of(context).textTheme.labelLarge?.copyWith(color: Theme.of(context).primaryColor),
                 ),
               ),
             ],

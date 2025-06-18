@@ -84,8 +84,14 @@ class _QuickAccessSectionState extends State<QuickAccessSection> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(item.label, style: TextStyle(fontSize: 14.0, color: Colors.black, fontWeight: FontWeight.bold)),
-                  Text(item.subLabel, style: TextStyle(fontSize: 12.0, color: Colors.grey[700])),
+                  Text(
+                    item.label,
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    item.subLabel,
+                    style: Theme.of(context).textTheme.labelSmall,
+                  ),
                 ],
               ),
             ],
@@ -102,9 +108,9 @@ class _QuickAccessSectionState extends State<QuickAccessSection> {
       children: [
         Padding(
           padding: const EdgeInsets.all(16.0),
-          child: const Text(
+          child: Text(
             'Quick Access',
-            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
           ),
         ),
         SizedBox(

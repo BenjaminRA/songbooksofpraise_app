@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:songbooksofpraise_app/HomePage/tabs/HomeTab.dart';
+import 'package:songbooksofpraise_app/HomePage/tabs/HomeTab/HomeTab.dart';
+import 'package:songbooksofpraise_app/HomePage/tabs/SettingsTab/SettingsTab.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -39,7 +40,7 @@ class _HomePageState extends State<HomePage> {
             Flexible(
               child: Text(
                 const [
-                  'Himnos y cánticos del Evangelio',
+                  'Songbooks of Praise',
                   'Manage Songbooks',
                   'Favorites',
                   'Settings',
@@ -59,7 +60,7 @@ class _HomePageState extends State<HomePage> {
           HomeTab(),
           Center(child: Text('Songbooks Tab')),
           Center(child: Text('Favorites Tab')),
-          Center(child: Text('Settings Tab')),
+          SettingsTab(),
         ],
       ),
       bottomNavigationBar: Theme(
