@@ -1,6 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:songbooksofpraise_app/HomePage/tabs/HomeTab/HomeTab.dart';
 import 'package:songbooksofpraise_app/HomePage/tabs/SettingsTab/SettingsTab.dart';
+import 'package:songbooksofpraise_app/HomePage/tabs/SongbookTab/SongbookTab.dart';
+import 'package:songbooksofpraise_app/Providers/AppBarProvider.dart';
+import 'package:songbooksofpraise_app/components/TabNavigator.dart';
+
+final homeTabKey = GlobalKey<NavigatorState>();
+final songbookTabKey = GlobalKey<NavigatorState>();
+final favoritesTabKey = GlobalKey<NavigatorState>();
+final churchesTabKey = GlobalKey<NavigatorState>();
+final settingsTabKey = GlobalKey<NavigatorState>();
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -23,44 +33,65 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Icon(
-              const [
-                Icons.menu_book_sharp,
-                Icons.library_books,
-                Icons.favorite,
-                Icons.settings,
-              ][currentTabIndex],
-              color: Theme.of(context).primaryColor,
-            ),
-            const SizedBox(width: 10),
-            Flexible(
-              child: Text(
-                const [
-                  'Songbooks of Praise',
-                  'Manage Songbooks',
-                  'Favorites',
-                  'Settings',
-                ][currentTabIndex],
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                maxLines: 2,
-              ),
-            ),
-          ],
-        ),
-      ),
       body: PageView(
         physics: const NeverScrollableScrollPhysics(),
         controller: pageController,
         onPageChanged: setTabIndex,
-        children: const <Widget>[
-          HomeTab(),
-          Center(child: Text('Songbooks Tab')),
-          Center(child: Text('Favorites Tab')),
-          SettingsTab(),
+        children: <Widget>[
+          ChangeNotifierProvider(
+            create: (_) => AppBarProvider(
+              AppBarState(
+                title: 'Home',
+                icon: Icons.home,
+              ),
+            ),
+            child: const HomeTab(),
+          ),
+          ChangeNotifierProvider(
+            create: (_) => AppBarProvider(
+              AppBarState(
+                title: 'Songbooks',
+                icon: Icons.library_books,
+              ),
+            ),
+            child: const SongbookTab(),
+          ),
+          TabNavigator(
+            navigatorKey: favoritesTabKey,
+            child: ChangeNotifierProvider(
+              create: (_) => AppBarProvider(
+                AppBarState(
+                  title: 'Favorites',
+                  icon: Icons.favorite,
+                ),
+              ),
+              child: const Text('Favorites Tab'),
+            ),
+          ),
+          TabNavigator(
+            navigatorKey: churchesTabKey,
+            child: ChangeNotifierProvider(
+              create: (_) => AppBarProvider(
+                AppBarState(
+                  title: 'Churches',
+                  icon: Icons.church,
+                ),
+              ),
+              child: const Text('Churches Tab'),
+            ),
+          ),
+          TabNavigator(
+            navigatorKey: settingsTabKey,
+            child: ChangeNotifierProvider(
+              create: (_) => AppBarProvider(
+                AppBarState(
+                  title: 'Settings',
+                  icon: Icons.settings,
+                ),
+              ),
+              child: SettingsTab(),
+            ),
+          ),
         ],
       ),
       bottomNavigationBar: Theme(
@@ -84,6 +115,10 @@ class _HomePageState extends State<HomePage> {
             BottomNavigationBarItem(
               icon: Icon(Icons.favorite),
               label: 'Favorites',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.church),
+              label: 'Churches',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.settings),

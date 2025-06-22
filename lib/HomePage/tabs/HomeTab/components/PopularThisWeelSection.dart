@@ -47,7 +47,7 @@ class _PopularThisWeekSectionState extends State<PopularThisWeekSection> {
               height: 40,
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: const Color.fromRGBO(201, 161, 42, 1.0).withAlpha(50),
+                color: const Color.fromRGBO(201, 161, 42, 1.0),
                 borderRadius: BorderRadius.circular(10.0),
               ),
               child: Text(
@@ -55,7 +55,7 @@ class _PopularThisWeekSectionState extends State<PopularThisWeekSection> {
                 textAlign: TextAlign.center,
                 softWrap: false,
                 overflow: TextOverflow.visible,
-                style: TextStyle(fontSize: 16.0, color: const Color.fromRGBO(201, 161, 42, 1.0)),
+                style: TextStyle(fontSize: 16.0, color: Colors.white),
               ),
             ),
             const SizedBox(width: 12.0),

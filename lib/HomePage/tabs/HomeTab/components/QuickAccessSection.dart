@@ -34,10 +34,10 @@ class _QuickAccessSectionState extends State<QuickAccessSection> {
         onPressed: () {},
       ),
       QuickAccessSectionItem(
-        icon: Icons.favorite,
-        label: 'Favorites',
-        subLabel: '21 songs',
-        color: const Color.fromRGBO(232, 43, 53, 1.0),
+        icon: Icons.menu_book,
+        label: 'Songbooks',
+        subLabel: 'Manage',
+        color: const Color.fromRGBO(201, 161, 42, 1.0),
         onPressed: () {},
       ),
       QuickAccessSectionItem(
@@ -48,10 +48,10 @@ class _QuickAccessSectionState extends State<QuickAccessSection> {
         onPressed: () {},
       ),
       QuickAccessSectionItem(
-        icon: Icons.menu_book,
-        label: 'Songbooks',
-        subLabel: 'Manage',
-        color: const Color.fromRGBO(201, 161, 42, 1.0),
+        icon: Icons.favorite,
+        label: 'Favorites',
+        subLabel: '21 songs',
+        color: const Color.fromRGBO(232, 43, 53, 1.0),
         onPressed: () {},
       ),
     ];
@@ -73,11 +73,11 @@ class _QuickAccessSectionState extends State<QuickAccessSection> {
             children: [
               Container(
                 decoration: BoxDecoration(
-                  color: item.color.withAlpha(50),
+                  color: item.color,
                   borderRadius: BorderRadius.circular(10.0),
                 ),
                 padding: const EdgeInsets.all(8.0),
-                child: Icon(item.icon, color: item.color, size: 28.0),
+                child: Icon(item.icon, color: Colors.white, size: 28.0),
               ),
               const SizedBox(width: 12),
               Column(
@@ -109,7 +109,7 @@ class _QuickAccessSectionState extends State<QuickAccessSection> {
         Padding(
           padding: const EdgeInsets.all(16.0),
           child: Text(
-            'Quick Access',
+            'Explore',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
           ),
         ),

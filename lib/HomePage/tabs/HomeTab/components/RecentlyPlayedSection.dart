@@ -48,7 +48,7 @@ class _RecentlyPlayedSectionState extends State<RecentlyPlayedSection> {
               height: 40,
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor.withAlpha(50),
+                color: Theme.of(context).primaryColor,
                 borderRadius: BorderRadius.circular(10.0),
               ),
               child: Text(
@@ -56,7 +56,7 @@ class _RecentlyPlayedSectionState extends State<RecentlyPlayedSection> {
                 textAlign: TextAlign.center,
                 softWrap: false,
                 overflow: TextOverflow.visible,
-                style: TextStyle(fontSize: 16.0, color: Theme.of(context).primaryColor),
+                style: TextStyle(fontSize: 16.0, color: Colors.white),
               ),
             ),
             const SizedBox(width: 12),

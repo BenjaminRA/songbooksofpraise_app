@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:songbooksofpraise_app/HomePage/HomePage.dart';
+import 'package:songbooksofpraise_app/components/SlideInFromRightPageBuilder.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,11 +17,17 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Songbooks of Praise',
       theme: ThemeData(
+        pageTransitionsTheme: PageTransitionsTheme(
+          builders: {
+            TargetPlatform.android: SlideInFromRightPageBuilder(),
+            TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+          },
+        ),
         fontFamily: 'Inter',
         primaryColor: primaryColor,
         colorScheme: ColorScheme.fromSeed(seedColor: primaryColor),
         scaffoldBackgroundColor: const Color.fromRGBO(248, 245, 237, 1.0),
-        appBarTheme: const AppBarTheme(backgroundColor: Colors.white),
+        appBarTheme: const AppBarTheme(backgroundColor: Colors.white, elevation: 0, surfaceTintColor: Colors.transparent),
         iconTheme: const IconThemeData(color: primaryColor),
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,
