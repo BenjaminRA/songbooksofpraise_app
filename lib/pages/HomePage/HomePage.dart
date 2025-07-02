@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:songbooksofpraise_app/HomePage/tabs/HomeTab/HomeTab.dart';
-import 'package:songbooksofpraise_app/HomePage/tabs/SettingsTab/SettingsTab.dart';
-import 'package:songbooksofpraise_app/HomePage/tabs/SongbookTab/SongbookTab.dart';
+import 'package:songbooksofpraise_app/pages/HomePage/tabs/HomeTab/HomeTab.dart';
+import 'package:songbooksofpraise_app/pages/HomePage/tabs/SettingsTab/SettingsTab.dart';
+import 'package:songbooksofpraise_app/pages/HomePage/tabs/SongbookTab/SongbookTab.dart';
 import 'package:songbooksofpraise_app/Providers/AppBarProvider.dart';
 import 'package:songbooksofpraise_app/components/TabNavigator.dart';
 
 final homeTabKey = GlobalKey<NavigatorState>();
 final songbookTabKey = GlobalKey<NavigatorState>();
-final favoritesTabKey = GlobalKey<NavigatorState>();
+// final favoritesTabKey = GlobalKey<NavigatorState>();
 final churchesTabKey = GlobalKey<NavigatorState>();
 final settingsTabKey = GlobalKey<NavigatorState>();
 
@@ -56,18 +56,18 @@ class _HomePageState extends State<HomePage> {
             ),
             child: const SongbookTab(),
           ),
-          TabNavigator(
-            navigatorKey: favoritesTabKey,
-            child: ChangeNotifierProvider(
-              create: (_) => AppBarProvider(
-                AppBarState(
-                  title: 'Favorites',
-                  icon: Icons.favorite,
-                ),
-              ),
-              child: const Text('Favorites Tab'),
-            ),
-          ),
+          // TabNavigator(
+          //   navigatorKey: favoritesTabKey,
+          //   child: ChangeNotifierProvider(
+          //     create: (_) => AppBarProvider(
+          //       AppBarState(
+          //         title: 'Favorites',
+          //         icon: Icons.favorite,
+          //       ),
+          //     ),
+          //     child: const Text('Favorites Tab'),
+          //   ),
+          // ),
           TabNavigator(
             navigatorKey: churchesTabKey,
             child: ChangeNotifierProvider(
@@ -112,10 +112,10 @@ class _HomePageState extends State<HomePage> {
               icon: Icon(Icons.library_books),
               label: 'Songbooks',
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.favorite),
-              label: 'Favorites',
-            ),
+            // BottomNavigationBarItem(
+            //   icon: Icon(Icons.favorite),
+            //   label: 'Favorites',
+            // ),
             BottomNavigationBarItem(
               icon: Icon(Icons.church),
               label: 'Churches',

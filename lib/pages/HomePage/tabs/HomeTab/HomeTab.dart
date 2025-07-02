@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:songbooksofpraise_app/HomePage/HomePage.dart';
-import 'package:songbooksofpraise_app/HomePage/tabs/HomeTab/components/PopularThisWeelSection.dart';
-import 'package:songbooksofpraise_app/HomePage/tabs/HomeTab/components/QuickAccessSection.dart';
-import 'package:songbooksofpraise_app/HomePage/tabs/HomeTab/components/RecentlyPlayedSection.dart';
-import 'package:songbooksofpraise_app/HomePage/tabs/HomeTab/components/HomePageSearchBar.dart';
+import 'package:songbooksofpraise_app/pages/HomePage/HomePage.dart';
+import 'package:songbooksofpraise_app/pages/HomePage/tabs/HomeTab/components/PopularThisWeelSection.dart';
+import 'package:songbooksofpraise_app/pages/HomePage/tabs/HomeTab/components/ExploreSection.dart';
+import 'package:songbooksofpraise_app/pages/HomePage/tabs/HomeTab/components/RecentlyPlayedSection.dart';
+import 'package:songbooksofpraise_app/pages/HomePage/tabs/HomeTab/components/HomePageSearchBar.dart';
 import 'package:songbooksofpraise_app/Providers/AppBarProvider.dart';
 import 'package:songbooksofpraise_app/components/TabNavigator.dart';
 
@@ -27,7 +27,7 @@ class _HomeTabState extends State<HomeTab> {
             ? IconButton(
                 icon: const Icon(Icons.arrow_back),
                 onPressed: () {
-                  songbookTabKey.currentState?.pop();
+                  homeTabKey.currentState?.pop();
                   Provider.of<AppBarProvider>(context, listen: false).popTitle();
                 },
               )
@@ -55,7 +55,7 @@ class _HomeTabState extends State<HomeTab> {
         child: ListView(
           children: const <Widget>[
             HomePageSearchBar(),
-            QuickAccessSection(),
+            ExploreSection(),
             RecentlyPlayedSection(),
             PopularThisWeekSection(),
             SizedBox(height: 20.0),

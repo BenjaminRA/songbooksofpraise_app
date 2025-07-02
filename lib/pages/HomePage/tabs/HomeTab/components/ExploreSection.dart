@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class QuickAccessSectionItem {
+class ExploreSectionItem {
   final IconData icon;
   final String label;
   final String subLabel;
   final Color color;
   final VoidCallback onPressed;
 
-  QuickAccessSectionItem({
+  ExploreSectionItem({
     required this.icon,
     required this.label,
     required this.subLabel,
@@ -16,38 +16,38 @@ class QuickAccessSectionItem {
   });
 }
 
-class QuickAccessSection extends StatefulWidget {
-  const QuickAccessSection({super.key});
+class ExploreSection extends StatefulWidget {
+  const ExploreSection({super.key});
 
   @override
-  State<QuickAccessSection> createState() => _QuickAccessSectionState();
+  State<ExploreSection> createState() => _ExploreSectionState();
 }
 
-class _QuickAccessSectionState extends State<QuickAccessSection> {
-  List<Widget> _quickAccessItems() {
-    List<QuickAccessSectionItem> items = [
-      QuickAccessSectionItem(
+class _ExploreSectionState extends State<ExploreSection> {
+  List<Widget> _exploreItems() {
+    List<ExploreSectionItem> items = [
+      ExploreSectionItem(
         icon: Icons.list,
         label: 'Browse',
         subLabel: 'Categories',
         color: const Color.fromRGBO(119, 24, 40, 1.0),
         onPressed: () {},
       ),
-      QuickAccessSectionItem(
+      ExploreSectionItem(
         icon: Icons.menu_book,
         label: 'Songbooks',
         subLabel: 'Manage',
         color: const Color.fromRGBO(201, 161, 42, 1.0),
         onPressed: () {},
       ),
-      QuickAccessSectionItem(
+      ExploreSectionItem(
         icon: Icons.access_time_filled,
         label: 'Recent',
         subLabel: 'Last played',
         color: const Color.fromRGBO(47, 105, 243, 1.0),
         onPressed: () {},
       ),
-      QuickAccessSectionItem(
+      ExploreSectionItem(
         icon: Icons.favorite,
         label: 'Favorites',
         subLabel: '21 songs',
@@ -119,7 +119,7 @@ class _QuickAccessSectionState extends State<QuickAccessSection> {
             alignment: WrapAlignment.spaceEvenly,
             crossAxisAlignment: WrapCrossAlignment.center,
             runSpacing: 16.0,
-            children: _quickAccessItems(),
+            children: _exploreItems(),
           ),
         )
       ],

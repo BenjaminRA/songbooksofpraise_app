@@ -1,10 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:songbooksofpraise_app/HomePage/HomePage.dart';
-import 'package:songbooksofpraise_app/HomePage/tabs/SongbookTab/components/ActiveSongbookSection.dart';
-import 'package:songbooksofpraise_app/HomePage/tabs/SongbookTab/components/CategoriesSection.dart';
-import 'package:songbooksofpraise_app/HomePage/tabs/SongbookTab/components/SongbookSearchBar.dart';
-import 'package:songbooksofpraise_app/HomePage/tabs/SongbookTab/components/SongbooksMenu.dart';
+import 'package:songbooksofpraise_app/models/Songbook.dart';
+import 'package:songbooksofpraise_app/pages/HomePage/HomePage.dart';
+import 'package:songbooksofpraise_app/pages/HomePage/tabs/SongbookTab/components/SongbookSearchBar.dart';
+import 'package:songbooksofpraise_app/pages/HomePage/tabs/SongbookTab/components/SongbooksMenu.dart';
 import 'package:songbooksofpraise_app/Providers/AppBarProvider.dart';
 import 'package:songbooksofpraise_app/components/TabNavigator.dart';
 
@@ -16,6 +16,26 @@ class SongbookTab extends StatefulWidget {
 }
 
 class _SongbookTabState extends State<SongbookTab> {
+  List<Songbook> installed = [];
+  List<Songbook> available = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    onRefresh();
+  }
+
+  Future<void> onRefresh() async {
+    // Simulate a network call or data refresh
+    // await Future.delayed(const Duration(seconds: 1));
+    if (mounted) {
+      setState(() {
+        installed = Songbook.getInstalled();
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final appBarState = context.watch<AppBarProvider>().state;
@@ -28,7 +48,6 @@ class _SongbookTabState extends State<SongbookTab> {
                 icon: const Icon(Icons.arrow_back),
                 onPressed: () {
                   songbookTabKey.currentState?.pop();
-                  Provider.of<AppBarProvider>(context, listen: false).popTitle();
                 },
               )
             : null,
@@ -52,13 +71,14 @@ class _SongbookTabState extends State<SongbookTab> {
       ),
       body: TabNavigator(
         navigatorKey: songbookTabKey,
-        child: ListView(
-          children: const [
-            SongbookSearchBar(),
-            SongbooksMenu(),
-            // Hero(tag: 'active_songbook', child: ActiveSongbookSection()),
-            // CategoriesSection(),
-          ],
+        child: RefreshIndicator(
+          onRefresh: onRefresh,
+          child: ListView(
+            children: [
+              const SongbookSearchBar(),
+              SongbooksMenu(installed: installed, available: available),
+            ],
+          ),
         ),
       ),
     );

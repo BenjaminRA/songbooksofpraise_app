@@ -2,6 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:songbooksofpraise_app/Providers/AppBarProvider.dart';
 
+class TabNavigatorObserver extends NavigatorObserver {
+  @override
+  void didPop(Route route, Route? previousRoute) {
+    super.didPop(route, previousRoute);
+
+    BuildContext? context = route.navigator?.context;
+
+    if (context != null) {
+      Provider.of<AppBarProvider>(context, listen: false).popTitle();
+    }
+  }
+}
+
 class TabNavigator extends StatefulWidget {
   final GlobalKey<NavigatorState> navigatorKey;
   final Widget child;
@@ -13,9 +26,10 @@ class TabNavigator extends StatefulWidget {
 }
 
 class _TabNavigatorState extends State<TabNavigator> {
-  final HeroController _heroController = HeroController(createRectTween: (begin, end) {
-    return RectTween(begin: begin, end: end);
-  });
+  // final HeroController _heroController = HeroController(createRectTween: (begin, end) {
+  // return RectTween(begin: begin, end: end);
+  // });
+  final TabNavigatorObserver _observer = TabNavigatorObserver();
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +44,7 @@ class _TabNavigatorState extends State<TabNavigator> {
       },
       child: Navigator(
         key: widget.navigatorKey,
-        observers: [_heroController],
+        observers: [_observer],
         onGenerateRoute: (settings) => MaterialPageRoute(
           builder: (context) => widget.child,
         ),

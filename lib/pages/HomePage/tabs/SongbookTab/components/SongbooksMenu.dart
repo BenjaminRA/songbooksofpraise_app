@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:songbooksofpraise_app/HomePage/tabs/SongbookTab/components/SongbooksMenuAvailable.dart';
-import 'package:songbooksofpraise_app/HomePage/tabs/SongbookTab/components/SongbooksMenuInstalled.dart';
+import 'package:songbooksofpraise_app/models/Songbook.dart';
+import 'package:songbooksofpraise_app/pages/HomePage/tabs/SongbookTab/components/SongbooksMenuAvailable.dart';
+import 'package:songbooksofpraise_app/pages/HomePage/tabs/SongbookTab/components/SongbooksMenuInstalled.dart';
 
 class SongbooksMenu extends StatefulWidget {
-  const SongbooksMenu({super.key});
+  final List<Songbook> installed;
+  final List<Songbook> available;
+
+  const SongbooksMenu({super.key, required this.installed, required this.available});
 
   @override
   State<SongbooksMenu> createState() => _SongbooksMenuState();
@@ -12,10 +16,21 @@ class SongbooksMenu extends StatefulWidget {
 class _SongbooksMenuState extends State<SongbooksMenu> {
   // PageController pageController = PageController();
   int currentSongbookTabIndex = 0;
-  final List<String> songbookTabs = ['Installed (6)', 'Available (24)'];
+
+  void initState() {
+    super.initState();
+
+    // pageController.addListener(() {
+    //   setState(() {
+    //     currentSongbookTabIndex = pageController.page?.round() ?? 0;
+    //   });
+    // });
+  }
 
   @override
   Widget build(BuildContext context) {
+    List<String> songbookTabs = ['Installed (${widget.installed.length})', 'Available (24)'];
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       mainAxisSize: MainAxisSize.max,
@@ -63,7 +78,7 @@ class _SongbooksMenuState extends State<SongbooksMenu> {
             }).toList(),
           ),
         ),
-        if (currentSongbookTabIndex == 0) const SongbooksMenuInstalled() else const SongbooksMenuAvailable(),
+        if (currentSongbookTabIndex == 0) SongbooksMenuInstalled(songbooks: widget.installed) else const SongbooksMenuAvailable(),
         // PageView(
         //   physics: const NeverScrollableScrollPhysics(),
         //   controller: pageController,

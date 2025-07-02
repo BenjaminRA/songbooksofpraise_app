@@ -1,9 +1,37 @@
 import 'package:flutter/material.dart';
-import 'package:songbooksofpraise_app/HomePage/HomePage.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:songbooksofpraise_app/Providers/SettingsProvider.dart';
+import 'package:songbooksofpraise_app/pages/HomePage/HomePage.dart';
 import 'package:songbooksofpraise_app/components/SlideInFromRightPageBuilder.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize the ThemeProvider with stored preferences if available
+
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  final textSize = prefs.getString('textSize') ?? 'medium';
+  final brightness = prefs.getString('brightness') == 'dark' ? Brightness.dark : Brightness.light;
+  final keepScreenOn = prefs.getBool('keepScreenOn') ?? true;
+  final defaultTranspose = prefs.getInt('defaultTranspose') ?? 0;
+  final showChordsByDefault = prefs.getBool('showChordsByDefault') ?? false;
+
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => SettingsProvider(
+        textSize: SettingsProviderTextSize.values.firstWhere(
+          (e) => e.name == textSize,
+          orElse: () => SettingsProviderTextSize.medium,
+        ),
+        brightness: brightness,
+        keepScreenOn: keepScreenOn,
+        defaultTranspose: defaultTranspose,
+        showChordsByDefault: showChordsByDefault,
+      ),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -13,6 +41,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const primaryColor = Color.fromRGBO(132, 14, 23, 1.0);
+    final textScaleFactor = context.watch<SettingsProvider>().textSize == SettingsProviderTextSize.small
+        ? 0.9
+        : context.watch<SettingsProvider>().textSize == SettingsProviderTextSize.large
+            ? 1.2
+            : 1.0;
+
+    final brightness = context.watch<SettingsProvider>().brightness;
 
     return MaterialApp(
       title: 'Songbooks of Praise',
@@ -27,10 +62,17 @@ class MyApp extends StatelessWidget {
         primaryColor: primaryColor,
         colorScheme: ColorScheme.fromSeed(seedColor: primaryColor),
         scaffoldBackgroundColor: const Color.fromRGBO(248, 245, 237, 1.0),
-        appBarTheme: const AppBarTheme(backgroundColor: Colors.white, elevation: 0, surfaceTintColor: Colors.transparent),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.white,
+          elevation: 0,
+          surfaceTintColor: Colors.transparent,
+        ),
         iconTheme: const IconThemeData(color: primaryColor),
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,
+        primaryIconTheme: const IconThemeData(
+          color: primaryColor,
+        ),
         textTheme: TextTheme(
           labelLarge: TextStyle(
             color: Colors.grey[700],
@@ -97,6 +139,12 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
+      builder: (context, child) {
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(textScaler: TextScaler.linear(textScaleFactor)),
+          child: child!,
+        );
+      },
       home: const HomePage(),
     );
   }

@@ -8,14 +8,14 @@ class SongbooksMenuItem {
   SongbooksMenuItem({required this.title, required this.hymnCount, this.description});
 }
 
-class SongbooksMenuInstalled extends StatefulWidget {
-  const SongbooksMenuInstalled({super.key});
+class SongbooksMenuAvailable extends StatefulWidget {
+  const SongbooksMenuAvailable({super.key});
 
   @override
-  State<SongbooksMenuInstalled> createState() => _SongbooksMenuInstalledState();
+  State<SongbooksMenuAvailable> createState() => _SongbooksMenuAvailableState();
 }
 
-class _SongbooksMenuInstalledState extends State<SongbooksMenuInstalled> {
+class _SongbooksMenuAvailableState extends State<SongbooksMenuAvailable> {
   Widget _buildSongbookItem(SongbooksMenuItem item) {
     return MaterialButton(
       elevation: 1.0,
@@ -41,37 +41,38 @@ class _SongbooksMenuInstalledState extends State<SongbooksMenuInstalled> {
                 const Spacer(),
                 GestureDetector(
                   onTap: () {
-                    showModalBottomSheet(
-                      enableDrag: true,
-                      context: context,
-                      useRootNavigator: true,
-                      builder: (context) {
-                        return Container(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              ListTile(
-                                leading: Icon(Icons.edit, color: Colors.blue),
-                                title: Text('Edit'),
-                                onTap: () {
-                                  // Handle edit action
-                                  Navigator.pop(context);
-                                },
-                              ),
-                              ListTile(
-                                leading: Icon(Icons.delete, color: Colors.red),
-                                title: Text('Delete'),
-                                onTap: () {
-                                  // Handle delete action
-                                  Navigator.pop(context);
-                                },
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    );
+                    // showModalBottomSheet(
+                    //   enableDrag: true,
+                    //   context: context,
+                    //   useRootNavigator: true,
+                    //   backgroundColor: Colors.white,
+                    //   builder: (context) {
+                    //     return Container(
+                    //       padding: const EdgeInsets.all(16.0),
+                    //       child: Column(
+                    //         mainAxisSize: MainAxisSize.min,
+                    //         children: [
+                    //           ListTile(
+                    //             leading: Icon(Icons.edit),
+                    //             title: Text('Edit'),
+                    //             onTap: () {
+                    //               // Handle edit action
+                    //               Navigator.pop(context);
+                    //             },
+                    //           ),
+                    //           ListTile(
+                    //             leading: Icon(Icons.delete, color: Colors.red),
+                    //             title: Text('Delete'),
+                    //             onTap: () {
+                    //               // Handle delete action
+                    //               Navigator.pop(context);
+                    //             },
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     );
+                    //   },
+                    // );
                   },
                   child: Icon(Icons.more_vert, color: Colors.grey[700], size: 18.0),
                 ),

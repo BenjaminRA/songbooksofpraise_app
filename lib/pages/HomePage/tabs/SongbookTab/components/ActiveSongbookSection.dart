@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:songbooksofpraise_app/models/Songbook.dart';
 
 class ActiveSongbookSection extends StatefulWidget {
-  const ActiveSongbookSection({super.key});
+  final Songbook songbook;
+
+  const ActiveSongbookSection({super.key, required this.songbook});
 
   @override
   State<ActiveSongbookSection> createState() => ActiveSongbookSectionState();
@@ -29,14 +32,14 @@ class ActiveSongbookSectionState extends State<ActiveSongbookSection> {
                   Icon(Icons.menu_book, size: 18.0),
                   SizedBox(width: 8.0),
                   Text(
-                    'Himnos y Cánticos del Evangelio',
+                    widget.songbook.title,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
               SizedBox(height: 8.0),
               Text(
-                '517 hymns • 12 categories • 48 subcategories',
+                '${widget.songbook.songCount} Songs • 12 categories • 48 subcategories',
                 style: Theme.of(context).textTheme.labelSmall,
               ),
             ],

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:songbooksofpraise_app/HomePage/tabs/SettingsTab/components/SettingsRow.dart';
+import 'package:provider/provider.dart';
+import 'package:songbooksofpraise_app/Providers/SettingsProvider.dart';
+import 'package:songbooksofpraise_app/pages/HomePage/tabs/SettingsTab/components/SettingsRow.dart';
 
 class MusicAndAudioSection extends StatefulWidget {
   const MusicAndAudioSection({super.key});
@@ -10,6 +12,15 @@ class MusicAndAudioSection extends StatefulWidget {
 
 class _MusicAndAudioSectionState extends State<MusicAndAudioSection> {
   bool showChordsByDefault = false;
+  int defaultTranspose = 0;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    showChordsByDefault = Provider.of<SettingsProvider>(context).showChordsByDefault;
+    defaultTranspose = Provider.of<SettingsProvider>(context).defaultTranspose;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,14 +39,22 @@ class _MusicAndAudioSectionState extends State<MusicAndAudioSection> {
             SettingsRow(
               title: 'Default Transpose',
               description: 'Automatic Key Adjustment',
-              action: DropdownMenu(
-                initialSelection: '0',
+              action: DropdownMenu<int>(
+                onSelected: (value) {
+                  if (value == null) return;
+
+                  Provider.of<SettingsProvider>(context, listen: false).setDefaultTranspose(value);
+                  setState(() {
+                    defaultTranspose = value;
+                  });
+                },
+                initialSelection: defaultTranspose,
                 enableSearch: false,
                 dropdownMenuEntries: List.generate(
                   23,
                   (index) {
-                    final value = (index - 11).toString();
-                    return DropdownMenuEntry(value: value, label: value);
+                    final value = (index - 11);
+                    return DropdownMenuEntry(value: value, label: value.toString());
                   },
                 ),
               ),
@@ -45,7 +64,12 @@ class _MusicAndAudioSectionState extends State<MusicAndAudioSection> {
               description: 'Display chords when opening songs',
               action: Switch(
                 value: showChordsByDefault,
-                onChanged: (value) => setState(() => showChordsByDefault = value),
+                onChanged: (value) {
+                  setState(() {
+                    showChordsByDefault = value;
+                  });
+                  Provider.of<SettingsProvider>(context, listen: false).setShowChordsByDefault(value);
+                },
               ),
             ),
           ],
