@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:songbooksofpraise_app/api/api.dart';
 import 'package:songbooksofpraise_app/models/Songbook.dart';
 import 'package:songbooksofpraise_app/pages/HomePage/HomePage.dart';
 import 'package:songbooksofpraise_app/pages/HomePage/tabs/SongbookTab/components/SongbookSearchBar.dart';
@@ -30,8 +31,14 @@ class _SongbookTabState extends State<SongbookTab> {
     // Simulate a network call or data refresh
     // await Future.delayed(const Duration(seconds: 1));
     if (mounted) {
+      final response = await API.get('songbooks');
+      final available = await Songbook.fromJson(response['songbooks']);
+
+      final installed = await Songbook.getInstalled();
+
       setState(() {
-        installed = Songbook.getInstalled();
+        this.available = available;
+        this.installed = installed;
       });
     }
   }
@@ -54,16 +61,32 @@ class _SongbookTabState extends State<SongbookTab> {
         title: Row(
           mainAxisSize: MainAxisSize.max,
           children: [
-            Icon(
-              appBarState.icon,
-              color: Theme.of(context).primaryColor,
-            ),
-            const SizedBox(width: 10),
+            if (appBarState.icon != null)
+              Icon(
+                appBarState.icon,
+                color: Theme.of(context).primaryColor,
+              ),
+            if (appBarState.icon != null) const SizedBox(width: 10),
             Flexible(
-              child: Text(
-                appBarState.title,
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                maxLines: 2,
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    appBarState.title,
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.start,
+                    maxLines: 2,
+                  ),
+                  if (appBarState.subtitle != null)
+                    Text(
+                      appBarState.subtitle!,
+                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+                      textAlign: TextAlign.start,
+                      maxLines: 2,
+                    ),
+                ],
               ),
             ),
           ],
@@ -71,14 +94,17 @@ class _SongbookTabState extends State<SongbookTab> {
       ),
       body: TabNavigator(
         navigatorKey: songbookTabKey,
-        child: RefreshIndicator(
-          onRefresh: onRefresh,
-          child: ListView(
-            children: [
-              const SongbookSearchBar(),
-              SongbooksMenu(installed: installed, available: available),
-            ],
-          ),
+        child: Column(
+          children: [
+            const SongbookSearchBar(),
+            Expanded(
+              child: SongbooksMenu(
+                onRefresh: onRefresh,
+                installed: installed,
+                available: available,
+              ),
+            ),
+          ],
         ),
       ),
     );

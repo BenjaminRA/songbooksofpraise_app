@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:songbooksofpraise_app/l10n/app_localizations.dart';
 import 'package:songbooksofpraise_app/pages/HomePage/tabs/HomeTab/HomeTab.dart';
 import 'package:songbooksofpraise_app/pages/HomePage/tabs/SettingsTab/SettingsTab.dart';
 import 'package:songbooksofpraise_app/pages/HomePage/tabs/SongbookTab/SongbookTab.dart';
@@ -21,10 +23,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int currentTabIndex = 0;
-  PageController pageController = PageController(initialPage: 0);
 
   void setTabIndex(int index) {
-    pageController.jumpToPage(index);
     setState(() {
       currentTabIndex = index;
     });
@@ -32,16 +32,16 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    AppLocalizations localizations = AppLocalizations.of(context)!;
+
     return Scaffold(
-      body: PageView(
-        physics: const NeverScrollableScrollPhysics(),
-        controller: pageController,
-        onPageChanged: setTabIndex,
+      body: IndexedStack(
+        index: currentTabIndex,
         children: <Widget>[
           ChangeNotifierProvider(
             create: (_) => AppBarProvider(
               AppBarState(
-                title: 'Home',
+                title: localizations.home,
                 icon: Icons.home,
               ),
             ),
@@ -50,30 +50,18 @@ class _HomePageState extends State<HomePage> {
           ChangeNotifierProvider(
             create: (_) => AppBarProvider(
               AppBarState(
-                title: 'Songbooks',
+                title: localizations.songbooks,
                 icon: Icons.library_books,
               ),
             ),
             child: const SongbookTab(),
           ),
-          // TabNavigator(
-          //   navigatorKey: favoritesTabKey,
-          //   child: ChangeNotifierProvider(
-          //     create: (_) => AppBarProvider(
-          //       AppBarState(
-          //         title: 'Favorites',
-          //         icon: Icons.favorite,
-          //       ),
-          //     ),
-          //     child: const Text('Favorites Tab'),
-          //   ),
-          // ),
           TabNavigator(
             navigatorKey: churchesTabKey,
             child: ChangeNotifierProvider(
               create: (_) => AppBarProvider(
                 AppBarState(
-                  title: 'Churches',
+                  title: localizations.churches,
                   icon: Icons.church,
                 ),
               ),
@@ -85,7 +73,7 @@ class _HomePageState extends State<HomePage> {
             child: ChangeNotifierProvider(
               create: (_) => AppBarProvider(
                 AppBarState(
-                  title: 'Settings',
+                  title: localizations.settings,
                   icon: Icons.settings,
                 ),
               ),
@@ -103,14 +91,14 @@ class _HomePageState extends State<HomePage> {
           currentIndex: currentTabIndex,
           onTap: setTabIndex,
           type: BottomNavigationBarType.fixed,
-          items: const <BottomNavigationBarItem>[
+          items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
-              label: 'Home',
+              label: localizations.home,
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.library_books),
-              label: 'Songbooks',
+              label: localizations.songbooks,
             ),
             // BottomNavigationBarItem(
             //   icon: Icon(Icons.favorite),
@@ -118,11 +106,11 @@ class _HomePageState extends State<HomePage> {
             // ),
             BottomNavigationBarItem(
               icon: Icon(Icons.church),
-              label: 'Churches',
+              label: localizations.churches,
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.settings),
-              label: 'Settings',
+              label: localizations.settings,
             ),
           ],
         ),

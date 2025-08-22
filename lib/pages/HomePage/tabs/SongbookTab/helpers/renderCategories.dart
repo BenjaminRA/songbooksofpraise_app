@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:songbooksofpraise_app/Providers/AppBarProvider.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:songbooksofpraise_app/models/Category.dart';
-import 'package:songbooksofpraise_app/pages/HomePage/HomePage.dart';
 
-Widget renderCategories(BuildContext context, Category category, {void Function()? onPressed}) {
+Widget renderCategories(BuildContext context, Category category, {void Function()? onPressed, int? loadingCategory}) {
   return MaterialButton(
     elevation: 1.0,
     shape: RoundedRectangleBorder(
@@ -23,14 +21,20 @@ Widget renderCategories(BuildContext context, Category category, {void Function(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(category.title, style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold)),
+              Text(category.name, style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold)),
               const SizedBox(height: 2),
               Text(
-                '${category.songCount} songs · ${category.categoriesCount} subcategories',
+                '${category.songCount} songs${category.categoriesCount > 0 ? ' • ${category.categoriesCount} subcategories' : ''}',
                 style: Theme.of(context).textTheme.labelSmall,
               ),
             ],
           ),
+          const Spacer(),
+          if (loadingCategory == category.id)
+            SpinKitThreeInOut(
+              color: Theme.of(context).primaryColor,
+              size: 18.0,
+            ),
         ],
       ),
     ),

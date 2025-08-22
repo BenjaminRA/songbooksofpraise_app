@@ -1,0 +1,23 @@
+{
+  "@@locale": "en",
+  "language": "English",
+  "@language": {
+    "description": "The language of the application"
+  },
+  "home": "Home",
+  "@home": {
+    "description": "Home Page label"
+  },
+  "songbooks": "Songbooks",
+  "@songbooks": {
+    "description": "Songbooks Page label"
+  },
+  "churches": "Churches",
+  "@churches": {
+    "description": "Churches Page label"
+  },
+  "settings": "Settings",
+  "@settings": {
+    "description": "Settings Page label"
+  }
+}

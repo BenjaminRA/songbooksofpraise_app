@@ -1,9 +1,15 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:songbooksofpraise_app/Providers/SettingsProvider.dart';
+import 'package:songbooksofpraise_app/db/DB.dart';
+import 'package:songbooksofpraise_app/l10n/app_localizations.dart';
 import 'package:songbooksofpraise_app/pages/HomePage/HomePage.dart';
 import 'package:songbooksofpraise_app/components/SlideInFromRightPageBuilder.dart';
+import 'l10n/l10n.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,6 +22,8 @@ void main() async {
   final keepScreenOn = prefs.getBool('keepScreenOn') ?? true;
   final defaultTranspose = prefs.getInt('defaultTranspose') ?? 0;
   final showChordsByDefault = prefs.getBool('showChordsByDefault') ?? false;
+
+  await DB.init();
 
   runApp(
     ChangeNotifierProvider(
@@ -47,10 +55,16 @@ class MyApp extends StatelessWidget {
             ? 1.2
             : 1.0;
 
-    final brightness = context.watch<SettingsProvider>().brightness;
-
     return MaterialApp(
       title: 'Songbooks of Praise',
+      supportedLocales: L18n.all,
+      // locale: Locale('es'),
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
       theme: ThemeData(
         pageTransitionsTheme: PageTransitionsTheme(
           builders: {

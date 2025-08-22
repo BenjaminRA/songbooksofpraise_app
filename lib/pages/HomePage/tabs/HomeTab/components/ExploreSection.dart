@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:songbooksofpraise_app/api/api.dart';
 
 class ExploreSectionItem {
   final IconData icon;
@@ -31,7 +34,11 @@ class _ExploreSectionState extends State<ExploreSection> {
         label: 'Browse',
         subLabel: 'Categories',
         color: const Color.fromRGBO(119, 24, 40, 1.0),
-        onPressed: () {},
+        onPressed: () async {
+          final response = await API.get('songbooks');
+
+          print(response);
+        },
       ),
       ExploreSectionItem(
         icon: Icons.menu_book,

@@ -2,18 +2,19 @@ import 'package:flutter/material.dart';
 
 class AppBarState {
   final String title;
-  final IconData icon;
+  final String? subtitle;
+  final IconData? icon;
 
   const AppBarState({
     required this.title,
-    required this.icon,
+    this.subtitle,
+    this.icon,
   });
 }
 
 class AppBarProvider extends ChangeNotifier {
   AppBarState _state = AppBarState(
     title: 'Default Title',
-    icon: Icons.library_books,
   );
 
   AppBarState get state => _state;

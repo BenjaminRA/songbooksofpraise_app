@@ -1,0 +1,23 @@
+{
+  "@@locale": "es",
+  "language": "Español",
+  "@language": {
+    "description": "El idioma de la aplicación"
+  },
+  "home": "Inicio",
+  "@home": {
+    "description": "Etiqueta de la página de inicio"
+  },
+  "songbooks": "Cancioneros",
+  "@songbooks": {
+    "description": "Etiqueta de la página de cancioneros"
+  },
+  "churches": "Iglesias",
+  "@churches": {
+    "description": "Etiqueta de la página de iglesias"
+  },
+  "settings": "Configuración",
+  "@settings": {
+    "description": "Etiqueta de la página de configuración"
+  }
+}

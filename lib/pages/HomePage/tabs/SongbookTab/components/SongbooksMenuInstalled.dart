@@ -111,7 +111,8 @@ class SongbooksMenuInstalled extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                '${item.songCount} songs • ${item.description}',
+                '${item.songCount} songs',
+                // '${item.songCount} songs • ${item.description}',
                 style: theme.textTheme.labelMedium,
               ),
               const SizedBox(height: 12),

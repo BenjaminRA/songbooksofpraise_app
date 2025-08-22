@@ -52,13 +52,19 @@ class _HomeTabState extends State<HomeTab> {
       ),
       body: TabNavigator(
         navigatorKey: homeTabKey,
-        child: ListView(
-          children: const <Widget>[
+        child: Column(
+          children: [
             HomePageSearchBar(),
-            ExploreSection(),
-            RecentlyPlayedSection(),
-            PopularThisWeekSection(),
-            SizedBox(height: 20.0),
+            Expanded(
+              child: ListView(
+                children: const <Widget>[
+                  ExploreSection(),
+                  RecentlyPlayedSection(),
+                  PopularThisWeekSection(),
+                  SizedBox(height: 20.0),
+                ],
+              ),
+            ),
           ],
         ),
       ),

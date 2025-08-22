@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:songbooksofpraise_app/helpers/renderLastPlayedText.dart';
+import 'package:songbooksofpraise_app/helpers/render_last_played_text.dart';
 
 class RecentlyPlayedSectionItem {
   final int? number;

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:songbooksofpraise_app/Providers/AppBarProvider.dart';
 import 'package:songbooksofpraise_app/models/Song.dart';
 import 'package:songbooksofpraise_app/pages/HomePage/HomePage.dart';
 
-Widget renderSongs(BuildContext context, Song song, {void Function()? onPressed}) {
+Widget renderSongs(BuildContext context, Song song, {void Function()? onPressed, int? loadingSong}) {
   return MaterialButton(
     elevation: 1.0,
     shape: RoundedRectangleBorder(
@@ -12,20 +13,6 @@ Widget renderSongs(BuildContext context, Song song, {void Function()? onPressed}
     ),
     color: Colors.white,
     onPressed: onPressed,
-    // () {
-    // Provider.of<AppBarProvider>(context, listen: false).setTitle(
-    //   AppBarState(
-    //     title: 'Categories',
-    //     icon: Icons.library_books,
-    //   ),
-    // );
-    // songbookTabKey.currentState?.push(
-    //   MaterialPageRoute(
-    //     builder: (context) => CategoryPage(category: item),
-    //   ),
-    // );
-    // },
-    // onPressed: item.onPressed,
     child: Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 18.0),
@@ -47,9 +34,16 @@ Widget renderSongs(BuildContext context, Song song, {void Function()? onPressed}
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(song.title, style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold)),
+              Text((song.number != null ? '${song.number} - ' : '') + song.title,
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold)),
             ],
           ),
+          const Spacer(),
+          if (song.id == loadingSong)
+            SpinKitThreeInOut(
+              color: Theme.of(context).primaryColor,
+              size: 18.0,
+            ),
         ],
       ),
     ),

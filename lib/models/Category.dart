@@ -2,8 +2,9 @@ import 'package:songbooksofpraise_app/models/Song.dart';
 
 class Category {
   int id;
-  String title;
-  String? description;
+  String name;
+  // String? description;
+  int songbookID;
 
   List<Category> subcategories;
   List<Song> songs;
@@ -13,29 +14,45 @@ class Category {
 
   Category({
     required this.id,
-    required this.title,
-    this.description,
+    required this.name,
+    // this.description,
     required this.songs,
     required this.subcategories,
-  })  : assert(
-          (songs.isEmpty) || (subcategories.isEmpty),
-          'Category must have either songs or subcategories',
-        ),
-        assert(
-          ((songs.isEmpty) != (subcategories.isEmpty)),
-          'Category must have either songs or subcategories, but not both or neither',
-        ) {
+    this.songCount = 0,
+    required this.songbookID,
+  })
+  // : assert(
+  //         (songs.isEmpty) || (subcategories.isEmpty),
+  //         'Category must have either songs or subcategories',
+  //       ),
+  //       assert(
+  //         ((songs.isEmpty) != (subcategories.isEmpty)),
+  //         'Category must have either songs or subcategories, but not both or neither',
+  //       )
+  {
     songCount = _getSongCount();
     categoriesCount = getCategoriesCount();
   }
 
+  static Category fromJson(Map<String, dynamic> json) {
+    return Category(
+      id: json['id'],
+      name: json['name'],
+      // description: json['description'],
+      songs: (json['songs'] as List<dynamic>?)?.map((item) => Song.fromJson(item)).toList() ?? [],
+      subcategories: (json['children'] as List<dynamic>?)?.map((item) => Category.fromJson(item)).toList() ?? [],
+      songCount: json['song_count'] ?? 0,
+      songbookID: json['songbook_id'],
+    );
+  }
+
   int _getSongCount() {
-    int count = songs.length;
+    int count = songCount;
 
     int recursiveSongCount(Category category) {
       int total = 0;
 
-      total += category.songs.length;
+      total += category.songCount;
 
       if (category.subcategories.isNotEmpty) {
         for (var subCategory in category.subcategories) {
@@ -49,7 +66,7 @@ class Category {
     }
 
     for (Category category in subcategories) {
-      count += category.songs.length;
+      count += category.songCount;
       if (category.subcategories.isNotEmpty) {
         count += recursiveSongCount(category);
       }

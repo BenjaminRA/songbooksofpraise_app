@@ -4,10 +4,11 @@ import 'package:songbooksofpraise_app/pages/HomePage/tabs/SongbookTab/components
 import 'package:songbooksofpraise_app/pages/HomePage/tabs/SongbookTab/components/SongbooksMenuInstalled.dart';
 
 class SongbooksMenu extends StatefulWidget {
+  final Future<void> Function() onRefresh;
   final List<Songbook> installed;
   final List<Songbook> available;
 
-  const SongbooksMenu({super.key, required this.installed, required this.available});
+  const SongbooksMenu({super.key, required this.onRefresh, required this.installed, required this.available});
 
   @override
   State<SongbooksMenu> createState() => _SongbooksMenuState();
@@ -29,7 +30,7 @@ class _SongbooksMenuState extends State<SongbooksMenu> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> songbookTabs = ['Installed (${widget.installed.length})', 'Available (24)'];
+    List<String> songbookTabs = ['Installed (${widget.installed.length})', 'Available (${widget.available.length})'];
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -78,7 +79,19 @@ class _SongbooksMenuState extends State<SongbooksMenu> {
             }).toList(),
           ),
         ),
-        if (currentSongbookTabIndex == 0) SongbooksMenuInstalled(songbooks: widget.installed) else const SongbooksMenuAvailable(),
+        Expanded(
+          child: RefreshIndicator(
+            onRefresh: widget.onRefresh,
+            child: ListView(
+              children: [
+                if (currentSongbookTabIndex == 0)
+                  SongbooksMenuInstalled(songbooks: widget.installed)
+                else
+                  SongbooksMenuAvailable(songbooks: widget.available),
+              ],
+            ),
+          ),
+        ),
         // PageView(
         //   physics: const NeverScrollableScrollPhysics(),
         //   controller: pageController,
