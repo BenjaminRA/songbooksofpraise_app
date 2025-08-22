@@ -19,5 +19,93 @@
   "settings": "Settings",
   "@settings": {
     "description": "Settings Page label"
+  },
+  "display": "Display",
+  "@display": {
+    "description": "Display section title in settings"
+  },
+  "textSize": "Text Size",
+  "@textSize": {
+    "description": "Text size setting label"
+  },
+  "adjustLyricsTextSize": "Adjust lyrics text size",
+  "@adjustLyricsTextSize": {
+    "description": "Text size setting description"
+  },
+  "theme": "Theme",
+  "@theme": {
+    "description": "Theme setting label"
+  },
+  "chooseAppAppearance": "Choose app appearance",
+  "@chooseAppAppearance": {
+    "description": "Theme setting description"
+  },
+  "keepScreenOn": "Keep Screen On",
+  "@keepScreenOn": {
+    "description": "Keep screen on setting label"
+  },
+  "preventScreenFromSleeping": "Prevent screen from sleeping",
+  "@preventScreenFromSleeping": {
+    "description": "Keep screen on setting description"
+  },
+  "small": "Small",
+  "@small": {
+    "description": "Small text size option"
+  },
+  "medium": "Medium",
+  "@medium": {
+    "description": "Medium text size option"
+  },
+  "large": "Large",
+  "@large": {
+    "description": "Large text size option"
+  },
+  "light": "Light",
+  "@light": {
+    "description": "Light theme option"
+  },
+  "dark": "Dark",
+  "@dark": {
+    "description": "Dark theme option"
+  },
+  "musicAndAudio": "Music & Audio",
+  "@musicAndAudio": {
+    "description": "Music and audio section title in settings"
+  },
+  "defaultTranspose": "Default Transpose",
+  "@defaultTranspose": {
+    "description": "Default transpose setting label"
+  },
+  "automaticKeyAdjustment": "Automatic Key Adjustment",
+  "@automaticKeyAdjustment": {
+    "description": "Default transpose setting description"
+  },
+  "showChordsByDefault": "Show Chords by Default",
+  "@showChordsByDefault": {
+    "description": "Show chords by default setting label"
+  },
+  "displayChordsWhenOpeningSongs": "Display chords when opening songs",
+  "@displayChordsWhenOpeningSongs": {
+    "description": "Show chords by default setting description"
+  },
+  "aboutAndSupport": "About & Support",
+  "@aboutAndSupport": {
+    "description": "About and support section title in settings"
+  },
+  "about": "About",
+  "@about": {
+    "description": "About option in settings"
+  },
+  "privacyPolicy": "Privacy Policy",
+  "@privacyPolicy": {
+    "description": "Privacy policy option in settings"
+  },
+  "announcements": "Announcements",
+  "@announcements": {
+    "description": "Announcements option in settings"
+  },
+  "contactUs": "Contact Us",
+  "@contactUs": {
+    "description": "Contact us option in settings"
   }
 }

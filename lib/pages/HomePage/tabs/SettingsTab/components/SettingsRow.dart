@@ -25,7 +25,7 @@ class SettingsRow extends StatelessWidget {
       children.addAll([
         const SizedBox(height: 2),
         Text(
-          'Prevent screen from sleeping',
+          description!,
           maxLines: 2,
           overflow: TextOverflow.visible,
           style: Theme.of(context).textTheme.labelSmall,
@@ -33,14 +33,20 @@ class SettingsRow extends StatelessWidget {
       ]);
     }
 
-    return Row(
+    return Flex(
+      direction: Axis.horizontal,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Expanded(
+        Flexible(
+          flex: 4,
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: children),
         ),
-        action
+        const SizedBox(width: 16),
+        Flexible(
+          flex: 3,
+          child: action,
+        ),
       ],
     );
   }

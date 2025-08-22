@@ -19,5 +19,93 @@
   "settings": "Configuración",
   "@settings": {
     "description": "Etiqueta de la página de configuración"
+  },
+  "display": "Pantalla",
+  "@display": {
+    "description": "Título de la sección de pantalla en configuración"
+  },
+  "textSize": "Tamaño de Texto",
+  "@textSize": {
+    "description": "Etiqueta de configuración del tamaño de texto"
+  },
+  "adjustLyricsTextSize": "Ajustar el tamaño del texto de las letras",
+  "@adjustLyricsTextSize": {
+    "description": "Descripción de configuración del tamaño de texto"
+  },
+  "theme": "Tema",
+  "@theme": {
+    "description": "Etiqueta de configuración del tema"
+  },
+  "chooseAppAppearance": "Elegir apariencia de la aplicación",
+  "@chooseAppAppearance": {
+    "description": "Descripción de configuración del tema"
+  },
+  "keepScreenOn": "Mantener Pantalla Encendida",
+  "@keepScreenOn": {
+    "description": "Etiqueta de configuración mantener pantalla encendida"
+  },
+  "preventScreenFromSleeping": "Evitar que la pantalla se apague",
+  "@preventScreenFromSleeping": {
+    "description": "Descripción de configuración mantener pantalla encendida"
+  },
+  "small": "Pequeño",
+  "@small": {
+    "description": "Opción de tamaño de texto pequeño"
+  },
+  "medium": "Mediano",
+  "@medium": {
+    "description": "Opción de tamaño de texto mediano"
+  },
+  "large": "Grande",
+  "@large": {
+    "description": "Opción de tamaño de texto grande"
+  },
+  "light": "Claro",
+  "@light": {
+    "description": "Opción de tema claro"
+  },
+  "dark": "Oscuro",
+  "@dark": {
+    "description": "Opción de tema oscuro"
+  },
+  "musicAndAudio": "Música y Audio",
+  "@musicAndAudio": {
+    "description": "Título de la sección de música y audio en configuración"
+  },
+  "defaultTranspose": "Transposición Predeterminada",
+  "@defaultTranspose": {
+    "description": "Etiqueta de configuración de transposición predeterminada"
+  },
+  "automaticKeyAdjustment": "Ajuste Automático de Tonalidad",
+  "@automaticKeyAdjustment": {
+    "description": "Descripción de configuración de transposición predeterminada"
+  },
+  "showChordsByDefault": "Mostrar Acordes por Defecto",
+  "@showChordsByDefault": {
+    "description": "Etiqueta de configuración mostrar acordes por defecto"
+  },
+  "displayChordsWhenOpeningSongs": "Mostrar acordes al abrir canciones",
+  "@displayChordsWhenOpeningSongs": {
+    "description": "Descripción de configuración mostrar acordes por defecto"
+  },
+  "aboutAndSupport": "Acerca de y Soporte",
+  "@aboutAndSupport": {
+    "description": "Título de la sección acerca de y soporte en configuración"
+  },
+  "about": "Acerca de",
+  "@about": {
+    "description": "Opción acerca de en configuración"
+  },
+  "privacyPolicy": "Política de Privacidad",
+  "@privacyPolicy": {
+    "description": "Opción política de privacidad en configuración"
+  },
+  "announcements": "Anuncios",
+  "@announcements": {
+    "description": "Opción anuncios en configuración"
+  },
+  "contactUs": "Contáctanos",
+  "@contactUs": {
+    "description": "Opción contáctanos en configuración"
   }
 }

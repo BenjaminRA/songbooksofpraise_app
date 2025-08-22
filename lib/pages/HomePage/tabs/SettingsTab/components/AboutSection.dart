@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:songbooksofpraise_app/l10n/app_localizations.dart';
 
 class AboutSectionItem {
   final IconData icon;
@@ -17,22 +18,24 @@ class AboutSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AppLocalizations localizations = AppLocalizations.of(context)!;
+
     final List<AboutSectionItem> items = [
       AboutSectionItem(
         icon: Icons.info,
-        label: 'About',
+        label: localizations.about,
         onPressed: () {
           print('asdasdasd');
         },
       ),
-      const AboutSectionItem(icon: Icons.privacy_tip, label: 'Privacy Policy'),
-      const AboutSectionItem(icon: Icons.announcement, label: 'Announcements'),
-      const AboutSectionItem(icon: Icons.contact_support, label: 'Contact Us'),
+      AboutSectionItem(icon: Icons.privacy_tip, label: localizations.privacyPolicy),
+      AboutSectionItem(icon: Icons.announcement, label: localizations.announcements),
+      AboutSectionItem(icon: Icons.contact_support, label: localizations.contactUs),
     ];
 
     List<Widget> children = [
       Text(
-        'About & Support',
+        localizations.aboutAndSupport,
         style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
       ),
       // const SizedBox(height: 16.0),

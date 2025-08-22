@@ -127,6 +127,138 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Settings'**
   String get settings;
+
+  /// Display section title in settings
+  ///
+  /// In en, this message translates to:
+  /// **'Display'**
+  String get display;
+
+  /// Text size setting label
+  ///
+  /// In en, this message translates to:
+  /// **'Text Size'**
+  String get textSize;
+
+  /// Text size setting description
+  ///
+  /// In en, this message translates to:
+  /// **'Adjust lyrics text size'**
+  String get adjustLyricsTextSize;
+
+  /// Theme setting label
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get theme;
+
+  /// Theme setting description
+  ///
+  /// In en, this message translates to:
+  /// **'Choose app appearance'**
+  String get chooseAppAppearance;
+
+  /// Keep screen on setting label
+  ///
+  /// In en, this message translates to:
+  /// **'Keep Screen On'**
+  String get keepScreenOn;
+
+  /// Keep screen on setting description
+  ///
+  /// In en, this message translates to:
+  /// **'Prevent screen from sleeping'**
+  String get preventScreenFromSleeping;
+
+  /// Small text size option
+  ///
+  /// In en, this message translates to:
+  /// **'Small'**
+  String get small;
+
+  /// Medium text size option
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get medium;
+
+  /// Large text size option
+  ///
+  /// In en, this message translates to:
+  /// **'Large'**
+  String get large;
+
+  /// Light theme option
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get light;
+
+  /// Dark theme option
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get dark;
+
+  /// Music and audio section title in settings
+  ///
+  /// In en, this message translates to:
+  /// **'Music & Audio'**
+  String get musicAndAudio;
+
+  /// Default transpose setting label
+  ///
+  /// In en, this message translates to:
+  /// **'Default Transpose'**
+  String get defaultTranspose;
+
+  /// Default transpose setting description
+  ///
+  /// In en, this message translates to:
+  /// **'Automatic Key Adjustment'**
+  String get automaticKeyAdjustment;
+
+  /// Show chords by default setting label
+  ///
+  /// In en, this message translates to:
+  /// **'Show Chords by Default'**
+  String get showChordsByDefault;
+
+  /// Show chords by default setting description
+  ///
+  /// In en, this message translates to:
+  /// **'Display chords when opening songs'**
+  String get displayChordsWhenOpeningSongs;
+
+  /// About and support section title in settings
+  ///
+  /// In en, this message translates to:
+  /// **'About & Support'**
+  String get aboutAndSupport;
+
+  /// About option in settings
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get about;
+
+  /// Privacy policy option in settings
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get privacyPolicy;
+
+  /// Announcements option in settings
+  ///
+  /// In en, this message translates to:
+  /// **'Announcements'**
+  String get announcements;
+
+  /// Contact us option in settings
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Us'**
+  String get contactUs;
 }
 
 class _AppLocalizationsDelegate

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:songbooksofpraise_app/Providers/SettingsProvider.dart';
 import 'package:songbooksofpraise_app/pages/HomePage/tabs/SettingsTab/components/SettingsRow.dart';
+import 'package:songbooksofpraise_app/l10n/app_localizations.dart';
 
 class DisplaySection extends StatefulWidget {
   const DisplaySection({super.key});
@@ -26,6 +27,8 @@ class _DisplaySectionState extends State<DisplaySection> {
 
   @override
   Widget build(BuildContext context) {
+    AppLocalizations localizations = AppLocalizations.of(context)!;
+
     return Card(
       color: Colors.white,
       child: Padding(
@@ -35,12 +38,12 @@ class _DisplaySectionState extends State<DisplaySection> {
           spacing: 16.0,
           children: [
             Text(
-              'Display',
+              localizations.display,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
             SettingsRow(
-              title: 'Text Size',
-              description: 'Adjust lyrics text size',
+              title: localizations.textSize,
+              description: localizations.adjustLyricsTextSize,
               action: DropdownMenu(
                 onSelected: (value) {
                   SettingsProviderTextSize textSizeValue = SettingsProviderTextSize.values.firstWhere(
@@ -56,15 +59,15 @@ class _DisplaySectionState extends State<DisplaySection> {
                 },
                 initialSelection: textSize,
                 dropdownMenuEntries: <DropdownMenuEntry>[
-                  DropdownMenuEntry(value: 'small', label: 'Small'),
-                  DropdownMenuEntry(value: 'medium', label: 'Medium'),
-                  DropdownMenuEntry(value: 'large', label: 'Large'),
+                  DropdownMenuEntry(value: 'small', label: localizations.small),
+                  DropdownMenuEntry(value: 'medium', label: localizations.medium),
+                  DropdownMenuEntry(value: 'large', label: localizations.large),
                 ],
               ),
             ),
             SettingsRow(
-              title: 'Theme',
-              description: 'Choose app appearance',
+              title: localizations.theme,
+              description: localizations.chooseAppAppearance,
               action: DropdownMenu(
                 onSelected: (value) {
                   Provider.of<SettingsProvider>(context, listen: false).setBrightness(
@@ -77,14 +80,14 @@ class _DisplaySectionState extends State<DisplaySection> {
                 },
                 initialSelection: theme,
                 dropdownMenuEntries: <DropdownMenuEntry>[
-                  DropdownMenuEntry(value: 'light', label: 'Light'),
-                  DropdownMenuEntry(value: 'dark', label: 'Dark'),
+                  DropdownMenuEntry(value: 'light', label: localizations.light),
+                  DropdownMenuEntry(value: 'dark', label: localizations.dark),
                 ],
               ),
             ),
             SettingsRow(
-              title: 'Keep Screen On',
-              description: 'Prevent screen from sleeping',
+              title: localizations.keepScreenOn,
+              description: localizations.preventScreenFromSleeping,
               action: Switch(
                 value: keepScreenOn,
                 onChanged: (value) {

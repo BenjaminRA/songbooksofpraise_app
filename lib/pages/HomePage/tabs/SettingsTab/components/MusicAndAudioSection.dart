@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:songbooksofpraise_app/Providers/SettingsProvider.dart';
 import 'package:songbooksofpraise_app/pages/HomePage/tabs/SettingsTab/components/SettingsRow.dart';
+import 'package:songbooksofpraise_app/l10n/app_localizations.dart';
 
 class MusicAndAudioSection extends StatefulWidget {
   const MusicAndAudioSection({super.key});
@@ -24,6 +25,8 @@ class _MusicAndAudioSectionState extends State<MusicAndAudioSection> {
 
   @override
   Widget build(BuildContext context) {
+    AppLocalizations localizations = AppLocalizations.of(context)!;
+
     return Card(
       color: Colors.white,
       child: Padding(
@@ -33,12 +36,12 @@ class _MusicAndAudioSectionState extends State<MusicAndAudioSection> {
           spacing: 16.0,
           children: [
             Text(
-              'Music & Audio',
+              localizations.musicAndAudio,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
             SettingsRow(
-              title: 'Default Transpose',
-              description: 'Automatic Key Adjustment',
+              title: localizations.defaultTranspose,
+              description: localizations.automaticKeyAdjustment,
               action: DropdownMenu<int>(
                 onSelected: (value) {
                   if (value == null) return;
@@ -60,8 +63,8 @@ class _MusicAndAudioSectionState extends State<MusicAndAudioSection> {
               ),
             ),
             SettingsRow(
-              title: 'Show Chords by Default',
-              description: 'Display chords when opening songs',
+              title: localizations.showChordsByDefault,
+              description: localizations.displayChordsWhenOpeningSongs,
               action: Switch(
                 value: showChordsByDefault,
                 onChanged: (value) {
