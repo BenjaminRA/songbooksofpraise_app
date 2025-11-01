@@ -89,4 +89,128 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get contactUs => 'Contact Us';
+
+  @override
+  String get searchHymnsSongsOrNumbers => 'Search hymns, songs, or numbers...';
+
+  @override
+  String get explore => 'Explore';
+
+  @override
+  String get browse => 'Browse';
+
+  @override
+  String get categories => 'Categories';
+
+  @override
+  String get manage => 'Manage';
+
+  @override
+  String get recent => 'Recent';
+
+  @override
+  String get lastPlayed => 'Last played';
+
+  @override
+  String get favorites => 'Favorites';
+
+  @override
+  String songsCount(int count) {
+    return '$count songs';
+  }
+
+  @override
+  String get recentlyPlayed => 'Recently Played';
+
+  @override
+  String get viewAll => 'View All';
+
+  @override
+  String get popularThisWeek => 'Popular This Week';
+
+  @override
+  String get hymn => 'Hymn';
+
+  @override
+  String playsCount(int count) {
+    return '$count plays';
+  }
+
+  @override
+  String get searchAvailableSongbooks => 'Search available songbooks';
+
+  @override
+  String get installed => 'Installed';
+
+  @override
+  String get available => 'Available';
+
+  @override
+  String installedCount(int count) {
+    return 'Installed ($count)';
+  }
+
+  @override
+  String availableCount(int count) {
+    return 'Available ($count)';
+  }
+
+  @override
+  String get installedSingular => 'Installed';
+
+  @override
+  String get availableSingular => 'Available';
+
+  @override
+  String get update => 'Update';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get download => 'Download';
+
+  @override
+  String hymnsCount(int count) {
+    return '$count hymns';
+  }
+
+  @override
+  String lastUpdated(String date) {
+    return 'Last updated: $date';
+  }
+
+  @override
+  String get browseCategories => 'Browse Categories';
+
+  @override
+  String get exploreCategoriesDescription =>
+      'Explore hymns organized by themes and occasions';
+
+  @override
+  String get searchCategories => 'Search categories';
+
+  @override
+  String get searchSongs => 'Search songs';
+
+  @override
+  String get backToSongbooks => 'Back to Songbooks';
+
+  @override
+  String get backToCategories => 'Back to Categories';
+
+  @override
+  String downloadedSuccessfully(String title) {
+    return '$title downloaded successfully!';
+  }
+
+  @override
+  String updatedSuccessfully(String title) {
+    return '$title updated successfully!';
+  }
+
+  @override
+  String deletedSuccessfully(String title) {
+    return '$title deleted successfully!';
+  }
 }

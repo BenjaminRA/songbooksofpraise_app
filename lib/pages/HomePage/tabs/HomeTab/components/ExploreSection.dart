@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:songbooksofpraise_app/api/api.dart';
+import 'package:songbooksofpraise_app/l10n/app_localizations.dart';
 
 class ExploreSectionItem {
   final IconData icon;
@@ -27,37 +28,33 @@ class ExploreSection extends StatefulWidget {
 }
 
 class _ExploreSectionState extends State<ExploreSection> {
-  List<Widget> _exploreItems() {
+  List<Widget> _exploreItems(AppLocalizations localizations) {
     List<ExploreSectionItem> items = [
       ExploreSectionItem(
         icon: Icons.list,
-        label: 'Browse',
-        subLabel: 'Categories',
+        label: localizations.browse,
+        subLabel: localizations.categories,
         color: const Color.fromRGBO(119, 24, 40, 1.0),
-        onPressed: () async {
-          final response = await API.get('songbooks');
-
-          print(response);
-        },
+        onPressed: () {},
       ),
       ExploreSectionItem(
         icon: Icons.menu_book,
-        label: 'Songbooks',
-        subLabel: 'Manage',
+        label: localizations.songbooks,
+        subLabel: localizations.manage,
         color: const Color.fromRGBO(201, 161, 42, 1.0),
         onPressed: () {},
       ),
       ExploreSectionItem(
         icon: Icons.access_time_filled,
-        label: 'Recent',
-        subLabel: 'Last played',
+        label: localizations.recent,
+        subLabel: localizations.lastPlayed,
         color: const Color.fromRGBO(47, 105, 243, 1.0),
         onPressed: () {},
       ),
       ExploreSectionItem(
         icon: Icons.favorite,
-        label: 'Favorites',
-        subLabel: '21 songs',
+        label: localizations.favorites,
+        subLabel: localizations.songsCount(21),
         color: const Color.fromRGBO(232, 43, 53, 1.0),
         onPressed: () {},
       ),
@@ -87,19 +84,27 @@ class _ExploreSectionState extends State<ExploreSection> {
                 child: Icon(item.icon, color: Colors.white, size: 28.0),
               ),
               const SizedBox(width: 12),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    item.label,
-                    style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    item.subLabel,
-                    style: Theme.of(context).textTheme.labelSmall,
-                  ),
-                ],
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      item.label,
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+                      overflow: TextOverflow.ellipsis,
+                      softWrap: true,
+                      maxLines: 2,
+                    ),
+                    Text(
+                      item.subLabel,
+                      style: Theme.of(context).textTheme.labelSmall,
+                      overflow: TextOverflow.visible,
+                      softWrap: true,
+                      maxLines: 2,
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -110,13 +115,15 @@ class _ExploreSectionState extends State<ExploreSection> {
 
   @override
   Widget build(BuildContext context) {
+    AppLocalizations localizations = AppLocalizations.of(context)!;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsets.all(16.0),
           child: Text(
-            'Explore',
+            localizations.explore,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
           ),
         ),
@@ -126,7 +133,7 @@ class _ExploreSectionState extends State<ExploreSection> {
             alignment: WrapAlignment.spaceEvenly,
             crossAxisAlignment: WrapCrossAlignment.center,
             runSpacing: 16.0,
-            children: _exploreItems(),
+            children: _exploreItems(localizations),
           ),
         )
       ],

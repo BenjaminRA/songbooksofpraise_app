@@ -4,8 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:songbooksofpraise_app/api/api.dart';
 import 'package:songbooksofpraise_app/models/Songbook.dart';
 import 'package:songbooksofpraise_app/pages/HomePage/HomePage.dart';
-import 'package:songbooksofpraise_app/pages/HomePage/tabs/SongbookTab/components/SongbookSearchBar.dart';
-import 'package:songbooksofpraise_app/pages/HomePage/tabs/SongbookTab/components/SongbooksMenu.dart';
+import 'package:songbooksofpraise_app/pages/HomePage/tabs/SongbooksTab/components/SongbookSearchBar.dart';
+import 'package:songbooksofpraise_app/pages/HomePage/tabs/SongbooksTab/components/SongbooksMenu.dart';
 import 'package:songbooksofpraise_app/Providers/AppBarProvider.dart';
 import 'package:songbooksofpraise_app/components/TabNavigator.dart';
 

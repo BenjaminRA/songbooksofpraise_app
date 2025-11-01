@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:songbooksofpraise_app/l10n/app_localizations.dart';
 import 'package:songbooksofpraise_app/pages/HomePage/tabs/HomeTab/HomeTab.dart';
 import 'package:songbooksofpraise_app/pages/HomePage/tabs/SettingsTab/SettingsTab.dart';
-import 'package:songbooksofpraise_app/pages/HomePage/tabs/SongbookTab/SongbookTab.dart';
+import 'package:songbooksofpraise_app/pages/HomePage/tabs/SongbooksTab/SongbookTab.dart';
 import 'package:songbooksofpraise_app/Providers/AppBarProvider.dart';
 import 'package:songbooksofpraise_app/components/TabNavigator.dart';
 

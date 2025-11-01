@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:songbooksofpraise_app/helpers/render_last_played_text.dart';
+import 'package:songbooksofpraise_app/l10n/app_localizations.dart';
 
 class RecentlyPlayedSectionItem {
   final int? number;
@@ -80,10 +81,13 @@ class _RecentlyPlayedSectionState extends State<RecentlyPlayedSection> {
 
   @override
   Widget build(BuildContext context) {
+    AppLocalizations localizations = AppLocalizations.of(context)!;
+
     List<RecentlyPlayedSectionItem> recentlyPlayedItems = [
-      RecentlyPlayedSectionItem(number: 999, title: 'Amazing Grace', category: 'Hymn', lastPlayed: DateTime.now().subtract(Duration(days: 1))),
-      RecentlyPlayedSectionItem(title: 'How Great Thou Art', category: 'Hymn'),
-      RecentlyPlayedSectionItem(title: 'Be Thou My Vision', category: 'Hymn', lastPlayed: DateTime.now().subtract(Duration(days: 2))),
+      RecentlyPlayedSectionItem(
+          number: 999, title: 'Amazing Grace', category: localizations.hymn, lastPlayed: DateTime.now().subtract(Duration(days: 1))),
+      RecentlyPlayedSectionItem(title: 'How Great Thou Art', category: localizations.hymn),
+      RecentlyPlayedSectionItem(title: 'Be Thou My Vision', category: localizations.hymn, lastPlayed: DateTime.now().subtract(Duration(days: 2))),
     ];
 
     return Column(
@@ -95,7 +99,7 @@ class _RecentlyPlayedSectionState extends State<RecentlyPlayedSection> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Recently Played',
+                localizations.recentlyPlayed,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
                 // style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
               ),
@@ -104,7 +108,7 @@ class _RecentlyPlayedSectionState extends State<RecentlyPlayedSection> {
                   // Handle "See All" action
                 },
                 child: Text(
-                  'View All',
+                  localizations.viewAll,
                   style: Theme.of(context).textTheme.labelLarge?.copyWith(color: Theme.of(context).primaryColor),
                 ),
               ),

@@ -107,5 +107,190 @@
   "contactUs": "Contact Us",
   "@contactUs": {
     "description": "Contact us option in settings"
+  },
+  "searchHymnsSongsOrNumbers": "Search hymns, songs, or numbers...",
+  "@searchHymnsSongsOrNumbers": {
+    "description": "Search bar placeholder text"
+  },
+  "explore": "Explore",
+  "@explore": {
+    "description": "Explore section title"
+  },
+  "browse": "Browse",
+  "@browse": {
+    "description": "Browse option in explore section"
+  },
+  "categories": "Categories",
+  "@categories": {
+    "description": "Categories label in explore section"
+  },
+  "manage": "Manage",
+  "@manage": {
+    "description": "Manage label in explore section"
+  },
+  "recent": "Recent",
+  "@recent": {
+    "description": "Recent option in explore section"
+  },
+  "lastPlayed": "Last played",
+  "@lastPlayed": {
+    "description": "Last played label in explore section"
+  },
+  "favorites": "Favorites",
+  "@favorites": {
+    "description": "Favorites option in explore section"
+  },
+  "songsCount": "{count} songs",
+  "@songsCount": {
+    "description": "Songs count label",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "recentlyPlayed": "Recently Played",
+  "@recentlyPlayed": {
+    "description": "Recently played section title"
+  },
+  "viewAll": "View All",
+  "@viewAll": {
+    "description": "View all button text"
+  },
+  "popularThisWeek": "Popular This Week",
+  "@popularThisWeek": {
+    "description": "Popular this week section title"
+  },
+  "hymn": "Hymn",
+  "@hymn": {
+    "description": "Hymn category label"
+  },
+  "playsCount": "{count} plays",
+  "@playsCount": {
+    "description": "Plays count label",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "searchAvailableSongbooks": "Search available songbooks",
+  "@searchAvailableSongbooks": {
+    "description": "Placeholder text for songbook search bar"
+  },
+  "installed": "Installed",
+  "@installed": {
+    "description": "Installed tab label"
+  },
+  "available": "Available",
+  "@available": {
+    "description": "Available tab label"
+  },
+  "installedCount": "Installed ({count})",
+  "@installedCount": {
+    "description": "Installed tab with count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "availableCount": "Available ({count})",
+  "@availableCount": {
+    "description": "Available tab with count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "installedSingular": "Installed",
+  "@installedSingular": {
+    "description": "Indicates that a songbook is installed"
+  },
+  "availableSingular": "Available",
+  "@availableSingular": {
+    "description": "Indicates that a songbook is available"
+  },
+  "update": "Update",
+  "@update": {
+    "description": "Update button text"
+  },
+  "delete": "Delete",
+  "@delete": {
+    "description": "Delete button text"
+  },
+  "download": "Download",
+  "@download": {
+    "description": "Download button text"
+  },
+  "hymnsCount": "{count} hymns",
+  "@hymnsCount": {
+    "description": "Hymns count label",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "lastUpdated": "Last updated: {date}",
+  "@lastUpdated": {
+    "description": "Last updated date label",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "browseCategories": "Browse Categories",
+  "@browseCategories": {
+    "description": "Browse categories section title"
+  },
+  "exploreCategoriesDescription": "Explore hymns organized by themes and occasions",
+  "@exploreCategoriesDescription": {
+    "description": "Description for browsing categories"
+  },
+  "searchCategories": "Search categories",
+  "@searchCategories": {
+    "description": "Search placeholder for category search"
+  },
+  "searchSongs": "Search songs",
+  "@searchSongs": {
+    "description": "Search placeholder for song search"
+  },
+  "backToSongbooks": "Back to Songbooks",
+  "@backToSongbooks": {
+    "description": "Back button text to return to songbooks"
+  },
+  "backToCategories": "Back to Categories",
+  "@backToCategories": {
+    "description": "Back button text to return to categories"
+  },
+  "downloadedSuccessfully": "{title} downloaded successfully!",
+  "@downloadedSuccessfully": {
+    "description": "Toast message when songbook is downloaded",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "updatedSuccessfully": "{title} updated successfully!",
+  "@updatedSuccessfully": {
+    "description": "Toast message when songbook is updated",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "deletedSuccessfully": "{title} deleted successfully!",
+  "@deletedSuccessfully": {
+    "description": "Toast message when songbook is deleted",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
   }
 }

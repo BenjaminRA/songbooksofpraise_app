@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:songbooksofpraise_app/l10n/app_localizations.dart';
 
 class HomePageSearchBar extends StatefulWidget {
   const HomePageSearchBar({super.key});
@@ -10,6 +11,8 @@ class HomePageSearchBar extends StatefulWidget {
 class _HomePageSearchBarState extends State<HomePageSearchBar> {
   @override
   Widget build(BuildContext context) {
+    AppLocalizations localizations = AppLocalizations.of(context)!;
+
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
@@ -24,7 +27,7 @@ class _HomePageSearchBarState extends State<HomePageSearchBar> {
           color: Theme.of(context).primaryColor,
         ),
         decoration: InputDecoration(
-          hintText: 'Search hymns, songs, or numbers...',
+          hintText: localizations.searchHymnsSongsOrNumbers,
           prefixIcon: const Icon(Icons.search, color: Color.fromRGBO(140, 147, 159, 1), size: 28),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16.0),

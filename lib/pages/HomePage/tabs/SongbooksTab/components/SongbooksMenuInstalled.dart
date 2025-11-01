@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:songbooksofpraise_app/l10n/app_localizations.dart';
 import 'package:songbooksofpraise_app/Providers/AppBarProvider.dart';
 import 'package:songbooksofpraise_app/models/Songbook.dart';
 import 'package:songbooksofpraise_app/pages/HomePage/HomePage.dart';
-import 'package:songbooksofpraise_app/pages/HomePage/tabs/SongbookTab/pages/SongbookPage.dart';
+import 'package:songbooksofpraise_app/pages/HomePage/tabs/SongbooksTab/pages/SongbookPage.dart';
 
 class SongbooksMenuInstalled extends StatelessWidget {
   final List<Songbook> songbooks;
+  final Future<void> Function() onRefresh;
 
-  const SongbooksMenuInstalled({super.key, required this.songbooks});
+  const SongbooksMenuInstalled({super.key, required this.songbooks, required this.onRefresh});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    AppLocalizations localizations = AppLocalizations.of(context)!;
 
     Widget buildSongbookItem(Songbook item) {
       return MaterialButton(
@@ -85,7 +88,7 @@ class SongbooksMenuInstalled extends StatelessWidget {
                                 ),
                                 ListTile(
                                   leading: Icon(Icons.refresh),
-                                  title: Text('Update', style: theme.textTheme.labelLarge),
+                                  title: Text(localizations.update, style: theme.textTheme.labelLarge),
                                   onTap: () {
                                     // Handle edit action
                                     Navigator.pop(context);
@@ -93,7 +96,7 @@ class SongbooksMenuInstalled extends StatelessWidget {
                                 ),
                                 ListTile(
                                   leading: Icon(Icons.delete, color: Colors.red),
-                                  title: Text('Delete', style: theme.textTheme.labelLarge?.copyWith(color: Colors.red)),
+                                  title: Text(localizations.delete, style: theme.textTheme.labelLarge?.copyWith(color: Colors.red)),
                                   onTap: () {
                                     // Handle delete action
                                     Navigator.pop(context);
@@ -111,7 +114,7 @@ class SongbooksMenuInstalled extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                '${item.songCount} songs',
+                localizations.songsCount(item.songCount),
                 // '${item.songCount} songs • ${item.description}',
                 style: theme.textTheme.labelMedium,
               ),
@@ -119,7 +122,7 @@ class SongbooksMenuInstalled extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    'Last updated: ${item.updatedAt.toLocal().toString().split(' ')[0]}',
+                    localizations.lastUpdated(item.updatedAt.toLocal().toString().split(' ')[0]),
                     style: theme.textTheme.labelSmall?.copyWith(color: Colors.grey[700]),
                   ),
                 ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:songbooksofpraise_app/l10n/app_localizations.dart';
 import 'package:songbooksofpraise_app/models/Songbook.dart';
 
 class ActiveSongbookSection extends StatefulWidget {
@@ -13,6 +14,7 @@ class ActiveSongbookSection extends StatefulWidget {
 class ActiveSongbookSectionState extends State<ActiveSongbookSection> {
   @override
   Widget build(BuildContext context) {
+    AppLocalizations localizations = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
@@ -39,7 +41,7 @@ class ActiveSongbookSectionState extends State<ActiveSongbookSection> {
               ),
               SizedBox(height: 8.0),
               Text(
-                '${widget.songbook.songCount} Songs • 12 categories • 48 subcategories',
+                '${localizations.songsCount(widget.songbook.songCount)} • 12 categories • 48 subcategories',
                 style: Theme.of(context).textTheme.labelSmall,
               ),
             ],

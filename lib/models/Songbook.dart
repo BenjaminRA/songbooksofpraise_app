@@ -31,6 +31,17 @@ class Songbook {
     categoriesCount = getCategoriesCount();
   }
 
+  static DateTime _stripMilliseconds(DateTime dateTime) {
+    return DateTime(
+      dateTime.year,
+      dateTime.month,
+      dateTime.day,
+      dateTime.hour,
+      dateTime.minute,
+      dateTime.second,
+    );
+  }
+
   static Future<List<Songbook>> getInstalled() async {
     final rows = await DB.rawQuery('''
       SELECT 
@@ -44,10 +55,11 @@ class Songbook {
 
   static Future<List<Songbook>> fromJson(List<dynamic> json) async {
     List<dynamic> installed = await DB.rawQuery('SELECT id, updated_at FROM songbooks;');
-    Map<int, DateTime> installedMap = {for (var item in installed) item['id']: DateTime.parse(item['updated_at'])};
+    Map<int, DateTime> installedMap = {for (var item in installed) item['id']: _stripMilliseconds(DateTime.parse(item['updated_at']))};
 
     return json.map((item) {
-      DateTime updatedAt = DateTime.parse(item['updated_at']);
+      DateTime updatedAt = _stripMilliseconds(DateTime.parse(item['updated_at']));
+
       return Songbook(
         id: item['id'],
         title: item['title'],
@@ -82,5 +94,9 @@ class Songbook {
     }
 
     return count;
+  }
+
+  Future<void> delete() {
+    return DB.execute('DELETE FROM songbooks WHERE id = ?;', arguments: [id]);
   }
 }

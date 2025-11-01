@@ -259,6 +259,216 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Contact Us'**
   String get contactUs;
+
+  /// Search bar placeholder text
+  ///
+  /// In en, this message translates to:
+  /// **'Search hymns, songs, or numbers...'**
+  String get searchHymnsSongsOrNumbers;
+
+  /// Explore section title
+  ///
+  /// In en, this message translates to:
+  /// **'Explore'**
+  String get explore;
+
+  /// Browse option in explore section
+  ///
+  /// In en, this message translates to:
+  /// **'Browse'**
+  String get browse;
+
+  /// Categories label in explore section
+  ///
+  /// In en, this message translates to:
+  /// **'Categories'**
+  String get categories;
+
+  /// Manage label in explore section
+  ///
+  /// In en, this message translates to:
+  /// **'Manage'**
+  String get manage;
+
+  /// Recent option in explore section
+  ///
+  /// In en, this message translates to:
+  /// **'Recent'**
+  String get recent;
+
+  /// Last played label in explore section
+  ///
+  /// In en, this message translates to:
+  /// **'Last played'**
+  String get lastPlayed;
+
+  /// Favorites option in explore section
+  ///
+  /// In en, this message translates to:
+  /// **'Favorites'**
+  String get favorites;
+
+  /// Songs count label
+  ///
+  /// In en, this message translates to:
+  /// **'{count} songs'**
+  String songsCount(int count);
+
+  /// Recently played section title
+  ///
+  /// In en, this message translates to:
+  /// **'Recently Played'**
+  String get recentlyPlayed;
+
+  /// View all button text
+  ///
+  /// In en, this message translates to:
+  /// **'View All'**
+  String get viewAll;
+
+  /// Popular this week section title
+  ///
+  /// In en, this message translates to:
+  /// **'Popular This Week'**
+  String get popularThisWeek;
+
+  /// Hymn category label
+  ///
+  /// In en, this message translates to:
+  /// **'Hymn'**
+  String get hymn;
+
+  /// Plays count label
+  ///
+  /// In en, this message translates to:
+  /// **'{count} plays'**
+  String playsCount(int count);
+
+  /// Placeholder text for songbook search bar
+  ///
+  /// In en, this message translates to:
+  /// **'Search available songbooks'**
+  String get searchAvailableSongbooks;
+
+  /// Installed tab label
+  ///
+  /// In en, this message translates to:
+  /// **'Installed'**
+  String get installed;
+
+  /// Available tab label
+  ///
+  /// In en, this message translates to:
+  /// **'Available'**
+  String get available;
+
+  /// Installed tab with count
+  ///
+  /// In en, this message translates to:
+  /// **'Installed ({count})'**
+  String installedCount(int count);
+
+  /// Available tab with count
+  ///
+  /// In en, this message translates to:
+  /// **'Available ({count})'**
+  String availableCount(int count);
+
+  /// Indicates that a songbook is installed
+  ///
+  /// In en, this message translates to:
+  /// **'Installed'**
+  String get installedSingular;
+
+  /// Indicates that a songbook is available
+  ///
+  /// In en, this message translates to:
+  /// **'Available'**
+  String get availableSingular;
+
+  /// Update button text
+  ///
+  /// In en, this message translates to:
+  /// **'Update'**
+  String get update;
+
+  /// Delete button text
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// Download button text
+  ///
+  /// In en, this message translates to:
+  /// **'Download'**
+  String get download;
+
+  /// Hymns count label
+  ///
+  /// In en, this message translates to:
+  /// **'{count} hymns'**
+  String hymnsCount(int count);
+
+  /// Last updated date label
+  ///
+  /// In en, this message translates to:
+  /// **'Last updated: {date}'**
+  String lastUpdated(String date);
+
+  /// Browse categories section title
+  ///
+  /// In en, this message translates to:
+  /// **'Browse Categories'**
+  String get browseCategories;
+
+  /// Description for browsing categories
+  ///
+  /// In en, this message translates to:
+  /// **'Explore hymns organized by themes and occasions'**
+  String get exploreCategoriesDescription;
+
+  /// Search placeholder for category search
+  ///
+  /// In en, this message translates to:
+  /// **'Search categories'**
+  String get searchCategories;
+
+  /// Search placeholder for song search
+  ///
+  /// In en, this message translates to:
+  /// **'Search songs'**
+  String get searchSongs;
+
+  /// Back button text to return to songbooks
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Songbooks'**
+  String get backToSongbooks;
+
+  /// Back button text to return to categories
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Categories'**
+  String get backToCategories;
+
+  /// Toast message when songbook is downloaded
+  ///
+  /// In en, this message translates to:
+  /// **'{title} downloaded successfully!'**
+  String downloadedSuccessfully(String title);
+
+  /// Toast message when songbook is updated
+  ///
+  /// In en, this message translates to:
+  /// **'{title} updated successfully!'**
+  String updatedSuccessfully(String title);
+
+  /// Toast message when songbook is deleted
+  ///
+  /// In en, this message translates to:
+  /// **'{title} deleted successfully!'**
+  String deletedSuccessfully(String title);
 }
 
 class _AppLocalizationsDelegate

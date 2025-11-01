@@ -20,6 +20,11 @@ class DB {
       await dbFile.create(recursive: true);
     }
 
+    // // debug reset db
+    // else {
+    //   await dbFile.delete();
+    // }
+
     // Initialize the database
     Database db = await openDatabase(await _getPath());
 
@@ -85,16 +90,14 @@ class DB {
     batch.execute('''
       CREATE TABLE IF NOT EXISTS favorite_songs (
         song_id INTEGER NOT NULL,
-        PRIMARY KEY (song_id),
-        FOREIGN KEY (song_id) REFERENCES songs(id) ON DELETE CASCADE
+        PRIMARY KEY (song_id)
       );
     ''');
 
     batch.execute('''
       CREATE TABLE IF NOT EXISTS favorite_songbooks (
         songbook_id INTEGER NOT NULL,
-        PRIMARY KEY (songbook_id),
-        FOREIGN KEY (songbook_id) REFERENCES songbooks(id) ON DELETE CASCADE
+        PRIMARY KEY (songbook_id)
       );
     ''');
 

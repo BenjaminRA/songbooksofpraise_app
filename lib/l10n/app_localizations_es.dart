@@ -90,4 +90,129 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get contactUs => 'Contáctanos';
+
+  @override
+  String get searchHymnsSongsOrNumbers =>
+      'Buscar himnos, canciones o números...';
+
+  @override
+  String get explore => 'Explorar';
+
+  @override
+  String get browse => 'Navegar';
+
+  @override
+  String get categories => 'Categorías';
+
+  @override
+  String get manage => 'Administrar';
+
+  @override
+  String get recent => 'Reciente';
+
+  @override
+  String get lastPlayed => 'Últimas reproducidas';
+
+  @override
+  String get favorites => 'Favoritos';
+
+  @override
+  String songsCount(int count) {
+    return '$count canciones';
+  }
+
+  @override
+  String get recentlyPlayed => 'Reproducidas Recientemente';
+
+  @override
+  String get viewAll => 'Ver Todas';
+
+  @override
+  String get popularThisWeek => 'Popular Esta Semana';
+
+  @override
+  String get hymn => 'Himno';
+
+  @override
+  String playsCount(int count) {
+    return '$count reproducciones';
+  }
+
+  @override
+  String get searchAvailableSongbooks => 'Buscar cancioneros disponibles';
+
+  @override
+  String get installed => 'Instalados';
+
+  @override
+  String get available => 'Disponibles';
+
+  @override
+  String installedCount(int count) {
+    return 'Instalados ($count)';
+  }
+
+  @override
+  String availableCount(int count) {
+    return 'Disponibles ($count)';
+  }
+
+  @override
+  String get installedSingular => 'Instalado';
+
+  @override
+  String get availableSingular => 'Disponible';
+
+  @override
+  String get update => 'Actualizar';
+
+  @override
+  String get delete => 'Eliminar';
+
+  @override
+  String get download => 'Descargar';
+
+  @override
+  String hymnsCount(int count) {
+    return '$count himnos';
+  }
+
+  @override
+  String lastUpdated(String date) {
+    return 'Última actualización: $date';
+  }
+
+  @override
+  String get browseCategories => 'Explorar Categorías';
+
+  @override
+  String get exploreCategoriesDescription =>
+      'Explora himnos organizados por temas y ocasiones';
+
+  @override
+  String get searchCategories => 'Buscar categorías';
+
+  @override
+  String get searchSongs => 'Buscar canciones';
+
+  @override
+  String get backToSongbooks => 'Volver a Cancioneros';
+
+  @override
+  String get backToCategories => 'Volver a Categorías';
+
+  @override
+  String downloadedSuccessfully(String title) {
+    return '¡$title descargado exitosamente!';
+  }
+
+  @override
+  String updatedSuccessfully(String title) {
+    return '¡$title actualizado exitosamente!';
+  }
+
+  @override
+  String deletedSuccessfully(String title) {
+    return '¡$title eliminado exitosamente!';
+  }
 }

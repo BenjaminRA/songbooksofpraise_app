@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:songbooksofpraise_app/l10n/app_localizations.dart';
 
 class PopularThisWeekSectionItem {
   final int? number;
@@ -26,7 +27,7 @@ class _PopularThisWeekSectionState extends State<PopularThisWeekSection> {
     return item.number != null ? item.number.toString() : item.title.substring(0, 1).toUpperCase();
   }
 
-  Widget _buildPopularThisWeekItem(PopularThisWeekSectionItem item) {
+  Widget _buildPopularThisWeekItem(PopularThisWeekSectionItem item, AppLocalizations localizations) {
     return MaterialButton(
       elevation: 1.0,
       shape: RoundedRectangleBorder(
@@ -66,7 +67,7 @@ class _PopularThisWeekSectionState extends State<PopularThisWeekSection> {
                 Text(item.title, style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold)),
                 const SizedBox(height: 2),
                 Text(
-                  '${item.category} • ${item.timesPlayed} plays',
+                  '${item.category} • ${localizations.playsCount(item.timesPlayed)}',
                   style: Theme.of(context).textTheme.labelSmall,
                 ),
               ],
@@ -79,10 +80,12 @@ class _PopularThisWeekSectionState extends State<PopularThisWeekSection> {
 
   @override
   Widget build(BuildContext context) {
+    AppLocalizations localizations = AppLocalizations.of(context)!;
+
     List<PopularThisWeekSectionItem> popularThisWeekItems = [
-      PopularThisWeekSectionItem(number: 999, title: 'Amazing Grace', category: 'Hymn', timesPlayed: 5),
-      PopularThisWeekSectionItem(title: 'How Great Thou Art', category: 'Hymn', timesPlayed: 3),
-      PopularThisWeekSectionItem(title: 'Be Thou My Vision', category: 'Hymn', timesPlayed: 4),
+      PopularThisWeekSectionItem(number: 999, title: 'Amazing Grace', category: localizations.hymn, timesPlayed: 5),
+      PopularThisWeekSectionItem(title: 'How Great Thou Art', category: localizations.hymn, timesPlayed: 3),
+      PopularThisWeekSectionItem(title: 'Be Thou My Vision', category: localizations.hymn, timesPlayed: 4),
     ];
 
     return Column(
@@ -94,7 +97,7 @@ class _PopularThisWeekSectionState extends State<PopularThisWeekSection> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Popular This Week',
+                localizations.popularThisWeek,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
               ),
               GestureDetector(
@@ -102,7 +105,7 @@ class _PopularThisWeekSectionState extends State<PopularThisWeekSection> {
                   // Handle "See All" action
                 },
                 child: Text(
-                  'View All',
+                  localizations.viewAll,
                   style: Theme.of(context).textTheme.labelLarge?.copyWith(color: Theme.of(context).primaryColor),
                 ),
               ),
@@ -115,7 +118,7 @@ class _PopularThisWeekSectionState extends State<PopularThisWeekSection> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             spacing: 16.0,
-            children: popularThisWeekItems.map((item) => _buildPopularThisWeekItem(item)).toList(),
+            children: popularThisWeekItems.map((item) => _buildPopularThisWeekItem(item, localizations)).toList(),
           ),
         )
       ],

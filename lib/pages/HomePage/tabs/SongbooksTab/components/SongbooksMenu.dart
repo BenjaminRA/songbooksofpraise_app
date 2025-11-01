@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:songbooksofpraise_app/l10n/app_localizations.dart';
 import 'package:songbooksofpraise_app/models/Songbook.dart';
-import 'package:songbooksofpraise_app/pages/HomePage/tabs/SongbookTab/components/SongbooksMenuAvailable.dart';
-import 'package:songbooksofpraise_app/pages/HomePage/tabs/SongbookTab/components/SongbooksMenuInstalled.dart';
+import 'package:songbooksofpraise_app/pages/HomePage/tabs/SongbooksTab/components/SongbooksMenuAvailable.dart';
+import 'package:songbooksofpraise_app/pages/HomePage/tabs/SongbooksTab/components/SongbooksMenuInstalled.dart';
 
 class SongbooksMenu extends StatefulWidget {
   final Future<void> Function() onRefresh;
@@ -30,7 +31,8 @@ class _SongbooksMenuState extends State<SongbooksMenu> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> songbookTabs = ['Installed (${widget.installed.length})', 'Available (${widget.available.length})'];
+    AppLocalizations localizations = AppLocalizations.of(context)!;
+    List<String> songbookTabs = [localizations.installedCount(widget.installed.length), localizations.availableCount(widget.available.length)];
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -85,9 +87,9 @@ class _SongbooksMenuState extends State<SongbooksMenu> {
             child: ListView(
               children: [
                 if (currentSongbookTabIndex == 0)
-                  SongbooksMenuInstalled(songbooks: widget.installed)
+                  SongbooksMenuInstalled(songbooks: widget.installed, onRefresh: widget.onRefresh)
                 else
-                  SongbooksMenuAvailable(songbooks: widget.available),
+                  SongbooksMenuAvailable(songbooks: widget.available, onRefresh: widget.onRefresh),
               ],
             ),
           ),

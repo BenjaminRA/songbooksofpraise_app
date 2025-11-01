@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:songbooksofpraise_app/l10n/app_localizations.dart';
 import 'package:songbooksofpraise_app/Providers/AppBarProvider.dart';
 import 'package:songbooksofpraise_app/api/api.dart';
 import 'package:songbooksofpraise_app/components/Breadcrumbs.dart';
 import 'package:songbooksofpraise_app/models/Category.dart';
 import 'package:songbooksofpraise_app/models/Songbook.dart';
 import 'package:songbooksofpraise_app/pages/HomePage/HomePage.dart';
-import 'package:songbooksofpraise_app/pages/HomePage/tabs/SongbookTab/helpers/renderCategories.dart';
-import 'package:songbooksofpraise_app/pages/HomePage/tabs/SongbookTab/pages/CategoryPage.dart';
+import 'package:songbooksofpraise_app/pages/HomePage/tabs/SongbooksTab/helpers/renderCategories.dart';
+import 'package:songbooksofpraise_app/pages/HomePage/tabs/SongbooksTab/pages/CategoryPage.dart';
 
 class SongbookPage extends StatefulWidget {
   final Songbook songbook;
@@ -76,6 +77,7 @@ class _SongbookPageState extends State<SongbookPage> {
 
   @override
   Widget build(BuildContext context) {
+    AppLocalizations localizations = AppLocalizations.of(context)!;
     return Scaffold(
       body: ListView(
         children: [
@@ -85,12 +87,12 @@ class _SongbookPageState extends State<SongbookPage> {
             child: Column(
               children: [
                 Text(
-                  'Browse Categories',
+                  localizations.browseCategories,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8.0),
                 Text(
-                  'Explore hymns organized by themes and occasions',
+                  localizations.exploreCategoriesDescription,
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
                 ),

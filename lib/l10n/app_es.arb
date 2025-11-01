@@ -107,5 +107,190 @@
   "contactUs": "Contáctanos",
   "@contactUs": {
     "description": "Opción contáctanos en configuración"
+  },
+  "searchHymnsSongsOrNumbers": "Buscar himnos, canciones o números...",
+  "@searchHymnsSongsOrNumbers": {
+    "description": "Texto de marcador de posición de la barra de búsqueda"
+  },
+  "explore": "Explorar",
+  "@explore": {
+    "description": "Título de la sección explorar"
+  },
+  "browse": "Navegar",
+  "@browse": {
+    "description": "Opción navegar en la sección explorar"
+  },
+  "categories": "Categorías",
+  "@categories": {
+    "description": "Etiqueta de categorías en la sección explorar"
+  },
+  "manage": "Administrar",
+  "@manage": {
+    "description": "Etiqueta administrar en la sección explorar"
+  },
+  "recent": "Reciente",
+  "@recent": {
+    "description": "Opción reciente en la sección explorar"
+  },
+  "lastPlayed": "Últimas reproducidas",
+  "@lastPlayed": {
+    "description": "Etiqueta últimas reproducidas en la sección explorar"
+  },
+  "favorites": "Favoritos",
+  "@favorites": {
+    "description": "Opción favoritos en la sección explorar"
+  },
+  "songsCount": "{count} canciones",
+  "@songsCount": {
+    "description": "Etiqueta de conteo de canciones",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "recentlyPlayed": "Reproducidas Recientemente",
+  "@recentlyPlayed": {
+    "description": "Título de la sección reproducidas recientemente"
+  },
+  "viewAll": "Ver Todas",
+  "@viewAll": {
+    "description": "Texto del botón ver todas"
+  },
+  "popularThisWeek": "Popular Esta Semana",
+  "@popularThisWeek": {
+    "description": "Título de la sección popular esta semana"
+  },
+  "hymn": "Himno",
+  "@hymn": {
+    "description": "Etiqueta de categoría himno"
+  },
+  "playsCount": "{count} reproducciones",
+  "@playsCount": {
+    "description": "Etiqueta de conteo de reproducciones",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "searchAvailableSongbooks": "Buscar cancioneros disponibles",
+  "@searchAvailableSongbooks": {
+    "description": "Texto de marcador de posición para la barra de búsqueda de cancioneros"
+  },
+  "installed": "Instalados",
+  "@installed": {
+    "description": "Etiqueta de pestaña instalados"
+  },
+  "available": "Disponibles",
+  "@available": {
+    "description": "Etiqueta de pestaña disponibles"
+  },
+  "installedCount": "Instalados ({count})",
+  "@installedCount": {
+    "description": "Pestaña instalados con conteo",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "availableCount": "Disponibles ({count})",
+  "@availableCount": {
+    "description": "Pestaña disponibles con conteo",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "installedSingular": "Instalado",
+  "@installedSingular": {
+    "description": "Marca de que un cancionero está instalado"
+  },
+  "availableSingular": "Disponible",
+  "@availableSingular": {
+    "description": "Marca de que un cancionero está disponible"
+  },
+  "update": "Actualizar",
+  "@update": {
+    "description": "Texto del botón actualizar"
+  },
+  "delete": "Eliminar",
+  "@delete": {
+    "description": "Texto del botón eliminar"
+  },
+  "download": "Descargar",
+  "@download": {
+    "description": "Texto del botón descargar"
+  },
+  "hymnsCount": "{count} himnos",
+  "@hymnsCount": {
+    "description": "Etiqueta de conteo de himnos",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "lastUpdated": "Última actualización: {date}",
+  "@lastUpdated": {
+    "description": "Etiqueta de fecha de última actualización",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "browseCategories": "Explorar Categorías",
+  "@browseCategories": {
+    "description": "Título de la sección explorar categorías"
+  },
+  "exploreCategoriesDescription": "Explora himnos organizados por temas y ocasiones",
+  "@exploreCategoriesDescription": {
+    "description": "Descripción para explorar categorías"
+  },
+  "searchCategories": "Buscar categorías",
+  "@searchCategories": {
+    "description": "Marcador de posición de búsqueda para búsqueda de categorías"
+  },
+  "searchSongs": "Buscar canciones",
+  "@searchSongs": {
+    "description": "Marcador de posición de búsqueda para búsqueda de canciones"
+  },
+  "backToSongbooks": "Volver a Cancioneros",
+  "@backToSongbooks": {
+    "description": "Texto del botón para volver a cancioneros"
+  },
+  "backToCategories": "Volver a Categorías",
+  "@backToCategories": {
+    "description": "Texto del botón para volver a categorías"
+  },
+  "downloadedSuccessfully": "¡{title} descargado exitosamente!",
+  "@downloadedSuccessfully": {
+    "description": "Mensaje de toast cuando el cancionero se descarga",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "updatedSuccessfully": "¡{title} actualizado exitosamente!",
+  "@updatedSuccessfully": {
+    "description": "Mensaje de toast cuando el cancionero se actualiza",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "deletedSuccessfully": "¡{title} eliminado exitosamente!",
+  "@deletedSuccessfully": {
+    "description": "Mensaje de toast cuando el cancionero se elimina",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
   }
 }

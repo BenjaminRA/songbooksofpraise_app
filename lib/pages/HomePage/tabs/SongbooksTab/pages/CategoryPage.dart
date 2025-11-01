@@ -9,8 +9,8 @@ import 'package:songbooksofpraise_app/models/Category.dart';
 import 'package:songbooksofpraise_app/models/Song.dart';
 import 'package:songbooksofpraise_app/models/Songbook.dart';
 import 'package:songbooksofpraise_app/pages/HomePage/HomePage.dart';
-import 'package:songbooksofpraise_app/pages/HomePage/tabs/SongbookTab/helpers/renderCategories.dart';
-import 'package:songbooksofpraise_app/pages/HomePage/tabs/SongbookTab/helpers/renderSongs.dart';
+import 'package:songbooksofpraise_app/pages/HomePage/tabs/SongbooksTab/helpers/renderCategories.dart';
+import 'package:songbooksofpraise_app/pages/HomePage/tabs/SongbooksTab/helpers/renderSongs.dart';
 import 'package:songbooksofpraise_app/pages/SongPage/SongPage.dart';
 
 class CategoryPage extends StatefulWidget {
