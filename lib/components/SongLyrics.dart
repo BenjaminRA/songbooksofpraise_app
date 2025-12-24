@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:songbooksofpraise_app/models/Song.dart';
 
@@ -53,7 +55,10 @@ class SongLyrics extends StatelessWidget {
             for (var match in chordRegex.allMatches(line)) {
               lyricsSpans.add(
                 TextSpan(
-                  text: line.substring(lastChordEnd, match.start - 1 - lastChordSize),
+                  text: line.substring(
+                    lastChordEnd,
+                    max(0, match.start - 1 - lastChordSize), // In case the lyrics start with a chord
+                  ),
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.transparent,
