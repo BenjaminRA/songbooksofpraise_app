@@ -216,6 +216,10 @@
   "@update": {
     "description": "Update button text"
   },
+  "updating": "Updating",
+  "@updating": {
+    "description": "Updating button text"
+  },
   "delete": "Delete",
   "@delete": {
     "description": "Delete button text"
@@ -292,5 +296,89 @@
         "type": "String"
       }
     }
+  },
+  "chords": "Chords",
+  "@chords": {
+    "description": "Chords label"
+  },
+  "sheet": "Sheet",
+  "@sheet": {
+    "description": "Sheet music label"
+  },
+  "verse": "Verse",
+  "@verse": {
+    "description": "Verse label"
+  },
+  "chorus": "Chorus",
+  "@chorus": {
+    "description": "Chorus label"
+  },
+  "bridge": "Bridge",
+  "@bridge": {
+    "description": "Bridge label"
+  },
+  "all": "All",
+  "@all": {
+    "description": "All category label"
+  },
+  "genericCategoryDescription1": "Explore the hymns in this category.",
+  "@genericCategoryDescription1": {
+    "description": "Generic category description 1"
+  },
+  "genericCategoryDescription2": "A collection of songs for inspiration and worship.",
+  "@genericCategoryDescription2": {
+    "description": "Generic category description 2"
+  },
+  "genericCategoryDescription3": "Discover hymns organized by this theme.",
+  "@genericCategoryDescription3": {
+    "description": "Generic category description 3"
+  },
+  "genericCategoryDescription4": "Songs gathered for special moments and occasions.",
+  "@genericCategoryDescription4": {
+    "description": "Generic category description 4"
+  },
+  "genericCategoryDescription5": "Enjoy a variety of hymns selected for this category.",
+  "@genericCategoryDescription5": {
+    "description": "Generic category description 5"
+  },
+  "genericCategoryDescription6": "A selection of meaningful hymns.",
+  "@genericCategoryDescription6": {
+    "description": "Generic category description 6"
+  },
+  "genericCategoryDescription7": "Find uplifting songs in this section.",
+  "@genericCategoryDescription7": {
+    "description": "Generic category description 7"
+  },
+  "genericCategoryDescription8": "Hymns curated for your spiritual journey.",
+  "@genericCategoryDescription8": {
+    "description": "Generic category description 8"
+  },
+  "genericCategoryDescription9": "Browse songs that fit this category.",
+  "@genericCategoryDescription9": {
+    "description": "Generic category description 9"
+  },
+  "genericCategoryDescription10": "A group of hymns to enrich your worship experience.",
+  "@genericCategoryDescription10": {
+    "description": "Generic category description 10"
+  },
+  "genericCategoryDescription11": "Explore the collection of hymns in this category.",
+  "@genericCategoryDescription11": {
+    "description": "Generic category description 11"
+  },
+  "genericCategoryDescription12": "Songs to inspire and uplift.",
+  "@genericCategoryDescription12": {
+    "description": "Generic category description 12"
+  },
+  "genericCategoryDescription13": "A special selection of hymns for this topic.",
+  "@genericCategoryDescription13": {
+    "description": "Generic category description 13"
+  },
+  "genericCategoryDescription14": "Discover new favorites in this category.",
+  "@genericCategoryDescription14": {
+    "description": "Generic category description 14"
+  },
+  "genericCategoryDescription15": "Meaningful songs for every occasion.",
+  "@genericCategoryDescription15": {
+    "description": "Generic category description 15"
   }
 }

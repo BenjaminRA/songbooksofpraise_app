@@ -392,6 +392,12 @@ abstract class AppLocalizations {
   /// **'Update'**
   String get update;
 
+  /// Updating button text
+  ///
+  /// In en, this message translates to:
+  /// **'Updating'**
+  String get updating;
+
   /// Delete button text
   ///
   /// In en, this message translates to:
@@ -469,6 +475,132 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{title} deleted successfully!'**
   String deletedSuccessfully(String title);
+
+  /// Chords label
+  ///
+  /// In en, this message translates to:
+  /// **'Chords'**
+  String get chords;
+
+  /// Sheet music label
+  ///
+  /// In en, this message translates to:
+  /// **'Sheet'**
+  String get sheet;
+
+  /// Verse label
+  ///
+  /// In en, this message translates to:
+  /// **'Verse'**
+  String get verse;
+
+  /// Chorus label
+  ///
+  /// In en, this message translates to:
+  /// **'Chorus'**
+  String get chorus;
+
+  /// Bridge label
+  ///
+  /// In en, this message translates to:
+  /// **'Bridge'**
+  String get bridge;
+
+  /// All category label
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get all;
+
+  /// Generic category description 1
+  ///
+  /// In en, this message translates to:
+  /// **'Explore the hymns in this category.'**
+  String get genericCategoryDescription1;
+
+  /// Generic category description 2
+  ///
+  /// In en, this message translates to:
+  /// **'A collection of songs for inspiration and worship.'**
+  String get genericCategoryDescription2;
+
+  /// Generic category description 3
+  ///
+  /// In en, this message translates to:
+  /// **'Discover hymns organized by this theme.'**
+  String get genericCategoryDescription3;
+
+  /// Generic category description 4
+  ///
+  /// In en, this message translates to:
+  /// **'Songs gathered for special moments and occasions.'**
+  String get genericCategoryDescription4;
+
+  /// Generic category description 5
+  ///
+  /// In en, this message translates to:
+  /// **'Enjoy a variety of hymns selected for this category.'**
+  String get genericCategoryDescription5;
+
+  /// Generic category description 6
+  ///
+  /// In en, this message translates to:
+  /// **'A selection of meaningful hymns.'**
+  String get genericCategoryDescription6;
+
+  /// Generic category description 7
+  ///
+  /// In en, this message translates to:
+  /// **'Find uplifting songs in this section.'**
+  String get genericCategoryDescription7;
+
+  /// Generic category description 8
+  ///
+  /// In en, this message translates to:
+  /// **'Hymns curated for your spiritual journey.'**
+  String get genericCategoryDescription8;
+
+  /// Generic category description 9
+  ///
+  /// In en, this message translates to:
+  /// **'Browse songs that fit this category.'**
+  String get genericCategoryDescription9;
+
+  /// Generic category description 10
+  ///
+  /// In en, this message translates to:
+  /// **'A group of hymns to enrich your worship experience.'**
+  String get genericCategoryDescription10;
+
+  /// Generic category description 11
+  ///
+  /// In en, this message translates to:
+  /// **'Explore the collection of hymns in this category.'**
+  String get genericCategoryDescription11;
+
+  /// Generic category description 12
+  ///
+  /// In en, this message translates to:
+  /// **'Songs to inspire and uplift.'**
+  String get genericCategoryDescription12;
+
+  /// Generic category description 13
+  ///
+  /// In en, this message translates to:
+  /// **'A special selection of hymns for this topic.'**
+  String get genericCategoryDescription13;
+
+  /// Generic category description 14
+  ///
+  /// In en, this message translates to:
+  /// **'Discover new favorites in this category.'**
+  String get genericCategoryDescription14;
+
+  /// Generic category description 15
+  ///
+  /// In en, this message translates to:
+  /// **'Meaningful songs for every occasion.'**
+  String get genericCategoryDescription15;
 }
 
 class _AppLocalizationsDelegate

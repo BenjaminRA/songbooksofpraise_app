@@ -1,16 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:songbooksofpraise_app/l10n/app_localizations.dart';
 import 'package:songbooksofpraise_app/Providers/AppBarProvider.dart';
 import 'package:songbooksofpraise_app/models/Songbook.dart';
-import 'package:songbooksofpraise_app/pages/HomePage/HomePage.dart';
-import 'package:songbooksofpraise_app/pages/HomePage/tabs/SongbooksTab/pages/SongbookPage.dart';
+import 'package:songbooksofpraise_app/pages/RootPage.dart';
+import 'package:songbooksofpraise_app/pages/Tabs/SongbooksTab/SongbookTab.dart';
+import 'package:songbooksofpraise_app/pages/Tabs/SongbooksTab/pages/SongbookPage.dart';
 
-class SongbooksMenuInstalled extends StatelessWidget {
+class SongbooksMenuInstalled extends StatefulWidget {
   final List<Songbook> songbooks;
-  final Future<void> Function() onRefresh;
+  final SongbookCallbacks callbacks;
 
-  const SongbooksMenuInstalled({super.key, required this.songbooks, required this.onRefresh});
+  const SongbooksMenuInstalled({super.key, required this.songbooks, required this.callbacks});
+
+  @override
+  State<SongbooksMenuInstalled> createState() => _SongbooksMenuInstalledState();
+}
+
+class _SongbooksMenuInstalledState extends State<SongbooksMenuInstalled> {
+  void onUpdateTapHandler(Songbook item) async {
+    await widget.callbacks.updateSongbook(item);
+  }
+
+  void onDeleteTapHandler(Songbook item) async {
+    await widget.callbacks.deleteSongbook(item);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +63,49 @@ class SongbooksMenuInstalled extends StatelessWidget {
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Icon(Icons.library_books, color: theme.primaryColor, size: 18.0),
+                  Stack(
+                    clipBehavior: Clip.none,
+                    alignment: Alignment.center,
+                    children: [
+                      Icon(Icons.library_books, color: theme.primaryColor, size: 18.0),
+                      if (item.updateAvailable)
+                        if (item.isDownloading)
+                          Positioned(
+                            right: -10.0,
+                            top: -10.0,
+                            child: Container(
+                              width: 19.0,
+                              height: 19.0,
+                              decoration: BoxDecoration(
+                                color: Colors.red,
+                                shape: BoxShape.circle,
+                                border: Border.all(color: Colors.white, width: 1.5),
+                              ),
+                              padding: const EdgeInsets.all(2.0),
+                              child: Center(
+                                child: SpinKitThreeBounce(
+                                  color: Colors.white,
+                                  size: 8.0,
+                                ),
+                              ),
+                            ),
+                          )
+                        else
+                          Positioned(
+                            right: -5.0,
+                            top: -5.0,
+                            child: Container(
+                              width: 12.0,
+                              height: 12.0,
+                              decoration: BoxDecoration(
+                                color: Colors.red,
+                                shape: BoxShape.circle,
+                                border: Border.all(color: Colors.white, width: 1.5),
+                              ),
+                            ),
+                          ),
+                    ],
+                  ),
                   const SizedBox(width: 12),
                   Text(item.title, style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold)),
                   const Spacer(),
@@ -86,20 +143,38 @@ class SongbooksMenuInstalled extends StatelessWidget {
                                     endIndent: 16.0,
                                   ),
                                 ),
-                                ListTile(
-                                  leading: Icon(Icons.refresh),
-                                  title: Text(localizations.update, style: theme.textTheme.labelLarge),
-                                  onTap: () {
-                                    // Handle edit action
-                                    Navigator.pop(context);
-                                  },
-                                ),
+                                if (item.updateAvailable)
+                                  ListTile(
+                                    leading: item.isDownloading
+                                        ? SizedBox(
+                                            width: 25.0,
+                                            height: 25.0,
+                                            child: Center(
+                                              child: SpinKitThreeBounce(
+                                                color: Colors.blue,
+                                                size: 16.0,
+                                              ),
+                                            ),
+                                          )
+                                        : Icon(
+                                            Icons.refresh,
+                                            color: Colors.blue,
+                                          ),
+                                    title:
+                                        Text(item.isDownloading ? localizations.updating : localizations.update, style: theme.textTheme.labelLarge),
+                                    onTap: item.isDownloading
+                                        ? null
+                                        : () {
+                                            Navigator.pop(context);
+                                            onUpdateTapHandler(item);
+                                          },
+                                  ),
                                 ListTile(
                                   leading: Icon(Icons.delete, color: Colors.red),
-                                  title: Text(localizations.delete, style: theme.textTheme.labelLarge?.copyWith(color: Colors.red)),
+                                  title: Text(localizations.delete, style: theme.textTheme.labelLarge),
                                   onTap: () {
-                                    // Handle delete action
                                     Navigator.pop(context);
+                                    onDeleteTapHandler(item);
                                   },
                                 ),
                               ],
@@ -112,13 +187,13 @@ class SongbooksMenuInstalled extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: 6),
               Text(
                 localizations.songsCount(item.songCount),
                 // '${item.songCount} songs • ${item.description}',
                 style: theme.textTheme.labelMedium,
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 6),
               Row(
                 children: [
                   Text(
@@ -138,7 +213,7 @@ class SongbooksMenuInstalled extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       child: Column(
         spacing: 16.6,
-        children: songbooks.map((item) => buildSongbookItem(item)).toList(),
+        children: widget.songbooks.map((item) => buildSongbookItem(item)).toList(),
       ),
     );
   }

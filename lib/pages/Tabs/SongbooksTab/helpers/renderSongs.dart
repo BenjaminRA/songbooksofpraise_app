@@ -3,7 +3,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:songbooksofpraise_app/Providers/AppBarProvider.dart';
 import 'package:songbooksofpraise_app/models/Song.dart';
-import 'package:songbooksofpraise_app/pages/HomePage/HomePage.dart';
+import 'package:songbooksofpraise_app/pages/RootPage.dart';
 
 Widget renderSongs(BuildContext context, Song song, {void Function()? onPressed, int? loadingSong}) {
   return MaterialButton(

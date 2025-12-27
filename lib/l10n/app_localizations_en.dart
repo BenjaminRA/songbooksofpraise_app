@@ -165,6 +165,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get update => 'Update';
 
   @override
+  String get updating => 'Updating';
+
+  @override
   String get delete => 'Delete';
 
   @override
@@ -213,4 +216,80 @@ class AppLocalizationsEn extends AppLocalizations {
   String deletedSuccessfully(String title) {
     return '$title deleted successfully!';
   }
+
+  @override
+  String get chords => 'Chords';
+
+  @override
+  String get sheet => 'Sheet';
+
+  @override
+  String get verse => 'Verse';
+
+  @override
+  String get chorus => 'Chorus';
+
+  @override
+  String get bridge => 'Bridge';
+
+  @override
+  String get all => 'All';
+
+  @override
+  String get genericCategoryDescription1 =>
+      'Explore the hymns in this category.';
+
+  @override
+  String get genericCategoryDescription2 =>
+      'A collection of songs for inspiration and worship.';
+
+  @override
+  String get genericCategoryDescription3 =>
+      'Discover hymns organized by this theme.';
+
+  @override
+  String get genericCategoryDescription4 =>
+      'Songs gathered for special moments and occasions.';
+
+  @override
+  String get genericCategoryDescription5 =>
+      'Enjoy a variety of hymns selected for this category.';
+
+  @override
+  String get genericCategoryDescription6 => 'A selection of meaningful hymns.';
+
+  @override
+  String get genericCategoryDescription7 =>
+      'Find uplifting songs in this section.';
+
+  @override
+  String get genericCategoryDescription8 =>
+      'Hymns curated for your spiritual journey.';
+
+  @override
+  String get genericCategoryDescription9 =>
+      'Browse songs that fit this category.';
+
+  @override
+  String get genericCategoryDescription10 =>
+      'A group of hymns to enrich your worship experience.';
+
+  @override
+  String get genericCategoryDescription11 =>
+      'Explore the collection of hymns in this category.';
+
+  @override
+  String get genericCategoryDescription12 => 'Songs to inspire and uplift.';
+
+  @override
+  String get genericCategoryDescription13 =>
+      'A special selection of hymns for this topic.';
+
+  @override
+  String get genericCategoryDescription14 =>
+      'Discover new favorites in this category.';
+
+  @override
+  String get genericCategoryDescription15 =>
+      'Meaningful songs for every occasion.';
 }

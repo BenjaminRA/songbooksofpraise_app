@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:songbooksofpraise_app/l10n/app_localizations.dart';
 import 'package:songbooksofpraise_app/models/Songbook.dart';
-import 'package:songbooksofpraise_app/pages/HomePage/tabs/SongbooksTab/components/SongbooksMenuAvailable.dart';
-import 'package:songbooksofpraise_app/pages/HomePage/tabs/SongbooksTab/components/SongbooksMenuInstalled.dart';
+import 'package:songbooksofpraise_app/pages/Tabs/SongbooksTab/SongbookTab.dart';
+import 'package:songbooksofpraise_app/pages/Tabs/SongbooksTab/components/SongbooksMenuAvailable.dart';
+import 'package:songbooksofpraise_app/pages/Tabs/SongbooksTab/components/SongbooksMenuInstalled.dart';
 
 class SongbooksMenu extends StatefulWidget {
-  final Future<void> Function() onRefresh;
+  final SongbookCallbacks callbacks;
   final List<Songbook> installed;
   final List<Songbook> available;
 
-  const SongbooksMenu({super.key, required this.onRefresh, required this.installed, required this.available});
-
+  const SongbooksMenu({super.key, required this.callbacks, required this.installed, required this.available});
   @override
   State<SongbooksMenu> createState() => _SongbooksMenuState();
 }
@@ -83,13 +83,19 @@ class _SongbooksMenuState extends State<SongbooksMenu> {
         ),
         Expanded(
           child: RefreshIndicator(
-            onRefresh: widget.onRefresh,
+            onRefresh: widget.callbacks.refresh,
             child: ListView(
               children: [
                 if (currentSongbookTabIndex == 0)
-                  SongbooksMenuInstalled(songbooks: widget.installed, onRefresh: widget.onRefresh)
+                  SongbooksMenuInstalled(
+                    songbooks: widget.installed,
+                    callbacks: widget.callbacks,
+                  )
                 else
-                  SongbooksMenuAvailable(songbooks: widget.available, onRefresh: widget.onRefresh),
+                  SongbooksMenuAvailable(
+                    songbooks: widget.available,
+                    callbacks: widget.callbacks,
+                  ),
               ],
             ),
           ),

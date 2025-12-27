@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:songbooksofpraise_app/l10n/app_localizations.dart';
 import 'package:songbooksofpraise_app/models/Song.dart';
 
 class SongLyrics extends StatelessWidget {
@@ -17,6 +18,8 @@ class SongLyrics extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AppLocalizations localizations = AppLocalizations.of(context)!;
+
     List<Widget> lyricsParagraphs = [];
 
     // Split lyrics into paragraphs based on double newlines
@@ -35,9 +38,19 @@ class SongLyrics extends StatelessWidget {
         if (RegExp(r'^(verse|chorus|bridge)(( \d+)*)', caseSensitive: false).hasMatch(line)) {
           isChorus = line.toLowerCase().contains('chorus');
 
+          String structureLine = line.toUpperCase().split(' ')[0];
+          String translatedStructureLine = '';
+          if (structureLine == 'VERSE') {
+            translatedStructureLine = localizations.verse + line.substring(5); // Add verse number if present
+          } else if (structureLine == 'CHORUS') {
+            translatedStructureLine = localizations.chorus + line.substring(6); // Add chorus number if present
+          } else if (structureLine == 'BRIDGE') {
+            translatedStructureLine = localizations.bridge + line.substring(6); // Add bridge number if present
+          }
+
           // Structure line
           lyricsSpans.add(TextSpan(
-            text: '${line.toUpperCase()}\n',
+            text: '${translatedStructureLine.toUpperCase()}\n',
             style: TextStyle(
               fontSize: fontSize,
               color: Theme.of(context).primaryColor,

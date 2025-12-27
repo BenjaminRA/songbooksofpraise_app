@@ -167,6 +167,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get update => 'Actualizar';
 
   @override
+  String get updating => 'Actualizando';
+
+  @override
   String get delete => 'Eliminar';
 
   @override
@@ -215,4 +218,82 @@ class AppLocalizationsEs extends AppLocalizations {
   String deletedSuccessfully(String title) {
     return '¡$title eliminado exitosamente!';
   }
+
+  @override
+  String get chords => 'Acordes';
+
+  @override
+  String get sheet => 'Partitura';
+
+  @override
+  String get verse => 'Verso';
+
+  @override
+  String get chorus => 'Coro';
+
+  @override
+  String get bridge => 'Puente';
+
+  @override
+  String get all => 'Todos';
+
+  @override
+  String get genericCategoryDescription1 =>
+      'Explora los himnos de esta categoría.';
+
+  @override
+  String get genericCategoryDescription2 =>
+      'Una colección de canciones para inspiración y adoración.';
+
+  @override
+  String get genericCategoryDescription3 =>
+      'Descubre himnos organizados por este tema.';
+
+  @override
+  String get genericCategoryDescription4 =>
+      'Canciones reunidas para momentos y ocasiones especiales.';
+
+  @override
+  String get genericCategoryDescription5 =>
+      'Disfruta de una variedad de himnos seleccionados para esta categoría.';
+
+  @override
+  String get genericCategoryDescription6 =>
+      'Una selección de himnos significativos.';
+
+  @override
+  String get genericCategoryDescription7 =>
+      'Encuentra canciones inspiradoras en esta sección.';
+
+  @override
+  String get genericCategoryDescription8 =>
+      'Himnos seleccionados para tu viaje espiritual.';
+
+  @override
+  String get genericCategoryDescription9 =>
+      'Navega canciones que se ajustan a esta categoría.';
+
+  @override
+  String get genericCategoryDescription10 =>
+      'Un grupo de himnos para enriquecer tu experiencia de adoración.';
+
+  @override
+  String get genericCategoryDescription11 =>
+      'Explora la colección de himnos en esta categoría.';
+
+  @override
+  String get genericCategoryDescription12 =>
+      'Canciones para inspirar y elevar.';
+
+  @override
+  String get genericCategoryDescription13 =>
+      'Una selección especial de himnos para este tema.';
+
+  @override
+  String get genericCategoryDescription14 =>
+      'Descubre nuevos favoritos en esta categoría.';
+
+  @override
+  String get genericCategoryDescription15 =>
+      'Canciones significativas para cada ocasión.';
 }

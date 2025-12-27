@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:songbooksofpraise_app/l10n/app_localizations.dart';
-import 'package:songbooksofpraise_app/pages/HomePage/tabs/HomeTab/HomeTab.dart';
-import 'package:songbooksofpraise_app/pages/HomePage/tabs/SettingsTab/SettingsTab.dart';
-import 'package:songbooksofpraise_app/pages/HomePage/tabs/SongbooksTab/SongbookTab.dart';
+import 'package:songbooksofpraise_app/pages/Tabs/HomeTab/HomeTab.dart';
+import 'package:songbooksofpraise_app/pages/Tabs/SettingsTab/SettingsTab.dart';
+import 'package:songbooksofpraise_app/pages/Tabs/SongbooksTab/SongbookTab.dart';
 import 'package:songbooksofpraise_app/Providers/AppBarProvider.dart';
 import 'package:songbooksofpraise_app/components/TabNavigator.dart';
 
 final homeTabKey = GlobalKey<NavigatorState>();
 final songbookTabKey = GlobalKey<NavigatorState>();
 // final favoritesTabKey = GlobalKey<NavigatorState>();
-final churchesTabKey = GlobalKey<NavigatorState>();
+// final churchesTabKey = GlobalKey<NavigatorState>();
 final settingsTabKey = GlobalKey<NavigatorState>();
 
 class HomePage extends StatefulWidget {
@@ -55,18 +55,18 @@ class _HomePageState extends State<HomePage> {
             ),
             child: const SongbookTab(),
           ),
-          TabNavigator(
-            navigatorKey: churchesTabKey,
-            child: ChangeNotifierProvider(
-              create: (_) => AppBarProvider(
-                AppBarState(
-                  title: localizations.churches,
-                  icon: Icons.church,
-                ),
-              ),
-              child: const Text('Churches Tab'),
-            ),
-          ),
+          // TabNavigator(
+          //   navigatorKey: churchesTabKey,
+          //   child: ChangeNotifierProvider(
+          //     create: (_) => AppBarProvider(
+          //       AppBarState(
+          //         title: localizations.churches,
+          //         icon: Icons.church,
+          //       ),
+          //     ),
+          //     child: const Text('Churches Tab'),
+          //   ),
+          // ),
           TabNavigator(
             navigatorKey: settingsTabKey,
             child: ChangeNotifierProvider(
@@ -103,10 +103,10 @@ class _HomePageState extends State<HomePage> {
             //   icon: Icon(Icons.favorite),
             //   label: 'Favorites',
             // ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.church),
-              label: localizations.churches,
-            ),
+            // BottomNavigationBarItem(
+            //   icon: Icon(Icons.church),
+            //   label: localizations.churches,
+            // ),
             BottomNavigationBarItem(
               icon: Icon(Icons.settings),
               label: localizations.settings,

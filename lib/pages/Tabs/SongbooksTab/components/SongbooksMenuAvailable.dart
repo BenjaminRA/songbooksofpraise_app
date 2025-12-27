@@ -8,24 +8,17 @@ import 'package:songbooksofpraise_app/db/DB.dart';
 import 'package:songbooksofpraise_app/helpers/render_date.dart';
 import 'package:songbooksofpraise_app/models/Category.dart';
 import 'package:songbooksofpraise_app/models/Songbook.dart';
-import 'package:songbooksofpraise_app/pages/HomePage/HomePage.dart';
-import 'package:songbooksofpraise_app/pages/HomePage/tabs/SongbooksTab/pages/SongbookPage.dart';
+import 'package:songbooksofpraise_app/pages/RootPage.dart';
+import 'package:songbooksofpraise_app/pages/Tabs/SongbooksTab/SongbookTab.dart';
+import 'package:songbooksofpraise_app/pages/Tabs/SongbooksTab/pages/SongbookPage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:toastification/toastification.dart';
 
-// class SongbooksMenuItem {
-//   final String title;
-//   final String? description;
-//   final int hymnCount;
-
-//   SongbooksMenuItem({required this.title, required this.hymnCount, this.description});
-// }
-
 class SongbooksMenuAvailable extends StatefulWidget {
   final List<Songbook> songbooks;
-  final Future<void> Function() onRefresh;
+  final SongbookCallbacks callbacks;
 
-  const SongbooksMenuAvailable({super.key, required this.songbooks, required this.onRefresh});
+  const SongbooksMenuAvailable({super.key, required this.songbooks, required this.callbacks});
 
   @override
   State<SongbooksMenuAvailable> createState() => _SongbooksMenuAvailableState();
@@ -34,7 +27,6 @@ class SongbooksMenuAvailable extends StatefulWidget {
 class _SongbooksMenuAvailableState extends State<SongbooksMenuAvailable> {
   // Songbook being loaded
   int? loadingSongbook;
-  List<int> downloadingSongbooks = [];
 
   void onSongbookTapHandler(Songbook item) async {
     setState(() => loadingSongbook = item.id);
@@ -77,88 +69,19 @@ class _SongbooksMenuAvailableState extends State<SongbooksMenuAvailable> {
   }
 
   void onDownloadTapHandler(Songbook item) async {
-    setState(() => downloadingSongbooks.add(item.id));
-
-    try {
-      final response = await API.get('songbooks/${item.id}/export');
-
-      await DB.updateDatabase(response.toString());
-
-      if (mounted) {
-        toastification.show(
-          context: context,
-          alignment: Alignment.bottomCenter,
-          title: Text(AppLocalizations.of(context)!.downloadedSuccessfully(item.title)),
-          type: ToastificationType.success,
-          // primaryColor: Theme.of(context).primaryColor,
-          icon: Icon(Icons.save),
-          dragToClose: true,
-          applyBlurEffect: true,
-          autoCloseDuration: const Duration(seconds: 5),
-        );
-      }
-    } catch (e) {
-      print('Error fetching export data: $e');
-    } finally {
-      setState(() => downloadingSongbooks.remove(item.id));
-      widget.onRefresh();
-    }
+    widget.callbacks.downloadSongbook(item);
   }
 
   void onUpdateTapHandler(Songbook item) async {
-    setState(() => downloadingSongbooks.add(item.id));
-
-    try {
-      final response = await API.get('songbooks/${item.id}/export');
-
-      await item.delete();
-
-      await DB.updateDatabase(response.toString());
-
-      if (mounted) {
-        toastification.show(
-          context: context,
-          alignment: Alignment.bottomCenter,
-          title: Text(AppLocalizations.of(context)!.updatedSuccessfully(item.title)),
-          type: ToastificationType.success,
-          // primaryColor: Theme.of(context).primaryColor,
-          icon: Icon(Icons.update),
-          dragToClose: true,
-          applyBlurEffect: true,
-          autoCloseDuration: const Duration(seconds: 5),
-        );
-      }
-    } catch (e) {
-      print('Error fetching export data: $e');
-    } finally {
-      setState(() => downloadingSongbooks.remove(item.id));
-      widget.onRefresh();
-    }
+    await widget.callbacks.updateSongbook(item);
   }
 
   void onDeleteTapHandler(Songbook item) async {
-    await item.delete();
-
-    if (mounted) {
-      toastification.show(
-        context: context,
-        alignment: Alignment.bottomCenter,
-        title: Text(AppLocalizations.of(context)!.deletedSuccessfully(item.title)),
-        type: ToastificationType.error,
-        // primaryColor: Theme.of(context).primaryColor,
-        icon: Icon(Icons.delete),
-        dragToClose: true,
-        applyBlurEffect: true,
-        autoCloseDuration: const Duration(seconds: 5),
-      );
-    }
-
-    widget.onRefresh();
+    await widget.callbacks.deleteSongbook(item);
   }
 
   Widget _buildSongbookItem(Songbook item, AppLocalizations localizations) {
     bool isLoading = loadingSongbook == item.id;
-    bool isDownloading = downloadingSongbooks.contains(item.id);
 
     return MaterialButton(
       elevation: 1.0,
@@ -244,22 +167,7 @@ class _SongbooksMenuAvailableState extends State<SongbooksMenuAvailable> {
                     ];
 
                     if (item.isInstalled) {
-                      // children.add(
-                      //   TextButton(
-                      //     style: TextButton.styleFrom(
-                      //       textStyle: Theme.of(context).textTheme.labelSmall?.copyWith(fontWeight: FontWeight.bold),
-                      //       visualDensity: VisualDensity.compact,
-                      //       foregroundColor: Theme.of(context).primaryColor,
-                      //       backgroundColor: Colors.white,
-                      //       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      //       disabledBackgroundColor: Colors.grey[300],
-                      //       disabledForegroundColor: Colors.white,
-                      //     ),
-                      //     onPressed: loadingSongbook == null ? () => onDeleteTapHandler(item) : null,
-                      //     child: Text(localizations.delete),
-                      //   ),
-                      // );
-                      if (item.updatedAvailable) {
+                      if (item.updateAvailable) {
                         children.add(
                           TextButton(
                             style: TextButton.styleFrom(
@@ -272,7 +180,7 @@ class _SongbooksMenuAvailableState extends State<SongbooksMenuAvailable> {
                               disabledForegroundColor: Colors.white,
                             ),
                             onPressed: loadingSongbook == null ? () => onUpdateTapHandler(item) : null,
-                            child: isDownloading ? SpinKitThreeBounce(color: Colors.white, size: 16.0) : Text(localizations.update),
+                            child: item.isDownloading ? SpinKitThreeBounce(color: Colors.white, size: 16.0) : Text(localizations.update),
                           ),
                         );
                       }
@@ -289,7 +197,7 @@ class _SongbooksMenuAvailableState extends State<SongbooksMenuAvailable> {
                             disabledForegroundColor: Colors.white,
                           ),
                           onPressed: loadingSongbook == null ? () => onDownloadTapHandler(item) : null,
-                          child: isDownloading ? SpinKitThreeBounce(color: Colors.white, size: 16.0) : Text(localizations.download),
+                          child: item.isDownloading ? SpinKitThreeBounce(color: Colors.white, size: 16.0) : Text(localizations.download),
                         ),
                       );
                     }

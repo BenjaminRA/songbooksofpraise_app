@@ -5,18 +5,20 @@ import 'package:provider/provider.dart';
 import 'package:songbooksofpraise_app/Providers/AppBarProvider.dart';
 import 'package:songbooksofpraise_app/api/api.dart';
 import 'package:songbooksofpraise_app/components/Breadcrumbs.dart';
+import 'package:songbooksofpraise_app/l10n/app_localizations.dart';
 import 'package:songbooksofpraise_app/models/Category.dart';
 import 'package:songbooksofpraise_app/models/Song.dart';
 import 'package:songbooksofpraise_app/models/Songbook.dart';
-import 'package:songbooksofpraise_app/pages/HomePage/HomePage.dart';
-import 'package:songbooksofpraise_app/pages/HomePage/tabs/SongbooksTab/helpers/renderCategories.dart';
-import 'package:songbooksofpraise_app/pages/HomePage/tabs/SongbooksTab/helpers/renderSongs.dart';
+import 'package:songbooksofpraise_app/pages/RootPage.dart';
+import 'package:songbooksofpraise_app/pages/Tabs/SongbooksTab/helpers/onCategoryTabHandler.dart';
+import 'package:songbooksofpraise_app/pages/Tabs/SongbooksTab/helpers/renderCategories.dart';
+import 'package:songbooksofpraise_app/pages/Tabs/SongbooksTab/helpers/renderSongs.dart';
 import 'package:songbooksofpraise_app/pages/SongPage/SongPage.dart';
 
 class CategoryPage extends StatefulWidget {
-  final List<Category> categoryRoute;
+  final Category category;
 
-  const CategoryPage({super.key, required this.categoryRoute});
+  const CategoryPage({super.key, required this.category});
 
   @override
   State<CategoryPage> createState() => _CategoryPageState();
@@ -26,79 +28,33 @@ class _CategoryPageState extends State<CategoryPage> {
   int? loadingCategory;
   int? loadingSong;
 
-  void onCategoryTapHandler(Category item) async {
-    if (item.subcategories.isEmpty) {
-      setState(() => loadingCategory = item.id);
-
-      try {
-        final response = await API.get('songbooks/${item.songbookID}/categories/${item.id}');
-
-        print(response['category']);
-
-        final category = Category.fromJson(response['category']);
-
-        category.songs.sort((a, b) {
-          final aValue = a.number != null ? '${a.number} - ${a.title}' : a.title;
-          final bValue = b.number != null ? '${b.number} - ${b.title}' : b.title;
-
-          if (a.number != null && b.number != null) {
-            return a.number! - b.number!;
-          }
-
-          return aValue.compareTo(bValue);
-        });
-
-        Provider.of<AppBarProvider>(context, listen: false).setTitle(
-          AppBarState(
-            title: Provider.of<AppBarProvider>(context, listen: false).state.title,
-            icon: Icons.library_books,
-          ),
-        );
-        songbookTabKey.currentState?.push(
-          MaterialPageRoute(
-            builder: (context) => CategoryPage(categoryRoute: [...widget.categoryRoute, category]),
-          ),
-        );
-      } catch (e) {
-        print('Error fetching category details: $e');
-      } finally {
-        if (mounted) {
-          setState(() => loadingCategory = null);
-        }
-      }
-    } else {
-      Provider.of<AppBarProvider>(context, listen: false).setTitle(
-        AppBarState(
-          title: Provider.of<AppBarProvider>(context, listen: false).state.title,
-          icon: Icons.library_books,
-        ),
-      );
-      songbookTabKey.currentState?.push(
-        MaterialPageRoute(
-          builder: (context) => CategoryPage(categoryRoute: [...widget.categoryRoute, item]),
-        ),
-      );
-    }
-  }
-
   void onSongTapHandler(Song item) async {
     setState(() => loadingSong = item.id);
     try {
-      final response = await API.get('songs/${item.id}');
+      Song? song = await Song.getSongByID(item.id);
 
-      final song = Song.fromJson(response['song']);
+      // If exists in local database
+      if (song == null) {
+        final response = await API.get('songs/${item.id}');
+
+        song = Song.fromJson(response['song']);
+      }
 
       Provider.of<AppBarProvider>(context, listen: false).setTitle(
         AppBarState(
           title: item.title,
           subtitle: item.number?.toString(),
           icon: Icons.music_note,
+          backgroundColor: Theme.of(context).primaryColor,
+          titleColor: Theme.of(context).scaffoldBackgroundColor,
+          subtitleColor: Theme.of(context).scaffoldBackgroundColor,
+          iconColor: Theme.of(context).scaffoldBackgroundColor,
         ),
       );
       songbookTabKey.currentState?.push(
         MaterialPageRoute(
           builder: (context) => SongPage(
-            song: song,
+            song: song!,
           ),
         ),
       );
@@ -112,34 +68,30 @@ class _CategoryPageState extends State<CategoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    final category = widget.categoryRoute.last;
-    const List<String> genericCategoryDescriptions = [
-      "Explore the hymns in this category.",
-      "A collection of songs for inspiration and worship.",
-      "Discover hymns organized by this theme.",
-      "Songs gathered for special moments and occasions.",
-      "Enjoy a variety of hymns selected for this category.",
-      "A selection of meaningful hymns.",
-      "Find uplifting songs in this section.",
-      "Hymns curated for your spiritual journey.",
-      "Browse songs that fit this category.",
-      "A group of hymns to enrich your worship experience.",
-      "Explore the collection of hymns in this category.",
-      "Songs to inspire and uplift.",
-      "A special selection of hymns for this topic.",
-      "Discover new favorites in this category.",
-      "Meaningful songs for every occasion.",
+    final breadcrumbs = Provider.of<AppBarProvider>(context).breadcrumbTitles;
+    AppLocalizations localizations = AppLocalizations.of(context)!;
+
+    final List<String> genericCategoryDescriptions = [
+      localizations.genericCategoryDescription1,
+      localizations.genericCategoryDescription2,
+      localizations.genericCategoryDescription3,
+      localizations.genericCategoryDescription4,
+      localizations.genericCategoryDescription5,
+      localizations.genericCategoryDescription6,
+      localizations.genericCategoryDescription7,
+      localizations.genericCategoryDescription8,
+      localizations.genericCategoryDescription9,
+      localizations.genericCategoryDescription10,
+      localizations.genericCategoryDescription11,
+      localizations.genericCategoryDescription12,
+      localizations.genericCategoryDescription13,
+      localizations.genericCategoryDescription14,
+      localizations.genericCategoryDescription15,
     ];
 
-    List<String> breadcrumbsItems = ['Songbooks', Provider.of<AppBarProvider>(context, listen: false).state.title];
+    List<String> breadcrumbsItems = breadcrumbs;
 
-    for (int i = 0; i < widget.categoryRoute.length; i++) {
-      breadcrumbsItems.add(
-        widget.categoryRoute[i].name,
-      );
-    }
-
-    if (category.subcategories.isEmpty) {
+    if (widget.category.subcategories.isEmpty) {
       return Scaffold(
         body: ListView(
           children: [
@@ -149,7 +101,7 @@ class _CategoryPageState extends State<CategoryPage> {
               child: Column(
                 children: [
                   Text(
-                    category.name,
+                    widget.category.id == -1 ? localizations.all : widget.category.name,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8.0),
@@ -166,7 +118,7 @@ class _CategoryPageState extends State<CategoryPage> {
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Column(
                 spacing: 16.0,
-                children: category.songs
+                children: widget.category.songs
                     .map(
                       (item) => renderSongs(
                         context,
@@ -192,12 +144,12 @@ class _CategoryPageState extends State<CategoryPage> {
             child: Column(
               children: [
                 Text(
-                  'Browse Categories',
+                  localizations.browseCategories,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8.0),
                 Text(
-                  'Explore hymns organized by themes and occasions',
+                  localizations.exploreCategoriesDescription,
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
                 ),
@@ -209,12 +161,16 @@ class _CategoryPageState extends State<CategoryPage> {
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Column(
               spacing: 16.0,
-              children: category.subcategories
+              children: widget.category.subcategories
                   .map(
                     (item) => renderCategories(
                       context,
                       item,
-                      onPressed: () => onCategoryTapHandler(item),
+                      onPressed: () async {
+                        setState(() => loadingCategory = item.id);
+                        await onCategoryTapHandler(context, item);
+                        setState(() => loadingCategory = null);
+                      },
                       loadingCategory: loadingCategory,
                     ),
                   )

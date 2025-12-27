@@ -14,7 +14,8 @@ class Songbook {
   DateTime updatedAt;
 
   bool isInstalled = false;
-  bool updatedAvailable = false;
+  bool updateAvailable = false;
+  bool isDownloading = false;
 
   Songbook({
     required this.id,
@@ -24,7 +25,7 @@ class Songbook {
     required this.updatedAt,
     required this.categories,
     this.isInstalled = false,
-    this.updatedAvailable = false,
+    this.updateAvailable = false,
     this.songCount = 0,
   }) {
     // songCount = _getSongCount();
@@ -50,7 +51,38 @@ class Songbook {
         (SELECT COUNT(*) FROM songs WHERE songs.songbook_id = songbooks.id) as song_count 
       FROM songbooks
     ''');
-    return Songbook.fromJson(rows);
+
+    List<Songbook> songbooks = [];
+
+    for (dynamic row in rows) {
+      DateTime updatedAt = _stripMilliseconds(DateTime.parse(row['updated_at']));
+
+      songbooks.add(
+        Songbook(
+          id: row['id'],
+          title: row['title'],
+          // description: item['description'],
+          createdAt: DateTime.parse(row['created_at']),
+          updatedAt: updatedAt,
+          songCount: row['song_count'],
+          isInstalled: true,
+          updateAvailable: false,
+          categories: [
+            Category(
+              id: -1,
+              name: 'All',
+              songs: [],
+              subcategories: [],
+              songbookID: row['id'],
+              songCount: row['song_count'],
+            ),
+            ...await Category.getCategoriesBySongbookID(row['id'])
+          ],
+        ),
+      );
+    }
+
+    return songbooks;
   }
 
   static Future<List<Songbook>> fromJson(List<dynamic> json) async {
@@ -68,7 +100,7 @@ class Songbook {
         updatedAt: updatedAt,
         songCount: item['song_count'],
         isInstalled: installedMap.containsKey(item['id']),
-        updatedAvailable: installedMap.containsKey(item['id']) ? updatedAt.isAfter(installedMap[item['id']]!) : false,
+        updateAvailable: installedMap.containsKey(item['id']) ? updatedAt.isAfter(installedMap[item['id']]!) : false,
         categories: item['categories'] != null ? (item['categories'] as List<dynamic>).map((cat) => Category.fromJson(cat)).toList() : [],
       );
     }).toList();

@@ -216,6 +216,10 @@
   "@update": {
     "description": "Texto del botón actualizar"
   },
+  "updating": "Actualizando",
+  "@updating": {
+    "description": "Texto del botón actualizando"
+  },
   "delete": "Eliminar",
   "@delete": {
     "description": "Texto del botón eliminar"
@@ -292,5 +296,89 @@
         "type": "String"
       }
     }
+  },
+  "chords": "Acordes",
+  "@chords": {
+    "description": "Etiqueta de acordes"
+  },
+  "sheet": "Partitura",
+  "@sheet": {
+    "description": "Etiqueta de partitura"
+  },
+  "verse": "Verso",
+  "@verse": {
+    "description": "Etiqueta de verso"
+  },
+  "chorus": "Coro",
+  "@chorus": {
+    "description": "Etiqueta de coro"
+  },
+  "bridge": "Puente",
+  "@bridge": {
+    "description": "Etiqueta de puente"
+  },
+  "all": "Todos",
+  "@all": {
+    "description": "Opción de todas las categorías"
+  },
+  "genericCategoryDescription1": "Explora los himnos de esta categoría.",
+  "@genericCategoryDescription1": {
+    "description": "Descripción genérica de categoría 1"
+  },
+  "genericCategoryDescription2": "Una colección de canciones para inspiración y adoración.",
+  "@genericCategoryDescription2": {
+    "description": "Descripción genérica de categoría 2"
+  },
+  "genericCategoryDescription3": "Descubre himnos organizados por este tema.",
+  "@genericCategoryDescription3": {
+    "description": "Descripción genérica de categoría 3"
+  },
+  "genericCategoryDescription4": "Canciones reunidas para momentos y ocasiones especiales.",
+  "@genericCategoryDescription4": {
+    "description": "Descripción genérica de categoría 4"
+  },
+  "genericCategoryDescription5": "Disfruta de una variedad de himnos seleccionados para esta categoría.",
+  "@genericCategoryDescription5": {
+    "description": "Descripción genérica de categoría 5"
+  },
+  "genericCategoryDescription6": "Una selección de himnos significativos.",
+  "@genericCategoryDescription6": {
+    "description": "Descripción genérica de categoría 6"
+  },
+  "genericCategoryDescription7": "Encuentra canciones inspiradoras en esta sección.",
+  "@genericCategoryDescription7": {
+    "description": "Descripción genérica de categoría 7"
+  },
+  "genericCategoryDescription8": "Himnos seleccionados para tu viaje espiritual.",
+  "@genericCategoryDescription8": {
+    "description": "Descripción genérica de categoría 8"
+  },
+  "genericCategoryDescription9": "Navega canciones que se ajustan a esta categoría.",
+  "@genericCategoryDescription9": {
+    "description": "Descripción genérica de categoría 9"
+  },
+  "genericCategoryDescription10": "Un grupo de himnos para enriquecer tu experiencia de adoración.",
+  "@genericCategoryDescription10": {
+    "description": "Descripción genérica de categoría 10"
+  },
+  "genericCategoryDescription11": "Explora la colección de himnos en esta categoría.",
+  "@genericCategoryDescription11": {
+    "description": "Descripción genérica de categoría 11"
+  },
+  "genericCategoryDescription12": "Canciones para inspirar y elevar.",
+  "@genericCategoryDescription12": {
+    "description": "Descripción genérica de categoría 12"
+  },
+  "genericCategoryDescription13": "Una selección especial de himnos para este tema.",
+  "@genericCategoryDescription13": {
+    "description": "Descripción genérica de categoría 13"
+  },
+  "genericCategoryDescription14": "Descubre nuevos favoritos en esta categoría.",
+  "@genericCategoryDescription14": {
+    "description": "Descripción genérica de categoría 14"
+  },
+  "genericCategoryDescription15": "Canciones significativas para cada ocasión.",
+  "@genericCategoryDescription15": {
+    "description": "Descripción genérica de categoría 15"
   }
 }

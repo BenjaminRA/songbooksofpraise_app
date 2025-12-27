@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:songbooksofpraise_app/Providers/SettingsProvider.dart';
-import 'package:songbooksofpraise_app/pages/HomePage/tabs/SettingsTab/components/SettingsRow.dart';
+import 'package:songbooksofpraise_app/pages/Tabs/SettingsTab/components/SettingsRow.dart';
 import 'package:songbooksofpraise_app/l10n/app_localizations.dart';
 
 class MusicAndAudioSection extends StatefulWidget {

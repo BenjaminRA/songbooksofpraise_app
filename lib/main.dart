@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:songbooksofpraise_app/Providers/SettingsProvider.dart';
 import 'package:songbooksofpraise_app/db/DB.dart';
 import 'package:songbooksofpraise_app/l10n/app_localizations.dart';
-import 'package:songbooksofpraise_app/pages/HomePage/HomePage.dart';
+import 'package:songbooksofpraise_app/pages/RootPage.dart';
 import 'package:songbooksofpraise_app/components/SlideInFromRightPageBuilder.dart';
 import 'l10n/l10n.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -131,6 +131,21 @@ class MyApp extends StatelessWidget {
           selectedLabelStyle: TextStyle(fontSize: 14.0),
           // selectedIconTheme: IconThemeData(size: 28.0),
           // unselectedIconTheme: IconThemeData(size: 24.0),
+        ),
+        chipTheme: ChipThemeData(
+          selectedColor: primaryColor,
+          disabledColor: Colors.white,
+          iconTheme: const IconThemeData(
+            color: Colors.white,
+          ),
+          secondaryLabelStyle: const TextStyle(
+            fontWeight: FontWeight.w500,
+            color: Colors.white,
+          ),
+          labelStyle: const TextStyle(
+            fontWeight: FontWeight.w500,
+            color: primaryColor,
+          ),
         ),
         dropdownMenuTheme: DropdownMenuThemeData(
           textStyle: TextStyle(
