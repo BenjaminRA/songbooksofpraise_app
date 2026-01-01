@@ -101,6 +101,14 @@ class DB {
       );
     ''');
 
+    batch.execute('''
+      CREATE TABLE IF NOT EXISTS recently_played_songs (
+        song_id INTEGER NOT NULL,
+        played_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (song_id) REFERENCES songs(id) ON DELETE CASCADE
+      );
+    ''');
+
     await batch.commit();
 
     db.close();

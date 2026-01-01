@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:songbooksofpraise_app/Providers/AppBarProvider.dart';
 import 'package:songbooksofpraise_app/Providers/SettingsProvider.dart';
+import 'package:songbooksofpraise_app/db/DB.dart';
 import 'package:songbooksofpraise_app/pages/SongPage/components/SongLyrics.dart';
 import 'package:songbooksofpraise_app/l10n/app_localizations.dart';
 import 'package:songbooksofpraise_app/models/Song.dart';
@@ -26,9 +27,19 @@ class _SongPageState extends State<SongPage> {
   @override
   void initState() {
     super.initState();
+
+    registerRecentlyPlayedSong();
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _updateAppBarActions();
     });
+  }
+
+  void registerRecentlyPlayedSong() async {
+    DB.rawInsert('''
+      INSERT INTO recently_played_songs (song_id, played_at)
+      VALUES (?, CURRENT_TIMESTAMP);
+    ''', arguments: [widget.song.id]);
   }
 
   void _updateAppBarActions() {
@@ -49,10 +60,37 @@ class _SongPageState extends State<SongPage> {
   }
 
   double getInitialFontSize() {
-    double width = MediaQuery.of(context).size.width;
-    int longestLine = widget.song.lyrics.split('\n').map((line) => line.length).reduce((a, b) => a > b ? a : b);
+    // Get screen dimensions
+    final screenWidth = MediaQuery.of(context).size.width;
+    final textScaleFactor = MediaQuery.of(context).textScaler.scale(1.0);
 
-    return MediaQuery.of(context).textScaler.scale(width * 0.061 - longestLine * 0.22);
+    // Account for horizontal padding (16.0 on each side from ListView padding)
+    final availableWidth = screenWidth - 32.0;
+
+    // Find the longest line in the lyrics
+    final lines = widget.song.lyrics.split('\n');
+    if (lines.isEmpty) return 16.0; // Default fallback
+
+    final longestLineLength = lines.map((line) => line.trim().length).reduce((a, b) => a > b ? a : b);
+
+    if (longestLineLength == 0) return 16.0; // Default fallback
+
+    // Set reasonable bounds for font size
+    const minFontSize = 12.0;
+    const maxFontSize = 20.0;
+
+    // Average character width is approximately 0.55 * fontSize for most fonts
+    // This accounts for variable-width fonts and typical character distributions
+    const avgCharWidthRatio = 0.55;
+
+    // Calculate ideal font size to fit the longest line
+    // Formula: availableWidth = longestLineLength * (fontSize * avgCharWidthRatio * textScaleFactor)
+    double idealFontSize = availableWidth / (longestLineLength * avgCharWidthRatio * textScaleFactor);
+
+    // Clamp the font size within reasonable bounds
+    double fontSize = idealFontSize.clamp(minFontSize, maxFontSize);
+
+    return fontSize;
   }
 
   bool getInitialShowChords() {
@@ -66,6 +104,7 @@ class _SongPageState extends State<SongPage> {
 
     return Scaffold(
       body: ListView(
+        physics: BouncingScrollPhysics(),
         // padding: const EdgeInsets.all(16.0),
         children: [
           AnimatedContainer(

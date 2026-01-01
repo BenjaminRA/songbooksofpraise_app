@@ -26,6 +26,7 @@ class _HomeTabState extends State<HomeTab> {
             HomePageSearchBar(),
             Expanded(
               child: ListView(
+                physics: BouncingScrollPhysics(),
                 children: const <Widget>[
                   ExploreSection(),
                   RecentlyPlayedSection(),

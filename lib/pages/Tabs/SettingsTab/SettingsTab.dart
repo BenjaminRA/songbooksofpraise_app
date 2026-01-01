@@ -26,6 +26,7 @@ class _SettingsTabState extends State<SettingsTab> {
     return Scaffold(
       appBar: AppBarWithProvider(settingsTabKey),
       body: ListView.separated(
+        physics: BouncingScrollPhysics(),
         padding: EdgeInsets.symmetric(horizontal: 14.0, vertical: 16.0),
         separatorBuilder: (BuildContext context, int index) {
           return SizedBox(height: 12.0);

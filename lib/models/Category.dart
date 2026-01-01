@@ -1,5 +1,6 @@
 import 'package:songbooksofpraise_app/db/DB.dart';
 import 'package:songbooksofpraise_app/models/Song.dart';
+import 'package:songbooksofpraise_app/models/Songbook.dart';
 
 class Category {
   int id;
@@ -118,6 +119,9 @@ class Category {
 
     // Special case for "All" category
     if (id == -1) {
+      // If Songbook doesn't exists, we go to the API returning null here
+      if (await DB.rawQuery('SELECT * FROM songbooks WHERE id = ?;', arguments: [songbookID]).then((rows) => rows.isEmpty)) return null;
+
       final category = Category(
         id: -1,
         name: 'All',

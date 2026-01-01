@@ -28,6 +28,7 @@ class _SongbookPageState extends State<SongbookPage> {
     AppLocalizations localizations = AppLocalizations.of(context)!;
     return Scaffold(
       body: ListView(
+        physics: BouncingScrollPhysics(),
         children: [
           Breadcrumbs(items: [localizations.songbooks, widget.songbook.title]),
           Container(

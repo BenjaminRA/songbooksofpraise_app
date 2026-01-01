@@ -66,11 +66,15 @@ class SongLyrics extends StatelessWidget {
           if (showChords) {
             // If chords are to be shown, format the line with chords
             for (var match in chordRegex.allMatches(line)) {
+              // The lyrics between the chords
               lyricsSpans.add(
                 TextSpan(
                   text: line.substring(
                     lastChordEnd,
-                    max(0, match.start - 1 - lastChordSize), // In case the lyrics start with a chord
+                    max(
+                        lastChordEnd + 1, // In case there are no lyrics between chords
+                        max(0, match.start - 1 - lastChordSize) // In case the lyrics start with a chord
+                        ),
                   ),
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
@@ -81,6 +85,7 @@ class SongLyrics extends StatelessWidget {
               lastChordEnd = match.end;
               lastChordSize = match.group(0)!.length - 2; // Exclude the brackets
 
+              // Add the chord
               lyricsSpans.add(
                 TextSpan(
                   text: '${match.group(1)![0].toUpperCase()}${match.group(1)!.substring(1)}',

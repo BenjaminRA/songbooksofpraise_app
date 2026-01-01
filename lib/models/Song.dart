@@ -1,4 +1,5 @@
 import 'package:songbooksofpraise_app/db/DB.dart';
+import 'package:songbooksofpraise_app/pages/Tabs/HomeTab/components/RecentlyPlayedSection.dart';
 
 class Song {
   int id;
@@ -128,5 +129,32 @@ class Song {
       created_at: DateTime.parse(json['created_at']),
       updated_at: DateTime.parse(json['updated_at']),
     );
+  }
+
+  static Future<List<RecentlyPlayedSectionItem>> GetRecentlyPlayedSongs(int limit, [int offset = 0]) async {
+    final rows = await DB.rawQuery('''
+      SELECT 
+        songs.*,
+        recently_played_songs.played_at,
+        songbooks.title AS songbook_title 
+      FROM songs
+      JOIN songbooks ON songs.songbook_id = songbooks.id
+      LEFT JOIN recently_played_songs ON songs.id = recently_played_songs.song_id
+      ORDER BY recently_played_songs.played_at DESC
+      LIMIT ? OFFSET ?;
+    ''', arguments: [limit, offset]);
+
+    List<RecentlyPlayedSectionItem> songs = [];
+
+    for (dynamic row in rows) {
+      songs.add(RecentlyPlayedSectionItem(
+        number: row['number'],
+        title: row['title'],
+        songbook: row['songbook_title'],
+        lastPlayed: row['played_at'] != null ? DateTime.parse(row['played_at']) : null,
+      ));
+    }
+
+    return songs;
   }
 }

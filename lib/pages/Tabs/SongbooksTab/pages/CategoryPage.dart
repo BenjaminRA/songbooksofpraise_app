@@ -94,6 +94,7 @@ class _CategoryPageState extends State<CategoryPage> {
     if (widget.category.subcategories.isEmpty) {
       return Scaffold(
         body: ListView(
+          physics: BouncingScrollPhysics(),
           children: [
             Breadcrumbs(items: breadcrumbsItems),
             Container(
@@ -137,6 +138,7 @@ class _CategoryPageState extends State<CategoryPage> {
 
     return Scaffold(
       body: ListView(
+        physics: BouncingScrollPhysics(),
         children: [
           Breadcrumbs(items: breadcrumbsItems),
           Container(

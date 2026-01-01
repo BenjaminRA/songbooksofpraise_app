@@ -7,7 +7,7 @@ String renderLastPlayedText(DateTime? lastPlayed) {
   final difference = now.difference(lastPlayed);
 
   if (difference.inDays > 30) {
-    return 'Played ${lastPlayed.month}/${lastPlayed.day}';
+    return 'Played ${lastPlayed.year}/${lastPlayed.month}/${lastPlayed.day}';
   }
 
   if (difference.inDays > 0) {

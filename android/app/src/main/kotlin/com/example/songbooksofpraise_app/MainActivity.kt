@@ -1,4 +1,4 @@
-package com.example.songbooksofpraise_app
+package com.songbooksofpraise.app
 
 import io.flutter.embedding.android.FlutterActivity
 
