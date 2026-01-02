@@ -380,5 +380,67 @@
   "genericCategoryDescription15": "Meaningful songs for every occasion.",
   "@genericCategoryDescription15": {
     "description": "Generic category description 15"
+  },
+  "neverPlayed": "Never played",
+  "@neverPlayed": {
+    "description": "Text shown when a song has never been played"
+  },
+  "playedOnDate": "Played {year}/{month}/{day}",
+  "@playedOnDate": {
+    "description": "Text shown when a song was played on a specific date",
+    "placeholders": {
+      "year": {
+        "type": "int"
+      },
+      "month": {
+        "type": "int"
+      },
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "playedYesterday": "Played yesterday",
+  "@playedYesterday": {
+    "description": "Text shown when a song was played yesterday"
+  },
+  "playedDaysAgo": "Played {days} days ago",
+  "@playedDaysAgo": {
+    "description": "Text shown when a song was played multiple days ago",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "playedOneHourAgo": "Played 1 hour ago",
+  "@playedOneHourAgo": {
+    "description": "Text shown when a song was played one hour ago"
+  },
+  "playedHoursAgo": "Played {hours} hours ago",
+  "@playedHoursAgo": {
+    "description": "Text shown when a song was played multiple hours ago",
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "playedOneMinuteAgo": "Played 1 minute ago",
+  "@playedOneMinuteAgo": {
+    "description": "Text shown when a song was played one minute ago"
+  },
+  "playedMinutesAgo": "Played {minutes} minutes ago",
+  "@playedMinutesAgo": {
+    "description": "Text shown when a song was played multiple minutes ago",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "playedJustNow": "Played just now",
+  "@playedJustNow": {
+    "description": "Text shown when a song was played just now"
   }
 }

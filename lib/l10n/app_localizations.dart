@@ -601,6 +601,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Meaningful songs for every occasion.'**
   String get genericCategoryDescription15;
+
+  /// Text shown when a song has never been played
+  ///
+  /// In en, this message translates to:
+  /// **'Never played'**
+  String get neverPlayed;
+
+  /// Text shown when a song was played on a specific date
+  ///
+  /// In en, this message translates to:
+  /// **'Played {year}/{month}/{day}'**
+  String playedOnDate(int year, int month, int day);
+
+  /// Text shown when a song was played yesterday
+  ///
+  /// In en, this message translates to:
+  /// **'Played yesterday'**
+  String get playedYesterday;
+
+  /// Text shown when a song was played multiple days ago
+  ///
+  /// In en, this message translates to:
+  /// **'Played {days} days ago'**
+  String playedDaysAgo(int days);
+
+  /// Text shown when a song was played one hour ago
+  ///
+  /// In en, this message translates to:
+  /// **'Played 1 hour ago'**
+  String get playedOneHourAgo;
+
+  /// Text shown when a song was played multiple hours ago
+  ///
+  /// In en, this message translates to:
+  /// **'Played {hours} hours ago'**
+  String playedHoursAgo(int hours);
+
+  /// Text shown when a song was played one minute ago
+  ///
+  /// In en, this message translates to:
+  /// **'Played 1 minute ago'**
+  String get playedOneMinuteAgo;
+
+  /// Text shown when a song was played multiple minutes ago
+  ///
+  /// In en, this message translates to:
+  /// **'Played {minutes} minutes ago'**
+  String playedMinutesAgo(int minutes);
+
+  /// Text shown when a song was played just now
+  ///
+  /// In en, this message translates to:
+  /// **'Played just now'**
+  String get playedJustNow;
 }
 
 class _AppLocalizationsDelegate

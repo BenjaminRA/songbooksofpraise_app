@@ -296,4 +296,39 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get genericCategoryDescription15 =>
       'Canciones significativas para cada ocasión.';
+
+  @override
+  String get neverPlayed => 'Nunca reproducido';
+
+  @override
+  String playedOnDate(int year, int month, int day) {
+    return 'Reproducido $year/$month/$day';
+  }
+
+  @override
+  String get playedYesterday => 'Reproducido ayer';
+
+  @override
+  String playedDaysAgo(int days) {
+    return 'Reproducido hace $days días';
+  }
+
+  @override
+  String get playedOneHourAgo => 'Reproducido hace 1 hora';
+
+  @override
+  String playedHoursAgo(int hours) {
+    return 'Reproducido hace $hours horas';
+  }
+
+  @override
+  String get playedOneMinuteAgo => 'Reproducido hace 1 minuto';
+
+  @override
+  String playedMinutesAgo(int minutes) {
+    return 'Reproducido hace $minutes minutos';
+  }
+
+  @override
+  String get playedJustNow => 'Reproducido justo ahora';
 }

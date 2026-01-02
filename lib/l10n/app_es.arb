@@ -380,5 +380,67 @@
   "genericCategoryDescription15": "Canciones significativas para cada ocasión.",
   "@genericCategoryDescription15": {
     "description": "Descripción genérica de categoría 15"
+  },
+  "neverPlayed": "Nunca reproducido",
+  "@neverPlayed": {
+    "description": "Texto mostrado cuando una canción nunca ha sido reproducida"
+  },
+  "playedOnDate": "Reproducido {year}/{month}/{day}",
+  "@playedOnDate": {
+    "description": "Texto mostrado cuando una canción fue reproducida en una fecha específica",
+    "placeholders": {
+      "year": {
+        "type": "int"
+      },
+      "month": {
+        "type": "int"
+      },
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "playedYesterday": "Reproducido ayer",
+  "@playedYesterday": {
+    "description": "Texto mostrado cuando una canción fue reproducida ayer"
+  },
+  "playedDaysAgo": "Reproducido hace {days} días",
+  "@playedDaysAgo": {
+    "description": "Texto mostrado cuando una canción fue reproducida hace varios días",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "playedOneHourAgo": "Reproducido hace 1 hora",
+  "@playedOneHourAgo": {
+    "description": "Texto mostrado cuando una canción fue reproducida hace una hora"
+  },
+  "playedHoursAgo": "Reproducido hace {hours} horas",
+  "@playedHoursAgo": {
+    "description": "Texto mostrado cuando una canción fue reproducida hace varias horas",
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "playedOneMinuteAgo": "Reproducido hace 1 minuto",
+  "@playedOneMinuteAgo": {
+    "description": "Texto mostrado cuando una canción fue reproducida hace un minuto"
+  },
+  "playedMinutesAgo": "Reproducido hace {minutes} minutos",
+  "@playedMinutesAgo": {
+    "description": "Texto mostrado cuando una canción fue reproducida hace varios minutos",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "playedJustNow": "Reproducido justo ahora",
+  "@playedJustNow": {
+    "description": "Texto mostrado cuando una canción fue reproducida justo ahora"
   }
 }

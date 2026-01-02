@@ -97,7 +97,7 @@ class _RecentlyPlayedSectionState extends State<RecentlyPlayedSection> {
                 Text(item.title, style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold)),
                 const SizedBox(height: 2),
                 Text(
-                  '${item.songbook} • ${item.lastPlayed}',
+                  '${item.songbook} • ${renderLastPlayedText(context, item.lastPlayed)}',
                   style: Theme.of(context).textTheme.labelSmall,
                 ),
               ],

@@ -15,6 +15,8 @@ class HomeTab extends StatefulWidget {
 }
 
 class _HomeTabState extends State<HomeTab> {
+  Key _refreshKey = UniqueKey();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,14 +27,23 @@ class _HomeTabState extends State<HomeTab> {
           children: [
             HomePageSearchBar(),
             Expanded(
-              child: ListView(
-                physics: BouncingScrollPhysics(),
-                children: const <Widget>[
-                  ExploreSection(),
-                  RecentlyPlayedSection(),
-                  PopularThisWeekSection(),
-                  SizedBox(height: 20.0),
-                ],
+              child: RefreshIndicator(
+                child: ListView(
+                  key: _refreshKey,
+                  physics: BouncingScrollPhysics(),
+                  children: const <Widget>[
+                    ExploreSection(),
+                    RecentlyPlayedSection(),
+                    PopularThisWeekSection(),
+                    SizedBox(height: 20.0),
+                  ],
+                ),
+                onRefresh: () async {
+                  // Force rebuild of all ListView items by changing the key
+                  setState(() {
+                    _refreshKey = UniqueKey();
+                  });
+                },
               ),
             ),
           ],
