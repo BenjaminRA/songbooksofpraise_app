@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:songbooksofpraise_app/Providers/AppBarProvider.dart';
 import 'package:songbooksofpraise_app/api/api.dart';
 import 'package:songbooksofpraise_app/components/Breadcrumbs.dart';
+import 'package:songbooksofpraise_app/components/ListBuilder.dart';
 import 'package:songbooksofpraise_app/l10n/app_localizations.dart';
 import 'package:songbooksofpraise_app/models/Category.dart';
 import 'package:songbooksofpraise_app/models/Song.dart';
@@ -27,6 +28,42 @@ class CategoryPage extends StatefulWidget {
 class _CategoryPageState extends State<CategoryPage> {
   int? loadingCategory;
   int? loadingSong;
+  String categoryDescription = '';
+
+  @override
+  void initState() {
+    super.initState();
+
+    getCategoryDescription();
+  }
+
+  Future<void> getCategoryDescription() async {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      AppLocalizations localizations = AppLocalizations.of(context)!;
+
+      final List<String> genericCategoryDescriptions = [
+        localizations.genericCategoryDescription1,
+        localizations.genericCategoryDescription2,
+        localizations.genericCategoryDescription3,
+        localizations.genericCategoryDescription4,
+        localizations.genericCategoryDescription5,
+        localizations.genericCategoryDescription6,
+        localizations.genericCategoryDescription7,
+        localizations.genericCategoryDescription8,
+        localizations.genericCategoryDescription9,
+        localizations.genericCategoryDescription10,
+        localizations.genericCategoryDescription11,
+        localizations.genericCategoryDescription12,
+        localizations.genericCategoryDescription13,
+        localizations.genericCategoryDescription14,
+        localizations.genericCategoryDescription15,
+      ];
+
+      setState(() {
+        categoryDescription = genericCategoryDescriptions[Random().nextInt(genericCategoryDescriptions.length)];
+      });
+    });
+  }
 
   void onSongTapHandler(Song item) async {
     setState(() => loadingSong = item.id);
@@ -71,24 +108,6 @@ class _CategoryPageState extends State<CategoryPage> {
     final breadcrumbs = Provider.of<AppBarProvider>(context).breadcrumbTitles;
     AppLocalizations localizations = AppLocalizations.of(context)!;
 
-    final List<String> genericCategoryDescriptions = [
-      localizations.genericCategoryDescription1,
-      localizations.genericCategoryDescription2,
-      localizations.genericCategoryDescription3,
-      localizations.genericCategoryDescription4,
-      localizations.genericCategoryDescription5,
-      localizations.genericCategoryDescription6,
-      localizations.genericCategoryDescription7,
-      localizations.genericCategoryDescription8,
-      localizations.genericCategoryDescription9,
-      localizations.genericCategoryDescription10,
-      localizations.genericCategoryDescription11,
-      localizations.genericCategoryDescription12,
-      localizations.genericCategoryDescription13,
-      localizations.genericCategoryDescription14,
-      localizations.genericCategoryDescription15,
-    ];
-
     List<String> breadcrumbsItems = breadcrumbs;
 
     if (widget.category.subcategories.isEmpty) {
@@ -107,7 +126,7 @@ class _CategoryPageState extends State<CategoryPage> {
                   ),
                   const SizedBox(height: 8.0),
                   Text(
-                    genericCategoryDescriptions[Random().nextInt(genericCategoryDescriptions.length)],
+                    categoryDescription,
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
                   ),
@@ -117,19 +136,32 @@ class _CategoryPageState extends State<CategoryPage> {
             Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Column(
-                spacing: 16.0,
-                children: widget.category.songs
+              child: ListBuilder(
+                groupBy: (item) => item.number != null ? '' : item.title[0].toUpperCase(),
+                items: widget.category.songs
                     .map(
-                      (item) => renderSongs(
-                        context,
-                        item,
-                        onPressed: () => onSongTapHandler(item),
-                        loadingSong: loadingSong,
+                      (item) => ListBuilderItem(
+                        title: item.title,
+                        number: item.number,
+                        onTap: () => onSongTapHandler(item),
+                        loading: loadingSong == item.id,
                       ),
                     )
                     .toList(),
               ),
+              // child: Column(
+              //   spacing: 16.0,
+              //   children: widget.category.songs
+              //       .map(
+              //         (item) => renderSongs(
+              //           context,
+              //           item,
+              //           onPressed: () => onSongTapHandler(item),
+              //           loadingSong: loadingSong,
+              //         ),
+              //       )
+              //       .toList(),
+              // ),
             ),
           ],
         ),
@@ -161,22 +193,27 @@ class _CategoryPageState extends State<CategoryPage> {
           Container(
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Column(
-              spacing: 16.0,
-              children: widget.category.subcategories
-                  .map(
-                    (item) => renderCategories(
-                      context,
-                      item,
-                      onPressed: () async {
-                        setState(() => loadingCategory = item.id);
-                        await onCategoryTapHandler(context, item);
-                        setState(() => loadingCategory = null);
-                      },
-                      loadingCategory: loadingCategory,
-                    ),
-                  )
-                  .toList(),
+            child: Builder(
+              builder: (context) {
+                List<Widget> children = widget.category.subcategories
+                    .map(
+                      (item) => renderCategories(
+                        context,
+                        item,
+                        onPressed: () async {
+                          setState(() => loadingCategory = item.id);
+                          await onCategoryTapHandler(context, item);
+                          setState(() => loadingCategory = null);
+                        },
+                        loadingCategory: loadingCategory,
+                      ),
+                    )
+                    .toList();
+
+                children.add(SizedBox(height: 20.0));
+
+                return Column(spacing: 16.0, children: children);
+              },
             ),
           ),
           // ActiveSongbookSection(songbook: widget.songbook),
