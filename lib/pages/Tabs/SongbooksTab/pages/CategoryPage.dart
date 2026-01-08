@@ -112,58 +112,42 @@ class _CategoryPageState extends State<CategoryPage> {
 
     if (widget.category.subcategories.isEmpty) {
       return Scaffold(
-        body: ListView(
-          physics: BouncingScrollPhysics(),
-          children: [
-            Breadcrumbs(items: breadcrumbsItems),
-            Container(
-              padding: EdgeInsets.only(top: 24.0, bottom: 28.0),
-              child: Column(
-                children: [
-                  Text(
-                    widget.category.id == -1 ? localizations.all : widget.category.name,
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 8.0),
-                  Text(
-                    categoryDescription,
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
-                  ),
-                ],
-              ),
+        body: ListBuilder(
+          slivers: [
+            SliverToBoxAdapter(
+              child: Breadcrumbs(items: breadcrumbsItems),
             ),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: ListBuilder(
-                groupBy: (item) => item.number != null ? '' : item.title[0].toUpperCase(),
-                items: widget.category.songs
-                    .map(
-                      (item) => ListBuilderItem(
-                        title: item.title,
-                        number: item.number,
-                        onTap: () => onSongTapHandler(item),
-                        loading: loadingSong == item.id,
-                      ),
-                    )
-                    .toList(),
+            SliverToBoxAdapter(
+              child: Container(
+                padding: EdgeInsets.only(top: 24.0, bottom: 28.0),
+                child: Column(
+                  children: [
+                    Text(
+                      widget.category.id == -1 ? localizations.all : widget.category.name,
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 8.0),
+                    Text(
+                      categoryDescription,
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+                    ),
+                  ],
+                ),
               ),
-              // child: Column(
-              //   spacing: 16.0,
-              //   children: widget.category.songs
-              //       .map(
-              //         (item) => renderSongs(
-              //           context,
-              //           item,
-              //           onPressed: () => onSongTapHandler(item),
-              //           loadingSong: loadingSong,
-              //         ),
-              //       )
-              //       .toList(),
-              // ),
             ),
           ],
+          groupBy: (item) => item.number != null ? '#' : item.title[0].toUpperCase(),
+          items: widget.category.songs
+              .map(
+                (item) => ListBuilderItem(
+                  title: item.title,
+                  number: item.number,
+                  onTap: () => onSongTapHandler(item),
+                  loading: loadingSong == item.id,
+                ),
+              )
+              .toList(),
         ),
       );
     }
