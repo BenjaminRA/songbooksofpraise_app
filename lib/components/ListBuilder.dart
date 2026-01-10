@@ -199,7 +199,10 @@ class _ListBuilderState extends State<ListBuilder> {
             padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: Text(
               group,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).primaryColor,
+                  ),
             ),
           ),
         );
@@ -220,25 +223,10 @@ class _ListBuilderState extends State<ListBuilder> {
       SliverPadding(
         padding: EdgeInsets.symmetric(horizontal: 16.0),
         sliver: SliverToBoxAdapter(
-          child: SizedBox(
-            width: double.infinity,
-            child: Stack(
-              children: [
-                Container(
-                  margin: EdgeInsets.only(right: 10.0),
-                  child: Column(
-                    children: children,
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Container(
-                    width: 20.0,
-                    height: MediaQuery.of(context).size.height * 0.5,
-                    decoration: BoxDecoration(color: Colors.red),
-                  ),
-                )
-              ],
+          child: Container(
+            margin: EdgeInsets.only(right: 10.0),
+            child: Column(
+              children: children,
             ),
           ),
         ),

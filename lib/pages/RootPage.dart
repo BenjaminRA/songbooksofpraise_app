@@ -7,6 +7,7 @@ import 'package:songbooksofpraise_app/pages/Tabs/SongbooksTab/SongbookTab.dart';
 import 'package:songbooksofpraise_app/Providers/AppBarProvider.dart';
 import 'package:songbooksofpraise_app/components/TabNavigator.dart';
 
+final globalNavigatorKey = GlobalKey<NavigatorState>();
 final homeTabKey = GlobalKey<NavigatorState>();
 final songbookTabKey = GlobalKey<NavigatorState>();
 // final favoritesTabKey = GlobalKey<NavigatorState>();
@@ -29,89 +30,128 @@ class _RootPageState extends State<RootPage> {
     });
   }
 
+  GlobalKey<NavigatorState>? _getCurrentNavigatorKey() {
+    switch (currentTabIndex) {
+      case 0:
+        return homeTabKey;
+      case 1:
+        return songbookTabKey;
+      case 2:
+        return settingsTabKey;
+      default:
+        return null;
+    }
+  }
+
+  Future<bool> _onWillPop() async {
+    // Get the current tab's navigator key
+    final navigatorKey = _getCurrentNavigatorKey();
+
+    // If the current tab has its own navigator, check if it can pop
+    if (navigatorKey != null && navigatorKey.currentState != null) {
+      final canPop = navigatorKey.currentState!.canPop();
+      if (canPop) {
+        navigatorKey.currentState!.pop();
+        return false; // Don't pop the outer navigator
+      }
+    }
+
+    return true; // Allow outer navigator to pop (exit app)
+  }
+
   @override
   Widget build(BuildContext context) {
     AppLocalizations localizations = AppLocalizations.of(context)!;
 
-    return Scaffold(
-      body: IndexedStack(
-        index: currentTabIndex,
-        children: <Widget>[
-          ChangeNotifierProvider(
-            create: (_) => AppBarProvider(
-              AppBarState(
-                title: localizations.home,
-                icon: Icons.home,
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Navigator(
+        key: globalNavigatorKey,
+        onGenerateRoute: (settings) => MaterialPageRoute(
+          builder: (context) {
+            return Scaffold(
+              body: IndexedStack(
+                index: currentTabIndex,
+                children: <Widget>[
+                  ChangeNotifierProvider(
+                    create: (_) => AppBarProvider(
+                      AppBarState(
+                        title: localizations.home,
+                        icon: Icons.home,
+                      ),
+                    ),
+                    child: const HomeTab(),
+                  ),
+                  ChangeNotifierProvider(
+                    create: (_) => AppBarProvider(
+                      AppBarState(
+                        title: localizations.songbooks,
+                        icon: Icons.library_books,
+                      ),
+                    ),
+                    child: const SongbookTab(),
+                  ),
+                  // TabNavigator(
+                  //   navigatorKey: churchesTabKey,
+                  //   child: ChangeNotifierProvider(
+                  //     create: (_) => AppBarProvider(
+                  //       AppBarState(
+                  //         title: localizations.churches,
+                  //         icon: Icons.church,
+                  //       ),
+                  //     ),
+                  //     child: const Text('Churches Tab'),
+                  //   ),
+                  // ),
+                  TabNavigator(
+                    navigatorKey: settingsTabKey,
+                    child: ChangeNotifierProvider(
+                      create: (_) => AppBarProvider(
+                        AppBarState(
+                          title: localizations.settings,
+                          icon: Icons.settings,
+                        ),
+                      ),
+                      child: SettingsTab(),
+                    ),
+                  ),
+                ],
               ),
-            ),
-            child: const HomeTab(),
-          ),
-          ChangeNotifierProvider(
-            create: (_) => AppBarProvider(
-              AppBarState(
-                title: localizations.songbooks,
-                icon: Icons.library_books,
-              ),
-            ),
-            child: const SongbookTab(),
-          ),
-          // TabNavigator(
-          //   navigatorKey: churchesTabKey,
-          //   child: ChangeNotifierProvider(
-          //     create: (_) => AppBarProvider(
-          //       AppBarState(
-          //         title: localizations.churches,
-          //         icon: Icons.church,
-          //       ),
-          //     ),
-          //     child: const Text('Churches Tab'),
-          //   ),
-          // ),
-          TabNavigator(
-            navigatorKey: settingsTabKey,
-            child: ChangeNotifierProvider(
-              create: (_) => AppBarProvider(
-                AppBarState(
-                  title: localizations.settings,
-                  icon: Icons.settings,
+              bottomNavigationBar: Theme(
+                data: Theme.of(context).copyWith(
+                  splashColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                ),
+                child: BottomNavigationBar(
+                  currentIndex: currentTabIndex,
+                  onTap: setTabIndex,
+                  type: BottomNavigationBarType.fixed,
+                  items: <BottomNavigationBarItem>[
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.home),
+                      label: localizations.home,
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.library_books),
+                      label: localizations.songbooks,
+                    ),
+                    // BottomNavigationBarItem(
+                    //   icon: Icon(Icons.favorite),
+                    //   label: 'Favorites',
+                    // ),
+                    // BottomNavigationBarItem(
+                    //   icon: Icon(Icons.church),
+                    //   label: localizations.churches,
+                    // ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.settings),
+                      label: localizations.settings,
+                    ),
+                  ],
                 ),
               ),
-              child: SettingsTab(),
-            ),
-          ),
-        ],
-      ),
-      bottomNavigationBar: Theme(
-        data: Theme.of(context).copyWith(
-          splashColor: Colors.transparent,
-          highlightColor: Colors.transparent,
-        ),
-        child: BottomNavigationBar(
-          currentIndex: currentTabIndex,
-          onTap: setTabIndex,
-          type: BottomNavigationBarType.fixed,
-          items: <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: localizations.home,
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.library_books),
-              label: localizations.songbooks,
-            ),
-            // BottomNavigationBarItem(
-            //   icon: Icon(Icons.favorite),
-            //   label: 'Favorites',
-            // ),
-            // BottomNavigationBarItem(
-            //   icon: Icon(Icons.church),
-            //   label: localizations.churches,
-            // ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.settings),
-              label: localizations.settings,
-            ),
-          ],
+            );
+          },
         ),
       ),
     );

@@ -9,6 +9,7 @@ import 'package:songbooksofpraise_app/l10n/app_localizations.dart';
 import 'package:songbooksofpraise_app/models/Song.dart';
 import 'package:songbooksofpraise_app/pages/SongPage/components/FontAdjustmentButtonBar.dart';
 import 'package:songbooksofpraise_app/pages/SongPage/components/SongPageToolbarChip.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 class SongPage extends StatefulWidget {
   final Song song;
@@ -33,6 +34,14 @@ class _SongPageState extends State<SongPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _updateAppBarActions();
     });
+
+    WakelockPlus.enable();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    WakelockPlus.disable();
   }
 
   void registerRecentlyPlayedSong() async {
