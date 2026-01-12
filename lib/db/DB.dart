@@ -140,7 +140,7 @@ class DB {
   }
 
   static dynamic rawQuery(String sql, {List<dynamic>? arguments}) async {
-    Database db = await openDatabase(await _getPath());
+    Database db = await openDatabase(await _getPath(), singleInstance: false);
 
     dynamic res = await db.rawQuery(sql, arguments);
 

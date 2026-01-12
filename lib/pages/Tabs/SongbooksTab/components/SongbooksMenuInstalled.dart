@@ -208,7 +208,40 @@ class _SongbooksMenuInstalledState extends State<SongbooksMenuInstalled> {
       );
     }
 
-    // Sample data for installed songbooks
+    if (widget.songbooks.isEmpty) {
+      return Container(
+        padding: const EdgeInsets.all(16.0),
+        child: Card(
+          elevation: 1.0,
+          color: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 40.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.library_books_outlined,
+                  size: 48,
+                  color: Colors.grey[400],
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  localizations.noInstalledSongbooks,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: Colors.grey[600],
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
     return Container(
       padding: const EdgeInsets.all(16.0),
       child: Column(

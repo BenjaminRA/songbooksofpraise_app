@@ -131,4 +131,44 @@ class Songbook {
   Future<void> delete() {
     return DB.execute('DELETE FROM songbooks WHERE id = ?;', arguments: [id]);
   }
+
+  /// Search for songbooks by title
+  static Future<List<Songbook>> search(String query) async {
+    if (query.isEmpty) return [];
+
+    final rows = await DB.rawQuery('''
+      SELECT 
+        *,
+        (SELECT COUNT(*) FROM songs WHERE songs.songbook_id = songbooks.id) as song_count
+      FROM songbooks
+      WHERE title LIKE ?
+      ORDER BY 
+        CASE 
+          WHEN title LIKE ? THEN 0
+          ELSE 1
+        END,
+        title ASC;
+    ''', arguments: ['%$query%', '$query%']);
+
+    List<Songbook> songbooks = [];
+
+    for (dynamic row in rows) {
+      DateTime updatedAt = _stripMilliseconds(DateTime.parse(row['updated_at']));
+
+      songbooks.add(
+        Songbook(
+          id: row['id'],
+          title: row['title'],
+          createdAt: DateTime.parse(row['created_at']),
+          updatedAt: updatedAt,
+          songCount: row['song_count'],
+          isInstalled: true,
+          updateAvailable: false,
+          categories: [],
+        ),
+      );
+    }
+
+    return songbooks;
+  }
 }

@@ -88,7 +88,7 @@ class _CategoryPageState extends State<CategoryPage> {
           iconColor: Theme.of(context).scaffoldBackgroundColor,
         ),
       );
-      songbookTabKey.currentState?.push(
+      Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => SongPage(
             song: song!,

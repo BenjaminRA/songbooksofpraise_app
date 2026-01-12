@@ -112,6 +112,10 @@
   "@searchHymnsSongsOrNumbers": {
     "description": "Search bar placeholder text"
   },
+  "searchPageWaitingForInputText": "Type to search hymns, songs, or numbers",
+  "@searchPageWaitingForInputText": {
+    "description": "Text shown on search page when waiting for user input"
+  },
   "explore": "Explore",
   "@explore": {
     "description": "Explore section title"
@@ -152,6 +156,14 @@
   "recentlyPlayed": "Recently Played",
   "@recentlyPlayed": {
     "description": "Recently played section title"
+  },
+  "noRecentlyPlayedSongs": "No recently played songs",
+  "@noRecentlyPlayedSongs": {
+    "description": "Message when there are no recently played songs"
+  },
+  "noInstalledSongbooks": "No songbooks installed",
+  "@noInstalledSongbooks": {
+    "description": "Message when there are no installed songbooks"
   },
   "viewAll": "View All",
   "@viewAll": {
@@ -253,6 +265,10 @@
   "exploreCategoriesDescription": "Explore hymns organized by themes and occasions",
   "@exploreCategoriesDescription": {
     "description": "Description for browsing categories"
+  },
+  "search": "Search",
+  "@search": {
+    "description": "Label for search"
   },
   "searchCategories": "Search categories",
   "@searchCategories": {
@@ -442,5 +458,29 @@
   "playedJustNow": "Played just now",
   "@playedJustNow": {
     "description": "Text shown when a song was played just now"
+  },
+  "songs": "Songs",
+  "@songs": {
+    "description": "Songs filter chip label"
+  },
+  "categories": "Categories",
+  "@categories": {
+    "description": "Categories filter chip label"
+  },
+  "song": "Song",
+  "@song": {
+    "description": "Song label for search results"
+  },
+  "category": "Category",
+  "@category": {
+    "description": "Category label for search results"
+  },
+  "songbook": "Songbook",
+  "@songbook": {
+    "description": "Songbook label for search results"
+  },
+  "noResults": "No results found",
+  "@noResults": {
+    "description": "Text shown when no search results are found"
   }
 }

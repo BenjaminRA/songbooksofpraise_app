@@ -1,6 +1,5 @@
 import 'package:songbooksofpraise_app/db/DB.dart';
 import 'package:songbooksofpraise_app/models/Song.dart';
-import 'package:songbooksofpraise_app/models/Songbook.dart';
 
 class Category {
   int id;
@@ -36,38 +35,38 @@ class Category {
     categoriesCount = _getCategoriesCount();
   }
 
-  /// Gets all `categories` and `subcategories` for a given songbook ID from the database in local storage.
-  static Future<List<Category>> getCategoriesBySongbookID(int songbookID) async {
-    Future<List<Category>> getSubCategoriesRecursive(int categoryID) async {
-      final subcategoryRows = await DB.rawQuery('''
-        SELECT 
-          *,
-          (SELECT COUNT(*) FROM song_categories WHERE category_id = categories.id) as song_count  
-        FROM categories 
-        WHERE parent_category_id = ?;
-      ''', arguments: [categoryID]);
+  static Future<List<Category>> getSubCategoriesRecursive(int categoryID) async {
+    final subcategoryRows = await DB.rawQuery('''
+      SELECT 
+        *,
+        (SELECT COUNT(*) FROM song_categories WHERE category_id = categories.id) as song_count  
+      FROM categories 
+      WHERE parent_category_id = ?;
+    ''', arguments: [categoryID]);
 
-      List<Category> subcategories = [];
+    List<Category> subcategories = [];
 
-      for (dynamic row in subcategoryRows) {
-        List<Category> children = await getSubCategoriesRecursive(row['id']);
+    for (dynamic row in subcategoryRows) {
+      List<Category> children = await getSubCategoriesRecursive(row['id']);
 
-        Category subcategory = Category(
-          id: row['id'],
-          name: row['name'],
-          // description: row['description'],
-          songs: [],
-          songCount: row['song_count'],
-          subcategories: children,
-          songbookID: row['songbook_id'],
-        );
+      Category subcategory = Category(
+        id: row['id'],
+        name: row['name'],
+        // description: row['description'],
+        songs: [],
+        songCount: row['song_count'],
+        subcategories: children,
+        songbookID: row['songbook_id'],
+      );
 
-        subcategories.add(subcategory);
-      }
-
-      return subcategories;
+      subcategories.add(subcategory);
     }
 
+    return subcategories;
+  }
+
+  /// Gets all `categories` and `subcategories` for a given songbook ID from the database in local storage.
+  static Future<List<Category>> getCategoriesBySongbookID(int songbookID) async {
     final rows = await DB.rawQuery('''
       SELECT 
         *,
@@ -79,7 +78,7 @@ class Category {
     List<Category> categories = [];
 
     for (dynamic row in rows) {
-      List<Category> subcategories = await getSubCategoriesRecursive(row['id']);
+      List<Category> subcategories = await Category.getSubCategoriesRecursive(row['id']);
 
       Category category = Category(
         id: row['id'],
@@ -225,5 +224,53 @@ class Category {
     }
 
     return count;
+  }
+
+  void calculateCounts() {
+    songCount = _getSongCount();
+    categoriesCount = _getCategoriesCount();
+  }
+
+  /// Search for categories by name
+  static Future<List<Map<String, dynamic>>> search(String query) async {
+    if (query.isEmpty) return [];
+
+    final rows = await DB.rawQuery('''
+      SELECT 
+        categories.*,
+        songbooks.title AS songbook_title,
+        (SELECT COUNT(*) FROM song_categories WHERE category_id = categories.id) as song_count
+      FROM categories
+      JOIN songbooks ON categories.songbook_id = songbooks.id
+      WHERE categories.name LIKE ?
+      ORDER BY 
+        CASE 
+          WHEN categories.name LIKE ? THEN 0
+          ELSE 1
+        END,
+        categories.name ASC;
+    ''', arguments: ['%$query%', '$query%']);
+
+    List<Map<String, dynamic>> result = [];
+
+    for (final row in rows) {
+      List<Category> children = await Category.getSubCategoriesRecursive(row['id']);
+
+      Category category = Category(
+        id: row['id'],
+        name: row['name'],
+        songs: [],
+        subcategories: children,
+        songCount: row['song_count'],
+        songbookID: row['songbook_id'],
+      );
+
+      result.add({
+        'category': category,
+        'songbook_title': row['songbook_title'],
+      });
+    }
+
+    return result;
   }
 }

@@ -266,6 +266,12 @@ abstract class AppLocalizations {
   /// **'Search hymns, songs, or numbers...'**
   String get searchHymnsSongsOrNumbers;
 
+  /// Text shown on search page when waiting for user input
+  ///
+  /// In en, this message translates to:
+  /// **'Type to search hymns, songs, or numbers'**
+  String get searchPageWaitingForInputText;
+
   /// Explore section title
   ///
   /// In en, this message translates to:
@@ -278,7 +284,7 @@ abstract class AppLocalizations {
   /// **'Browse'**
   String get browse;
 
-  /// Categories label in explore section
+  /// Categories filter chip label
   ///
   /// In en, this message translates to:
   /// **'Categories'**
@@ -319,6 +325,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Recently Played'**
   String get recentlyPlayed;
+
+  /// Message when there are no recently played songs
+  ///
+  /// In en, this message translates to:
+  /// **'No recently played songs'**
+  String get noRecentlyPlayedSongs;
+
+  /// Message when there are no installed songbooks
+  ///
+  /// In en, this message translates to:
+  /// **'No songbooks installed'**
+  String get noInstalledSongbooks;
 
   /// View all button text
   ///
@@ -433,6 +451,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Explore hymns organized by themes and occasions'**
   String get exploreCategoriesDescription;
+
+  /// Label for search
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get search;
 
   /// Search placeholder for category search
   ///
@@ -655,6 +679,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Played just now'**
   String get playedJustNow;
+
+  /// Songs filter chip label
+  ///
+  /// In en, this message translates to:
+  /// **'Songs'**
+  String get songs;
+
+  /// Song label for search results
+  ///
+  /// In en, this message translates to:
+  /// **'Song'**
+  String get song;
+
+  /// Category label for search results
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get category;
+
+  /// Songbook label for search results
+  ///
+  /// In en, this message translates to:
+  /// **'Songbook'**
+  String get songbook;
+
+  /// Text shown when no search results are found
+  ///
+  /// In en, this message translates to:
+  /// **'No results found'**
+  String get noResults;
 }
 
 class _AppLocalizationsDelegate

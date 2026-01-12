@@ -96,6 +96,10 @@ class AppLocalizationsEs extends AppLocalizations {
       'Buscar himnos, canciones o números...';
 
   @override
+  String get searchPageWaitingForInputText =>
+      'Escribe para buscar himnos, canciones o números';
+
+  @override
   String get explore => 'Explorar';
 
   @override
@@ -123,6 +127,13 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get recentlyPlayed => 'Reproducidas Recientemente';
+
+  @override
+  String get noRecentlyPlayedSongs =>
+      'No hay canciones reproducidas recientemente';
+
+  @override
+  String get noInstalledSongbooks => 'No hay cancioneros instalados';
 
   @override
   String get viewAll => 'Ver Todas';
@@ -191,6 +202,9 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get exploreCategoriesDescription =>
       'Explora himnos organizados por temas y ocasiones';
+
+  @override
+  String get search => 'Search';
 
   @override
   String get searchCategories => 'Buscar categorías';
@@ -331,4 +345,19 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get playedJustNow => 'Reproducido justo ahora';
+
+  @override
+  String get songs => 'Canciones';
+
+  @override
+  String get song => 'Canción';
+
+  @override
+  String get category => 'Categoría';
+
+  @override
+  String get songbook => 'Cancionero';
+
+  @override
+  String get noResults => 'No se encontraron resultados';
 }

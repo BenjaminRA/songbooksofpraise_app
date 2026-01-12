@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:songbooksofpraise_app/Providers/AppBarProvider.dart';
 import 'package:songbooksofpraise_app/components/AppBarWithProvider.dart';
 import 'package:songbooksofpraise_app/pages/RootPage.dart';
 import 'package:songbooksofpraise_app/pages/Tabs/HomeTab/components/PopularThisWeelSection.dart';
@@ -30,7 +32,7 @@ class _HomeTabState extends State<HomeTab> {
               child: RefreshIndicator(
                 child: ListView(
                   key: _refreshKey,
-                  physics: BouncingScrollPhysics(),
+                  physics: AlwaysScrollableScrollPhysics(),
                   children: const <Widget>[
                     ExploreSection(),
                     RecentlyPlayedSection(),

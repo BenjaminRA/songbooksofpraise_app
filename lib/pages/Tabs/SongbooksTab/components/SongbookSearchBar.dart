@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:songbooksofpraise_app/Providers/AppBarProvider.dart';
 import 'package:songbooksofpraise_app/l10n/app_localizations.dart';
 import 'package:songbooksofpraise_app/pages/RootPage.dart';
 import 'package:songbooksofpraise_app/pages/SongSearch/SongSearch.dart';
@@ -19,6 +21,7 @@ class _SongbookSearchBarState extends State<SongbookSearchBar> {
   @override
   Widget build(BuildContext context) {
     AppLocalizations localizations = AppLocalizations.of(context)!;
+    AppBarProvider appBarProvider = Provider.of<AppBarProvider>(context, listen: false);
 
     return Container(
       padding: const EdgeInsets.all(16.0),
@@ -29,20 +32,23 @@ class _SongbookSearchBarState extends State<SongbookSearchBar> {
         ),
         // borderRadius: BorderRadius.circular(8.0),
       ),
-      child: TextField(
-        // controller: _searchController,
-        // onChanged: widget.onSearchChanged,
-        onTap: () {
-          globalNavigatorKey.currentState?.push(MaterialPageRoute(builder: (context) => const SongSearch()));
+      child: GestureDetector(
+        onTap: () async {
+          appBarProvider.setTitle(AppBarState(title: localizations.search, icon: Icons.search));
+          await songbookTabKey.currentState?.push(MaterialPageRoute(builder: (context) => const SongSearch()));
+          appBarProvider.popTitle();
         },
-        decoration: InputDecoration(
-          hintText: localizations.searchHymnsSongsOrNumbers,
-          prefixIcon: const Icon(Icons.search, color: Color.fromRGBO(140, 147, 159, 1), size: 28),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16.0),
-            borderSide: const BorderSide(
-              color: Color.fromRGBO(221, 225, 229, 1),
-              width: 1.5,
+        child: TextField(
+          enabled: false,
+          decoration: InputDecoration(
+            hintText: localizations.searchHymnsSongsOrNumbers,
+            prefixIcon: const Icon(Icons.search, color: Color.fromRGBO(140, 147, 159, 1), size: 28),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16.0),
+              borderSide: const BorderSide(
+                color: Color.fromRGBO(221, 225, 229, 1),
+                width: 1.5,
+              ),
             ),
           ),
         ),

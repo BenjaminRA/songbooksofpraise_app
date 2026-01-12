@@ -5,14 +5,14 @@ class SongPageToolbarChip extends StatelessWidget {
   final bool selected;
   final String label;
   final IconData? icon;
-  final VoidCallback onSelected;
+  final VoidCallback? onSelected;
 
   const SongPageToolbarChip({super.key, this.disabled = false, this.selected = false, required this.label, this.icon, required this.onSelected});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: !disabled ? onSelected : null,
+      onTap: !disabled && onSelected != null ? onSelected : null,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         curve: Curves.easeInOut,

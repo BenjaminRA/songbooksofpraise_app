@@ -42,6 +42,36 @@ class Song {
     required this.updated_at,
   });
 
+  bool hasChordsInLyrics() {
+    final chordPattern = RegExp(
+      r'\['
+      r'(?:'
+      r'[A-G]'
+      r'|(?:do|re|mi|fa|sol|la|si)'
+      r')'
+      r'(?:[#♯]|b|♭)?'
+      r'(?:'
+      r'M|maj|major|Maj|Major|'
+      r'm(?:in)?|minor|Minor|'
+      r'dim|°|o|'
+      r'aug|\+|'
+      r'sus[24]?|'
+      r'[56789]|11|13|'
+      r'add[69]|add11|add13|'
+      r'maj7|min7|m7|M7|7|6|69|'
+      r'[♯#b♭]?[59]|[♯#b♭]?11|[♯#b♭]?13'
+      r')*'
+      r'(?:/'
+      r'(?:[A-G]|(?:do|re|mi|fa|sol|la|si))'
+      r'(?:[#♯]|b|♭)?'
+      r')?'
+      r'\]',
+      caseSensitive: false,
+      multiLine: false,
+    );
+    return chordPattern.hasMatch(lyrics);
+  }
+
   static Future<List<Song>> getSongsByCategoryID(int categoryID) async {
     final rows = await DB.rawQuery('''
       SELECT songs.* FROM songs
@@ -148,6 +178,7 @@ class Song {
 
     for (dynamic row in rows) {
       songs.add(RecentlyPlayedSectionItem(
+        id: row['id'],
         number: row['number'],
         title: row['title'],
         songbook: row['songbook_title'],
@@ -156,5 +187,42 @@ class Song {
     }
 
     return songs;
+  }
+
+  /// Search for songs by title or number
+  static Future<List<Map<String, dynamic>>> search(String query) async {
+    if (query.isEmpty) return [];
+
+    // Check if query is a number
+    final isNumericQuery = int.tryParse(query) != null;
+
+    final rows = await DB.rawQuery('''
+      SELECT 
+        songs.*,
+        songbooks.title AS songbook_title
+      FROM songs
+      JOIN songbooks ON songs.songbook_id = songbooks.id
+      WHERE songs.title LIKE ? OR (songs.number IS NOT NULL AND songs.number = ?)
+      ORDER BY 
+        CASE 
+          WHEN songs.number = ? THEN 0
+          WHEN songs.title LIKE ? THEN 1
+          ELSE 2
+        END,
+        songs.title ASC;
+    ''', arguments: [
+      '%$query%',
+      isNumericQuery ? int.parse(query) : -1,
+      isNumericQuery ? int.parse(query) : -1,
+      '$query%',
+    ]);
+
+    return rows
+        .map((row) => {
+              'song': Song.fromJson(row),
+              'songbook_title': row['songbook_title'],
+            })
+        .toList()
+        .cast<Map<String, dynamic>>();
   }
 }

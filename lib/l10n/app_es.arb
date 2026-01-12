@@ -112,6 +112,10 @@
   "@searchHymnsSongsOrNumbers": {
     "description": "Texto de marcador de posición de la barra de búsqueda"
   },
+  "searchPageWaitingForInputText": "Escribe para buscar himnos, canciones o números",
+  "@searchPageWaitingForInputText": {
+    "description": "Texto mostrado en la página de búsqueda mientras se espera la entrada del usuario"
+  },
   "explore": "Explorar",
   "@explore": {
     "description": "Título de la sección explorar"
@@ -152,6 +156,14 @@
   "recentlyPlayed": "Reproducidas Recientemente",
   "@recentlyPlayed": {
     "description": "Título de la sección reproducidas recientemente"
+  },
+  "noRecentlyPlayedSongs": "No hay canciones reproducidas recientemente",
+  "@noRecentlyPlayedSongs": {
+    "description": "Mensaje cuando no hay canciones reproducidas recientemente"
+  },
+  "noInstalledSongbooks": "No hay cancioneros instalados",
+  "@noInstalledSongbooks": {
+    "description": "Mensaje cuando no hay cancioneros instalados"
   },
   "viewAll": "Ver Todas",
   "@viewAll": {
@@ -253,6 +265,10 @@
   "exploreCategoriesDescription": "Explora himnos organizados por temas y ocasiones",
   "@exploreCategoriesDescription": {
     "description": "Descripción para explorar categorías"
+  },
+  "search": "Search",
+  "@search": {
+    "description": "Label for search"
   },
   "searchCategories": "Buscar categorías",
   "@searchCategories": {
@@ -442,5 +458,25 @@
   "playedJustNow": "Reproducido justo ahora",
   "@playedJustNow": {
     "description": "Texto mostrado cuando una canción fue reproducida justo ahora"
+  },
+  "songs": "Canciones",
+  "@songs": {
+    "description": "Etiqueta del chip de filtro de canciones"
+  },
+  "song": "Canción",
+  "@song": {
+    "description": "Etiqueta de canción para resultados de búsqueda"
+  },
+  "category": "Categoría",
+  "@category": {
+    "description": "Etiqueta de categoría para resultados de búsqueda"
+  },
+  "songbook": "Cancionero",
+  "@songbook": {
+    "description": "Etiqueta de cancionero para resultados de búsqueda"
+  },
+  "noResults": "No se encontraron resultados",
+  "@noResults": {
+    "description": "Texto mostrado cuando no se encuentran resultados de búsqueda"
   }
 }

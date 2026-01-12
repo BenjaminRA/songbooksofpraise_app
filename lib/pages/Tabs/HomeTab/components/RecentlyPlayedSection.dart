@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:songbooksofpraise_app/helpers/navigateToSong.dart';
 import 'package:songbooksofpraise_app/helpers/render_last_played_text.dart';
 import 'package:songbooksofpraise_app/l10n/app_localizations.dart';
 import 'package:songbooksofpraise_app/models/Song.dart';
 
 class RecentlyPlayedSectionItem {
+  final int? id;
   final int? number;
   final String title;
   final String songbook;
   final DateTime? lastPlayed;
 
   RecentlyPlayedSectionItem({
+    this.id,
     this.number,
     required this.title,
     required this.songbook,
@@ -62,7 +65,11 @@ class _RecentlyPlayedSectionState extends State<RecentlyPlayedSection> {
         borderRadius: BorderRadius.circular(10.0),
       ),
       color: Colors.white,
-      onPressed: () {},
+      onPressed: item.id != null
+          ? () {
+              navigateToSong(context, item.id!);
+            }
+          : null,
       // onPressed: item.onPressed,
       child: Container(
         width: double.infinity,
@@ -157,6 +164,35 @@ class _RecentlyPlayedSectionState extends State<RecentlyPlayedSection> {
                       ],
                     );
                   }
+
+                  if (recentlyPlayedSongs.isEmpty) {
+                    return Card(
+                      elevation: 1.0,
+                      color: Colors.white,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 40.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.music_note_outlined,
+                              size: 48,
+                              color: Colors.grey[400],
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              localizations.noRecentlyPlayedSongs,
+                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    color: Colors.grey[600],
+                                  ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     spacing: 16.0,

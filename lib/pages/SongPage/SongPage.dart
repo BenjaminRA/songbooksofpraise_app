@@ -9,6 +9,7 @@ import 'package:songbooksofpraise_app/l10n/app_localizations.dart';
 import 'package:songbooksofpraise_app/models/Song.dart';
 import 'package:songbooksofpraise_app/pages/SongPage/components/FontAdjustmentButtonBar.dart';
 import 'package:songbooksofpraise_app/pages/SongPage/components/SongPageToolbarChip.dart';
+import 'package:songbooksofpraise_app/pages/SongPage/components/MusicSheetViewer.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 class SongPage extends StatefulWidget {
@@ -22,7 +23,6 @@ class SongPage extends StatefulWidget {
 class _SongPageState extends State<SongPage> {
   late double fontSize = getInitialFontSize();
   late bool showChords = getInitialShowChords();
-  bool showSheet = false;
   bool showTools = false;
 
   @override
@@ -33,9 +33,9 @@ class _SongPageState extends State<SongPage> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _updateAppBarActions();
-    });
 
-    WakelockPlus.enable();
+      Provider.of<SettingsProvider>(context, listen: false).keepScreenOn ? WakelockPlus.enable() : WakelockPlus.disable();
+    });
   }
 
   @override
@@ -109,6 +109,7 @@ class _SongPageState extends State<SongPage> {
   @override
   Widget build(BuildContext context) {
     AppLocalizations localizations = AppLocalizations.of(context)!;
+    AppBarProvider appBarProvider = Provider.of<AppBarProvider>(context);
     double toolbarHeight = 60.0;
 
     return Scaffold(
@@ -132,6 +133,7 @@ class _SongPageState extends State<SongPage> {
                     SongPageToolbarChip(
                       label: localizations.chords,
                       icon: FontAwesomeIcons.music,
+                      disabled: !widget.song.hasChordsInLyrics(),
                       selected: showChords,
                       onSelected: () {
                         setState(() {
@@ -142,11 +144,19 @@ class _SongPageState extends State<SongPage> {
                     SongPageToolbarChip(
                       label: localizations.sheet,
                       icon: FontAwesomeIcons.fileLines,
-                      selected: showSheet,
+                      selected: false,
+                      disabled: widget.song.music_sheet == null,
                       onSelected: () {
-                        setState(() {
-                          showSheet = !showSheet;
-                        });
+                        appBarProvider.setTitle(appBarProvider.state);
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MusicSheetViewer(
+                              imageUrl: widget.song.music_sheet!,
+                            ),
+                          ),
+                        );
                       },
                     ),
                     Spacer(),

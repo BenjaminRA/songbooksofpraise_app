@@ -94,6 +94,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get searchHymnsSongsOrNumbers => 'Search hymns, songs, or numbers...';
 
   @override
+  String get searchPageWaitingForInputText =>
+      'Type to search hymns, songs, or numbers';
+
+  @override
   String get explore => 'Explore';
 
   @override
@@ -121,6 +125,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get recentlyPlayed => 'Recently Played';
+
+  @override
+  String get noRecentlyPlayedSongs => 'No recently played songs';
+
+  @override
+  String get noInstalledSongbooks => 'No songbooks installed';
 
   @override
   String get viewAll => 'View All';
@@ -189,6 +199,9 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get exploreCategoriesDescription =>
       'Explore hymns organized by themes and occasions';
+
+  @override
+  String get search => 'Search';
 
   @override
   String get searchCategories => 'Search categories';
@@ -327,4 +340,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get playedJustNow => 'Played just now';
+
+  @override
+  String get songs => 'Songs';
+
+  @override
+  String get song => 'Song';
+
+  @override
+  String get category => 'Category';
+
+  @override
+  String get songbook => 'Songbook';
+
+  @override
+  String get noResults => 'No results found';
 }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:songbooksofpraise_app/Providers/AppBarProvider.dart';
 import 'package:songbooksofpraise_app/l10n/app_localizations.dart';
 import 'package:songbooksofpraise_app/pages/RootPage.dart';
 import 'package:songbooksofpraise_app/pages/SongSearch/SongSearch.dart';
@@ -14,19 +16,25 @@ class _HomePageSearchBarState extends State<HomePageSearchBar> {
   @override
   Widget build(BuildContext context) {
     AppLocalizations localizations = AppLocalizations.of(context)!;
+    AppBarProvider appBarProvider = Provider.of<AppBarProvider>(context, listen: false);
 
-    return Hero(
-      tag: 'song-search',
-      child: Container(
-        padding: const EdgeInsets.all(16.0),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.symmetric(
-            horizontal: BorderSide(color: Color.fromRGBO(254, 247, 218, 1.0), width: 2.0),
-          ),
-          // borderRadius: BorderRadius.circular(8.0),
+    return Container(
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.symmetric(
+          horizontal: BorderSide(color: Color.fromRGBO(254, 247, 218, 1.0), width: 2.0),
         ),
+        // borderRadius: BorderRadius.circular(8.0),
+      ),
+      child: GestureDetector(
+        onTap: () async {
+          appBarProvider.setTitle(AppBarState(title: localizations.search, icon: Icons.search));
+          await homeTabKey.currentState?.push(MaterialPageRoute(builder: (context) => const SongSearch()));
+          appBarProvider.popTitle();
+        },
         child: TextField(
+          enabled: false,
           style: TextStyle(
             color: Theme.of(context).primaryColor,
           ),
@@ -41,9 +49,6 @@ class _HomePageSearchBarState extends State<HomePageSearchBar> {
               ),
             ),
           ),
-          onTap: () {
-            globalNavigatorKey.currentState?.push(MaterialPageRoute(builder: (context) => const SongSearch()));
-          },
         ),
       ),
     );

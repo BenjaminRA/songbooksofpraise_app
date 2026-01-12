@@ -9,6 +9,7 @@ class AppBarState {
   final Color? subtitleColor;
   final Color? iconColor;
   final List<Widget>? actions;
+  final bool disabledBackButton;
 
   const AppBarState({
     required this.title,
@@ -19,6 +20,7 @@ class AppBarState {
     this.subtitleColor,
     this.iconColor,
     this.actions,
+    this.disabledBackButton = false,
   });
 
   AppBarState copyWith({
@@ -30,6 +32,7 @@ class AppBarState {
     Color? subtitleColor,
     Color? iconColor,
     List<Widget>? actions,
+    bool? disabledBackButton,
   }) {
     return AppBarState(
       title: title ?? this.title,
@@ -40,6 +43,7 @@ class AppBarState {
       subtitleColor: subtitleColor ?? this.subtitleColor,
       iconColor: iconColor ?? this.iconColor,
       actions: actions ?? this.actions,
+      disabledBackButton: disabledBackButton ?? this.disabledBackButton,
     );
   }
 }
@@ -53,7 +57,7 @@ class AppBarProvider extends ChangeNotifier {
 
   List<AppBarState> _stateStack = [];
 
-  bool get showBackButton => _stateStack.length > 1;
+  bool get showBackButton => _stateStack.length > 1 && !_state.disabledBackButton;
 
   AppBarProvider(AppBarState initialState) {
     _state = initialState;
