@@ -72,13 +72,21 @@
   "@musicAndAudio": {
     "description": "Music and audio section title in settings"
   },
-  "defaultTranspose": "Default Transpose",
-  "@defaultTranspose": {
-    "description": "Default transpose setting label"
+  "defaultNotation": "Default Notation",
+  "@defaultNotation": {
+    "description": "Default notation setting label"
   },
-  "automaticKeyAdjustment": "Automatic Key Adjustment",
-  "@automaticKeyAdjustment": {
-    "description": "Default transpose setting description"
+  "defaultNotationHelperText": "Choose your preferred chord notation",
+  "@defaultNotationHelperText": {
+    "description": "Default notation setting description"
+  },
+  "letterNotation": "Letter",
+  "@letterNotation": {
+    "description": "Letter notation option"
+  },
+  "solfegeNotation": "Solfege",
+  "@solfegeNotation": {
+    "description": "Solfege notation option"
   },
   "showChordsByDefault": "Show Chords by Default",
   "@showChordsByDefault": {
@@ -87,6 +95,14 @@
   "displayChordsWhenOpeningSongs": "Display chords when opening songs",
   "@displayChordsWhenOpeningSongs": {
     "description": "Show chords by default setting description"
+  },
+  "showSheetByDefault": "Show Sheet by Default",
+  "@showSheetByDefault": {
+    "description": "Show sheet music by default setting label"
+  },
+  "displaySheetMusicWhenOpeningSongs": "Display sheet music when opening songs",
+  "@displaySheetMusicWhenOpeningSongs": {
+    "description": "Show sheet music by default setting description"
   },
   "aboutAndSupport": "About & Support",
   "@aboutAndSupport": {
@@ -224,6 +240,10 @@
   "@availableSingular": {
     "description": "Indicates that a songbook is available"
   },
+  "errorFetchingSongbooks": "Error fetching songbooks. Please try again later.",
+  "@errorFetchingSongbooks": {
+    "description": "Error message when failing to fetch songbooks"
+  },
   "update": "Update",
   "@update": {
     "description": "Update button text"
@@ -321,6 +341,14 @@
   "@sheet": {
     "description": "Sheet music label"
   },
+  "transpose": "Transpose",
+  "@transpose": {
+    "description": "Transpose label"
+  },
+  "chordNotation": "Chord Notation",
+  "@chordNotation": {
+    "description": "Chord notation setting label"
+  },
   "verse": "Verse",
   "@verse": {
     "description": "Verse label"
@@ -336,6 +364,22 @@
   "all": "All",
   "@all": {
     "description": "All category label"
+  },
+  "chordsByInstrument": "Chords by Instrument",
+  "@chordsByInstrument": {
+    "description": "Chords by instrument section title"
+  },
+  "guitar": "Guitar",
+  "@guitar": {
+    "description": "Guitar instrument label"
+  },
+  "piano": "Piano",
+  "@piano": {
+    "description": "Piano instrument label"
+  },
+  "ukulele": "Ukulele",
+  "@ukulele": {
+    "description": "Ukulele instrument label"
   },
   "genericCategoryDescription1": "Explore the hymns in this category.",
   "@genericCategoryDescription1": {

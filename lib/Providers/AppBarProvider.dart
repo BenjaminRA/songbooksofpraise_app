@@ -64,8 +64,8 @@ class AppBarProvider extends ChangeNotifier {
     _stateStack = [initialState];
   }
 
-  void setActions(List<Widget>? _actions) {
-    _state = _state.copyWith(actions: _actions);
+  void setActions(List<Widget>? actions) {
+    _state = _state.copyWith(actions: actions);
     notifyListeners();
   }
 

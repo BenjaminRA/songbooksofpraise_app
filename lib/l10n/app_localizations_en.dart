@@ -63,10 +63,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get musicAndAudio => 'Music & Audio';
 
   @override
-  String get defaultTranspose => 'Default Transpose';
+  String get defaultNotation => 'Default Notation';
 
   @override
-  String get automaticKeyAdjustment => 'Automatic Key Adjustment';
+  String get defaultNotationHelperText =>
+      'Choose your preferred chord notation';
+
+  @override
+  String get letterNotation => 'Letter';
+
+  @override
+  String get solfegeNotation => 'Solfege';
 
   @override
   String get showChordsByDefault => 'Show Chords by Default';
@@ -74,6 +81,13 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get displayChordsWhenOpeningSongs =>
       'Display chords when opening songs';
+
+  @override
+  String get showSheetByDefault => 'Show Sheet by Default';
+
+  @override
+  String get displaySheetMusicWhenOpeningSongs =>
+      'Display sheet music when opening songs';
 
   @override
   String get aboutAndSupport => 'About & Support';
@@ -172,6 +186,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get availableSingular => 'Available';
 
   @override
+  String get errorFetchingSongbooks =>
+      'Error fetching songbooks. Please try again later.';
+
+  @override
   String get update => 'Update';
 
   @override
@@ -237,6 +255,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sheet => 'Sheet';
 
   @override
+  String get transpose => 'Transpose';
+
+  @override
+  String get chordNotation => 'Chord Notation';
+
+  @override
   String get verse => 'Verse';
 
   @override
@@ -247,6 +271,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get all => 'All';
+
+  @override
+  String get chordsByInstrument => 'Chords by Instrument';
+
+  @override
+  String get guitar => 'Guitar';
+
+  @override
+  String get piano => 'Piano';
+
+  @override
+  String get ukulele => 'Ukulele';
 
   @override
   String get genericCategoryDescription1 =>

@@ -18,7 +18,7 @@ class SongPageToolbarChip extends StatelessWidget {
         curve: Curves.easeInOut,
         decoration: BoxDecoration(
           color: disabled
-              ? Colors.grey
+              ? Colors.white
               : selected
                   ? Theme.of(context).primaryColor
                   : Colors.white,
@@ -41,7 +41,7 @@ class SongPageToolbarChip extends StatelessWidget {
                   icon,
                   size: 16.0,
                   color: disabled
-                      ? Colors.grey[200]
+                      ? Colors.grey[500]
                       : selected
                           ? Colors.white
                           : Theme.of(context).primaryColor,
@@ -52,7 +52,7 @@ class SongPageToolbarChip extends StatelessWidget {
                 label,
                 style: TextStyle(
                   color: disabled
-                      ? Colors.grey[200]
+                      ? Colors.grey[500]
                       : selected
                           ? Colors.white
                           : Theme.of(context).primaryColor,

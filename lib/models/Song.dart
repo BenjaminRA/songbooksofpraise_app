@@ -1,10 +1,15 @@
 import 'package:songbooksofpraise_app/db/DB.dart';
+import 'package:songbooksofpraise_app/pages/SongPage/SongPage.dart';
+import 'package:songbooksofpraise_app/pages/SongPage/components/ChordsByInstrument.dart';
 import 'package:songbooksofpraise_app/pages/Tabs/HomeTab/components/RecentlyPlayedSection.dart';
+
+enum ChordNotation { Letter, Solfege }
 
 class Song {
   int id;
   String title;
   String lyrics;
+  late String transposedLyrics;
   String? music_sheet;
   String? music;
   String? music_only;
@@ -40,36 +45,118 @@ class Song {
     required this.songbook_id,
     required this.created_at,
     required this.updated_at,
-  });
+  }) {
+    transposedLyrics = lyrics;
+  }
 
   bool hasChordsInLyrics() {
     final chordPattern = RegExp(
-      r'\['
-      r'(?:'
-      r'[A-G]'
-      r'|(?:do|re|mi|fa|sol|la|si)'
-      r')'
-      r'(?:[#♯]|b|♭)?'
-      r'(?:'
-      r'M|maj|major|Maj|Major|'
-      r'm(?:in)?|minor|Minor|'
-      r'dim|°|o|'
-      r'aug|\+|'
-      r'sus[24]?|'
-      r'[56789]|11|13|'
-      r'add[69]|add11|add13|'
-      r'maj7|min7|m7|M7|7|6|69|'
-      r'[♯#b♭]?[59]|[♯#b♭]?11|[♯#b♭]?13'
-      r')*'
-      r'(?:/'
-      r'(?:[A-G]|(?:do|re|mi|fa|sol|la|si))'
-      r'(?:[#♯]|b|♭)?'
-      r')?'
-      r'\]',
+      r'\[([^\]]+)\]',
       caseSensitive: false,
       multiLine: false,
     );
     return chordPattern.hasMatch(lyrics);
+  }
+
+  List<Chord> getChordsInLyrics(ChordNotation notation) {
+    final chordPattern = RegExp(
+      r'\[([^\]]+)\]',
+      caseSensitive: false,
+      multiLine: false,
+    );
+
+    final matches = chordPattern.allMatches(lyrics);
+
+    Set<String> chordsSet = {};
+
+    for (final match in matches) {
+      String chord = match.group(1)!;
+      List<String> parts = chord.split('/');
+
+      for (int i = 0; i < parts.length; i++) {
+        parts[i] = transposeChord(parts[i], transpose, notation);
+      }
+
+      chordsSet.add(parts.join('/'));
+    }
+
+    return chordsSet.map((chordName) => Chord(name: chordName)).toList();
+  }
+
+  String transposeChord(String chord, int semitones, ChordNotation notation) {
+    ChordNotation chordNotation = _getChordNotation(chord);
+    const List<String> letterChordsSharp = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+    const List<String> letterChordsFlat = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
+
+    const List<String> solfegeChordsSharp = ['Do', 'Do#', 'Re', 'Re#', 'Mi', 'Fa', 'Fa#', 'Sol', 'Sol#', 'La', 'La#', 'Si'];
+    const List<String> solfegeChordsFlat = ['Do', 'Reb', 'Re', 'Mib', 'Mi', 'Fa', 'Solb', 'Sol', 'Lab', 'La', 'Sib', 'Si'];
+
+    List<String> originalChordNotationList = chordNotation == ChordNotation.Letter ? letterChordsSharp : solfegeChordsSharp;
+    List<String> finalChordNotationList = notation == ChordNotation.Letter ? letterChordsSharp : solfegeChordsSharp;
+
+    String baseChord = chord.toUpperCase();
+
+    int chordListIndex = originalChordNotationList.indexWhere((c) {
+      // If is not a sharp chord but the base chord contains a sharp version, skip it
+      if (!c.contains('#') && baseChord.contains('${c.toUpperCase()}#')) {
+        return false;
+      }
+
+      // If is flat
+      if (!c.contains('b') && baseChord.contains('${c.toUpperCase()}B')) {
+        return false;
+      }
+
+      return baseChord.startsWith(c.toUpperCase());
+    });
+
+    if (chordListIndex == -1) {
+      originalChordNotationList = chordNotation == ChordNotation.Letter ? letterChordsFlat : solfegeChordsFlat;
+      finalChordNotationList = notation == ChordNotation.Letter ? letterChordsFlat : solfegeChordsFlat;
+
+      chordListIndex = originalChordNotationList.indexWhere((c) => baseChord.startsWith(c.toUpperCase()));
+    }
+
+    return chord.toLowerCase().replaceAll(
+          originalChordNotationList[chordListIndex].toLowerCase(),
+          finalChordNotationList[(chordListIndex + semitones) % finalChordNotationList.length],
+        );
+  }
+
+  void transposeChords(int semitones, ChordNotation notation) {
+    transposedLyrics = lyrics;
+
+    final chordRegex = RegExp(r'\[([^\]]+)\]');
+
+    int cursor = 0;
+
+    while (cursor < transposedLyrics.length) {
+      final match = chordRegex.firstMatch(transposedLyrics.substring(cursor));
+
+      if (match == null) break;
+
+      String originalChord = match.group(1)!;
+      List<String> parts = originalChord.split('/');
+
+      List<String> transposedParts = parts.map((part) => transposeChord(part, semitones, notation)).toList();
+
+      String transposedChord = transposedParts.join('/');
+
+      transposedLyrics = transposedLyrics.replaceRange(cursor + match.start + 1, cursor + match.end - 1, transposedChord);
+      cursor = cursor + match.start + transposedChord.length + 2; // +2 for the brackets
+    }
+  }
+
+  ChordNotation _getChordNotation(String chord) {
+    final solfegePattern = RegExp(r'\b(do|re|mi|fa|sol|la|si)', caseSensitive: false);
+
+    final hasSolfegeChords = solfegePattern.hasMatch(chord);
+
+    if (hasSolfegeChords) {
+      return ChordNotation.Solfege;
+    }
+
+    return ChordNotation.Letter;
   }
 
   static Future<List<Song>> getSongsByCategoryID(int categoryID) async {

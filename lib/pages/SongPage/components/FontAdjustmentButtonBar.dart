@@ -15,61 +15,33 @@ class FontAdjustmentButtonBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double boxSize = 35.0;
-
     return Container(
       color: Colors.white,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
-          GestureDetector(
-            onTap: onDecreaseFontSize,
-            child: Container(
-              height: boxSize,
-              width: boxSize,
-              decoration: BoxDecoration(
-                border: Border.all(color: Theme.of(context).primaryColor),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(10.0),
-                  bottomLeft: Radius.circular(10.0),
-                ),
-              ),
-              child: const Icon(FontAwesomeIcons.minus, size: 16.0),
+          Expanded(child: Container()),
+          IconButton(
+            visualDensity: VisualDensity.compact,
+            onPressed: onDecreaseFontSize,
+            icon: const Icon(
+              FontAwesomeIcons.minus,
+              size: 16.0,
             ),
           ),
           Container(
-            height: boxSize,
-            width: boxSize,
-            decoration: BoxDecoration(
-              border: Border.symmetric(horizontal: BorderSide(color: Theme.of(context).primaryColor)),
-            ),
-            alignment: Alignment.center,
+            margin: EdgeInsets.symmetric(horizontal: 9.0),
             child: Icon(FontAwesomeIcons.a, size: 18.0, color: Theme.of(context).primaryColor),
-            // child: Text(
-            //   actualFontSize.toInt().toString(),
-            //   style: TextStyle(
-            //     fontSize: 14.0,
-            //     fontWeight: FontWeight.w500,
-            //     color: Theme.of(context).primaryColor,
-            //   ),
-            // ),
           ),
-          GestureDetector(
-            onTap: onIncreaseFontSize,
-            child: Container(
-              height: boxSize,
-              width: boxSize,
-              decoration: BoxDecoration(
-                border: Border.all(color: Theme.of(context).primaryColor),
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(10.0),
-                  bottomRight: Radius.circular(10.0),
-                ),
-              ),
-              child: const Icon(FontAwesomeIcons.plus, size: 16.0),
+          IconButton(
+            visualDensity: VisualDensity.compact,
+            onPressed: onIncreaseFontSize,
+            icon: const Icon(
+              FontAwesomeIcons.plus,
+              size: 16.0,
             ),
-          ),
+          )
         ],
       ),
     );

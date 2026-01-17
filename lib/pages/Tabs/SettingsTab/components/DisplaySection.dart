@@ -65,26 +65,26 @@ class _DisplaySectionState extends State<DisplaySection> {
                 ],
               ),
             ),
-            SettingsRow(
-              title: localizations.theme,
-              description: localizations.chooseAppAppearance,
-              action: DropdownMenu(
-                onSelected: (value) {
-                  Provider.of<SettingsProvider>(context, listen: false).setBrightness(
-                    value == 'dark' ? Brightness.dark : Brightness.light,
-                  );
+            // SettingsRow(
+            //   title: localizations.theme,
+            //   description: localizations.chooseAppAppearance,
+            //   action: DropdownMenu(
+            //     onSelected: (value) {
+            //       Provider.of<SettingsProvider>(context, listen: false).setBrightness(
+            //         value == 'dark' ? Brightness.dark : Brightness.light,
+            //       );
 
-                  setState(() {
-                    theme = value!;
-                  });
-                },
-                initialSelection: theme,
-                dropdownMenuEntries: <DropdownMenuEntry>[
-                  DropdownMenuEntry(value: 'light', label: localizations.light),
-                  DropdownMenuEntry(value: 'dark', label: localizations.dark),
-                ],
-              ),
-            ),
+            //       setState(() {
+            //         theme = value!;
+            //       });
+            //     },
+            //     initialSelection: theme,
+            //     dropdownMenuEntries: <DropdownMenuEntry>[
+            //       DropdownMenuEntry(value: 'light', label: localizations.light),
+            //       DropdownMenuEntry(value: 'dark', label: localizations.dark),
+            //     ],
+            //   ),
+            // ),
             SettingsRow(
               title: localizations.keepScreenOn,
               description: localizations.preventScreenFromSleeping,

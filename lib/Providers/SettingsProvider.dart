@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:songbooksofpraise_app/models/Song.dart';
 
 enum SettingsProviderTextSize {
   small,
@@ -11,26 +12,30 @@ class SettingsProvider extends ChangeNotifier {
   SettingsProviderTextSize _textSize = SettingsProviderTextSize.medium;
   Brightness _brightness = Brightness.light;
   bool _keepScreenOn = true;
-  int _defaultTranspose = 0;
+  ChordNotation _defaultNotation = ChordNotation.Letter;
   bool _showChordsByDefault = false;
+  bool _showSheetByDefault = false;
 
   SettingsProvider({
     SettingsProviderTextSize textSize = SettingsProviderTextSize.medium,
     Brightness brightness = Brightness.light,
     bool keepScreenOn = true,
-    int defaultTranspose = 0,
+    ChordNotation defaultNotation = ChordNotation.Letter,
     bool showChordsByDefault = false,
+    bool showSheetByDefault = false,
   })  : _textSize = textSize,
         _brightness = brightness,
         _keepScreenOn = keepScreenOn,
-        _defaultTranspose = defaultTranspose,
-        _showChordsByDefault = showChordsByDefault;
+        _defaultNotation = defaultNotation,
+        _showChordsByDefault = showChordsByDefault,
+        _showSheetByDefault = showSheetByDefault;
 
   SettingsProviderTextSize get textSize => _textSize;
   Brightness get brightness => _brightness;
   bool get keepScreenOn => _keepScreenOn;
-  int get defaultTranspose => _defaultTranspose;
+  ChordNotation get defaultNotation => _defaultNotation;
   bool get showChordsByDefault => _showChordsByDefault;
+  bool get showSheetByDefault => _showSheetByDefault;
 
   void setTextSize(SettingsProviderTextSize newSize) {
     _textSize = newSize;
@@ -62,11 +67,11 @@ class SettingsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setDefaultTranspose(int value) {
-    _defaultTranspose = value;
+  void setDefaultNotation(ChordNotation value) {
+    _defaultNotation = value;
 
     SharedPreferences.getInstance().then((prefs) {
-      prefs.setInt('defaultTranspose', value);
+      prefs.setString('defaultNotation', value == ChordNotation.Letter ? 'Letter' : 'Solfege');
     });
 
     notifyListeners();
@@ -77,6 +82,16 @@ class SettingsProvider extends ChangeNotifier {
 
     SharedPreferences.getInstance().then((prefs) {
       prefs.setBool('showChordsByDefault', value);
+    });
+
+    notifyListeners();
+  }
+
+  void setShowSheetByDefault(bool value) {
+    _showSheetByDefault = value;
+
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.setBool('showSheetByDefault', value);
     });
 
     notifyListeners();

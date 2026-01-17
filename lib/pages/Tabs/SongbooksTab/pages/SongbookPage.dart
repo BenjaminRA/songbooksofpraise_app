@@ -69,6 +69,7 @@ class _SongbookPageState extends State<SongbookPage> {
                   .toList(),
             ),
           ),
+          SizedBox(height: 20.0),
           // ActiveSongbookSection(songbook: widget.songbook),
         ],
       ),

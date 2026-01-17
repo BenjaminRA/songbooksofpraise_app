@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:songbooksofpraise_app/Providers/SettingsProvider.dart';
 import 'package:songbooksofpraise_app/db/DB.dart';
 import 'package:songbooksofpraise_app/l10n/app_localizations.dart';
+import 'package:songbooksofpraise_app/models/Song.dart';
 import 'package:songbooksofpraise_app/pages/RootPage.dart';
 import 'package:songbooksofpraise_app/components/SlideInFromRightPageBuilder.dart';
 import 'l10n/l10n.dart';
@@ -18,8 +19,16 @@ void main() async {
   final textSize = prefs.getString('textSize') ?? 'medium';
   final brightness = prefs.getString('brightness') == 'dark' ? Brightness.dark : Brightness.light;
   final keepScreenOn = prefs.getBool('keepScreenOn') ?? true;
-  final defaultTranspose = prefs.getInt('defaultTranspose') ?? 0;
+  ChordNotation defaultNotation = prefs.getString('defaultNotation') == 'Letter' ? ChordNotation.Letter : ChordNotation.Solfege;
   final showChordsByDefault = prefs.getBool('showChordsByDefault') ?? false;
+  final showSheetByDefault = prefs.getBool('showSheetByDefault') ?? false;
+
+  if (prefs.getString('defaultNotation') == null) {
+    final locale = WidgetsBinding.instance.platformDispatcher.locale;
+    // Set default based on locale, e.g., Letter for English, Solfege for Spanish
+    defaultNotation = locale.languageCode == 'en' ? ChordNotation.Letter : ChordNotation.Solfege;
+    await prefs.setString('defaultNotation', defaultNotation.name);
+  }
 
   await DB.init();
 
@@ -32,8 +41,9 @@ void main() async {
         ),
         brightness: brightness,
         keepScreenOn: keepScreenOn,
-        defaultTranspose: defaultTranspose,
+        defaultNotation: defaultNotation,
         showChordsByDefault: showChordsByDefault,
+        showSheetByDefault: showSheetByDefault,
       ),
       child: const MyApp(),
     ),

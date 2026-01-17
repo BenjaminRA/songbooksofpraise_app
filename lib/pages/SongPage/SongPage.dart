@@ -1,9 +1,12 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:songbooksofpraise_app/Providers/AppBarProvider.dart';
 import 'package:songbooksofpraise_app/Providers/SettingsProvider.dart';
 import 'package:songbooksofpraise_app/db/DB.dart';
+import 'package:songbooksofpraise_app/pages/SongPage/components/ChordsButtonBar.dart';
+import 'package:songbooksofpraise_app/pages/SongPage/components/ChordsByInstrument.dart';
 import 'package:songbooksofpraise_app/pages/SongPage/components/SongLyrics.dart';
 import 'package:songbooksofpraise_app/l10n/app_localizations.dart';
 import 'package:songbooksofpraise_app/models/Song.dart';
@@ -24,10 +27,13 @@ class _SongPageState extends State<SongPage> {
   late double fontSize = getInitialFontSize();
   late bool showChords = getInitialShowChords();
   bool showTools = false;
+  ChordNotation chordNotation = ChordNotation.Letter;
 
   @override
   void initState() {
     super.initState();
+
+    widget.song.transposeChords(widget.song.transpose, chordNotation);
 
     registerRecentlyPlayedSong();
 
@@ -35,6 +41,13 @@ class _SongPageState extends State<SongPage> {
       _updateAppBarActions();
 
       Provider.of<SettingsProvider>(context, listen: false).keepScreenOn ? WakelockPlus.enable() : WakelockPlus.disable();
+
+      setState(() {
+        chordNotation = Provider.of<SettingsProvider>(context, listen: false).defaultNotation;
+        widget.song.transposeChords(widget.song.transpose, chordNotation);
+      });
+
+      checkShowSheetByDefault();
     });
   }
 
@@ -106,11 +119,119 @@ class _SongPageState extends State<SongPage> {
     return Provider.of<SettingsProvider>(context, listen: false).showChordsByDefault;
   }
 
+  void checkShowSheetByDefault() {
+    if (Provider.of<SettingsProvider>(context, listen: false).showSheetByDefault) {
+      openSheet();
+    }
+  }
+
+  void openChordsByInstrument(Instrument instrument) async {
+    AppBarProvider appBarProvider = Provider.of<AppBarProvider>(context, listen: false);
+
+    appBarProvider.setTitle(appBarProvider.state.copyWith(
+      actions: [],
+    ));
+
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ChordsByInstrument(
+          song: widget.song,
+          instrument: instrument,
+          chordNotation: chordNotation,
+        ),
+      ),
+    );
+
+    _updateAppBarActions();
+  }
+
+  void openSheet() async {
+    AppBarProvider appBarProvider = Provider.of<AppBarProvider>(context, listen: false);
+
+    appBarProvider.setTitle(appBarProvider.state.copyWith(
+      actions: [],
+    ));
+
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MusicSheetViewer(
+          imageUrl: widget.song.music_sheet!,
+        ),
+      ),
+    );
+
+    _updateAppBarActions();
+  }
+
   @override
   Widget build(BuildContext context) {
     AppLocalizations localizations = AppLocalizations.of(context)!;
-    AppBarProvider appBarProvider = Provider.of<AppBarProvider>(context);
-    double toolbarHeight = 60.0;
+    double chordsToolsHeight = (showChords && widget.song.hasChordsInLyrics()) ? 130.0 : 0.0;
+    double toolbarHeight = 105.0 + chordsToolsHeight;
+
+    List<Widget> toolbarChildren = [
+      Padding(
+        padding: EdgeInsets.symmetric(vertical: 12.0),
+        child: Row(
+          spacing: 12.0,
+          children: [
+            SongPageToolbarChip(
+              label: localizations.chords,
+              icon: FontAwesomeIcons.music,
+              disabled: !widget.song.hasChordsInLyrics(),
+              selected: showChords,
+              onSelected: () {
+                setState(() {
+                  showChords = !showChords;
+                });
+              },
+            ),
+            SongPageToolbarChip(
+              label: localizations.sheet,
+              icon: FontAwesomeIcons.fileLines,
+              selected: false,
+              disabled: widget.song.music_sheet == null,
+              onSelected: openSheet,
+            ),
+            Spacer(),
+          ],
+        ),
+      ),
+    ];
+
+    if (showChords && widget.song.hasChordsInLyrics()) {
+      toolbarChildren.addAll([
+        Divider(height: 0.0),
+        ChordsButtonBar(
+          transpose: widget.song.transpose,
+          chordNotation: chordNotation,
+          onOpenChordsByInstrument: (instrument) => openChordsByInstrument(instrument),
+          onSelectedChordNotation: (notation) => setState(() {
+            chordNotation = notation;
+            widget.song.transposeChords(widget.song.transpose, chordNotation);
+          }),
+          onIncreaseTranspose: () => setState(() {
+            widget.song.transpose = widget.song.transpose + 1;
+            widget.song.transposeChords(widget.song.transpose, chordNotation);
+          }),
+          onDecreaseTranspose: () => setState(() {
+            widget.song.transpose = widget.song.transpose - 1;
+            widget.song.transposeChords(widget.song.transpose, chordNotation);
+          }),
+        ),
+      ]);
+    }
+
+    toolbarChildren.addAll([
+      Divider(height: 0.0),
+      FontAdjustmentButtonBar(
+        actualFontSize: fontSize,
+        onIncreaseFontSize: () => setState(() => fontSize = fontSize + 1),
+        onDecreaseFontSize: () => setState(() => fontSize = fontSize - 1),
+      )
+    ]);
 
     return Scaffold(
       body: ListView(
@@ -123,51 +244,10 @@ class _SongPageState extends State<SongPage> {
             height: showTools ? toolbarHeight : 0.0,
             transform: Transform.translate(offset: Offset(0, showTools ? 0 : -toolbarHeight)).transform,
             decoration: BoxDecoration(color: Colors.white),
-            padding: EdgeInsets.symmetric(horizontal: 10.0),
+            padding: EdgeInsets.symmetric(horizontal: 12.0),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Row(
-                  spacing: 6.0,
-                  children: [
-                    SongPageToolbarChip(
-                      label: localizations.chords,
-                      icon: FontAwesomeIcons.music,
-                      disabled: !widget.song.hasChordsInLyrics(),
-                      selected: showChords,
-                      onSelected: () {
-                        setState(() {
-                          showChords = !showChords;
-                        });
-                      },
-                    ),
-                    SongPageToolbarChip(
-                      label: localizations.sheet,
-                      icon: FontAwesomeIcons.fileLines,
-                      selected: false,
-                      disabled: widget.song.music_sheet == null,
-                      onSelected: () {
-                        appBarProvider.setTitle(appBarProvider.state);
-
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MusicSheetViewer(
-                              imageUrl: widget.song.music_sheet!,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                    Spacer(),
-                    FontAdjustmentButtonBar(
-                      actualFontSize: fontSize,
-                      onIncreaseFontSize: () => setState(() => fontSize = fontSize + 1),
-                      onDecreaseFontSize: () => setState(() => fontSize = fontSize - 1),
-                    )
-                  ],
-                ),
-              ],
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: toolbarChildren,
             ),
           ),
           Padding(

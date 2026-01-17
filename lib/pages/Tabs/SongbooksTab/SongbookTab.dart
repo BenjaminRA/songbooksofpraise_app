@@ -135,29 +135,49 @@ class _SongbookTabState extends State<SongbookTab> {
     // Simulate a network call or data refresh
     // await Future.delayed(const Duration(seconds: 1));
     if (mounted) {
-      final response = await API.get('songbooks');
-      final available = await Songbook.fromJson(response['songbooks']);
-
-      Map<int, bool> updateAvailable = {};
-
-      for (Songbook available in available) {
-        if (available.updateAvailable) {
-          updateAvailable[available.id] = true;
-        }
-      }
-
+      // First get installed songbooks
       final installed = await Songbook.getInstalled();
 
-      for (Songbook songbook in installed) {
-        if (updateAvailable.containsKey(songbook.id)) {
-          songbook.updateAvailable = true;
-        }
-      }
-
       setState(() {
-        this.available = available;
         this.installed = installed;
       });
+
+      // Then get available songbooks from API
+      try {
+        final response = await API.get('songbooks');
+        final available = await Songbook.fromJson(response['songbooks']);
+
+        Map<int, bool> updateAvailable = {};
+
+        for (Songbook available in available) {
+          if (available.updateAvailable) {
+            updateAvailable[available.id] = true;
+          }
+        }
+
+        for (Songbook songbook in installed) {
+          if (updateAvailable.containsKey(songbook.id)) {
+            songbook.updateAvailable = true;
+          }
+        }
+
+        setState(() {
+          this.installed = installed;
+          this.available = available;
+        });
+      } catch (e) {
+        toastification.show(
+          context: context,
+          alignment: Alignment.bottomCenter,
+          title: Text(AppLocalizations.of(context)!.errorFetchingSongbooks),
+          type: ToastificationType.error,
+          // primaryColor: Theme.of(context).primaryColor,
+          icon: Icon(Icons.error),
+          dragToClose: true,
+          applyBlurEffect: true,
+          autoCloseDuration: const Duration(seconds: 5),
+        );
+      }
     }
   }
 

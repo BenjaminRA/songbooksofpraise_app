@@ -64,10 +64,17 @@ class AppLocalizationsEs extends AppLocalizations {
   String get musicAndAudio => 'Música y Audio';
 
   @override
-  String get defaultTranspose => 'Transposición Predeterminada';
+  String get defaultNotation => 'Notación Predeterminada';
 
   @override
-  String get automaticKeyAdjustment => 'Ajuste Automático de Tonalidad';
+  String get defaultNotationHelperText =>
+      'Elige tu notación de acordes preferida';
+
+  @override
+  String get letterNotation => 'Americana';
+
+  @override
+  String get solfegeNotation => 'Solfeo';
 
   @override
   String get showChordsByDefault => 'Mostrar Acordes por Defecto';
@@ -75,6 +82,13 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get displayChordsWhenOpeningSongs =>
       'Mostrar acordes al abrir canciones';
+
+  @override
+  String get showSheetByDefault => 'Mostrar Partituras por Defecto';
+
+  @override
+  String get displaySheetMusicWhenOpeningSongs =>
+      'Mostrar partituras al abrir canciones';
 
   @override
   String get aboutAndSupport => 'Acerca de y Soporte';
@@ -175,6 +189,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get availableSingular => 'Disponible';
 
   @override
+  String get errorFetchingSongbooks =>
+      'Error al obtener los cancioneros. Por favor, inténtalo de nuevo más tarde.';
+
+  @override
   String get update => 'Actualizar';
 
   @override
@@ -240,6 +258,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get sheet => 'Partitura';
 
   @override
+  String get transpose => 'Transponer';
+
+  @override
+  String get chordNotation => 'Notación de acordes';
+
+  @override
   String get verse => 'Verso';
 
   @override
@@ -250,6 +274,18 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get all => 'Todos';
+
+  @override
+  String get chordsByInstrument => 'Acordes por Instrumento';
+
+  @override
+  String get guitar => 'Guitarra';
+
+  @override
+  String get piano => 'Piano';
+
+  @override
+  String get ukulele => 'Ukulele';
 
   @override
   String get genericCategoryDescription1 =>

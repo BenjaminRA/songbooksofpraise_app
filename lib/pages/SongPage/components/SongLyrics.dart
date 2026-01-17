@@ -23,7 +23,7 @@ class SongLyrics extends StatelessWidget {
     List<Widget> lyricsParagraphs = [];
 
     // Split lyrics into paragraphs based on double newlines
-    for (var paragraphs in song.lyrics.split('\n\n')) {
+    for (var paragraphs in song.transposedLyrics.split('\n\n')) {
       List<InlineSpan> lyricsSpans = [];
       bool isChorus = false;
 
@@ -169,7 +169,7 @@ class SongLyrics extends StatelessWidget {
     //   }
     // }
 
-    // for (var line in song.lyrics.split('\n')) {
+    // for (var line in song.transposedLyrics.split('\n')) {
     //   line = line.trim();
 
     //   // Structure line

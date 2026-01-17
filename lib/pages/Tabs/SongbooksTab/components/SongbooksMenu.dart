@@ -98,6 +98,7 @@ class _SongbooksMenuState extends State<SongbooksMenu> {
                     songbooks: widget.available,
                     callbacks: widget.callbacks,
                   ),
+                SizedBox(height: 20.0),
               ],
             ),
           ),

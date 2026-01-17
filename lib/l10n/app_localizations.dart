@@ -206,17 +206,29 @@ abstract class AppLocalizations {
   /// **'Music & Audio'**
   String get musicAndAudio;
 
-  /// Default transpose setting label
+  /// Default notation setting label
   ///
   /// In en, this message translates to:
-  /// **'Default Transpose'**
-  String get defaultTranspose;
+  /// **'Default Notation'**
+  String get defaultNotation;
 
-  /// Default transpose setting description
+  /// Default notation setting description
   ///
   /// In en, this message translates to:
-  /// **'Automatic Key Adjustment'**
-  String get automaticKeyAdjustment;
+  /// **'Choose your preferred chord notation'**
+  String get defaultNotationHelperText;
+
+  /// Letter notation option
+  ///
+  /// In en, this message translates to:
+  /// **'Letter'**
+  String get letterNotation;
+
+  /// Solfege notation option
+  ///
+  /// In en, this message translates to:
+  /// **'Solfege'**
+  String get solfegeNotation;
 
   /// Show chords by default setting label
   ///
@@ -229,6 +241,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Display chords when opening songs'**
   String get displayChordsWhenOpeningSongs;
+
+  /// Show sheet music by default setting label
+  ///
+  /// In en, this message translates to:
+  /// **'Show Sheet by Default'**
+  String get showSheetByDefault;
+
+  /// Show sheet music by default setting description
+  ///
+  /// In en, this message translates to:
+  /// **'Display sheet music when opening songs'**
+  String get displaySheetMusicWhenOpeningSongs;
 
   /// About and support section title in settings
   ///
@@ -404,6 +428,12 @@ abstract class AppLocalizations {
   /// **'Available'**
   String get availableSingular;
 
+  /// Error message when failing to fetch songbooks
+  ///
+  /// In en, this message translates to:
+  /// **'Error fetching songbooks. Please try again later.'**
+  String get errorFetchingSongbooks;
+
   /// Update button text
   ///
   /// In en, this message translates to:
@@ -512,6 +542,18 @@ abstract class AppLocalizations {
   /// **'Sheet'**
   String get sheet;
 
+  /// Transpose label
+  ///
+  /// In en, this message translates to:
+  /// **'Transpose'**
+  String get transpose;
+
+  /// Chord notation setting label
+  ///
+  /// In en, this message translates to:
+  /// **'Chord Notation'**
+  String get chordNotation;
+
   /// Verse label
   ///
   /// In en, this message translates to:
@@ -535,6 +577,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'All'**
   String get all;
+
+  /// Chords by instrument section title
+  ///
+  /// In en, this message translates to:
+  /// **'Chords by Instrument'**
+  String get chordsByInstrument;
+
+  /// Guitar instrument label
+  ///
+  /// In en, this message translates to:
+  /// **'Guitar'**
+  String get guitar;
+
+  /// Piano instrument label
+  ///
+  /// In en, this message translates to:
+  /// **'Piano'**
+  String get piano;
+
+  /// Ukulele instrument label
+  ///
+  /// In en, this message translates to:
+  /// **'Ukulele'**
+  String get ukulele;
 
   /// Generic category description 1
   ///

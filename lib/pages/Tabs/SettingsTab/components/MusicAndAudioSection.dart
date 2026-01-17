@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:songbooksofpraise_app/Providers/SettingsProvider.dart';
+import 'package:songbooksofpraise_app/models/Song.dart';
 import 'package:songbooksofpraise_app/pages/Tabs/SettingsTab/components/SettingsRow.dart';
 import 'package:songbooksofpraise_app/l10n/app_localizations.dart';
 
@@ -13,14 +14,16 @@ class MusicAndAudioSection extends StatefulWidget {
 
 class _MusicAndAudioSectionState extends State<MusicAndAudioSection> {
   bool showChordsByDefault = false;
-  int defaultTranspose = 0;
+  bool showSheetByDefault = false;
+  ChordNotation defaultNotation = ChordNotation.Letter;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
     showChordsByDefault = Provider.of<SettingsProvider>(context).showChordsByDefault;
-    defaultTranspose = Provider.of<SettingsProvider>(context).defaultTranspose;
+    showSheetByDefault = Provider.of<SettingsProvider>(context).showSheetByDefault;
+    defaultNotation = Provider.of<SettingsProvider>(context).defaultNotation;
   }
 
   @override
@@ -40,26 +43,23 @@ class _MusicAndAudioSectionState extends State<MusicAndAudioSection> {
               style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
             SettingsRow(
-              title: localizations.defaultTranspose,
-              description: localizations.automaticKeyAdjustment,
-              action: DropdownMenu<int>(
+              title: localizations.defaultNotation,
+              description: localizations.defaultNotationHelperText,
+              action: DropdownMenu<ChordNotation>(
                 onSelected: (value) {
                   if (value == null) return;
 
-                  Provider.of<SettingsProvider>(context, listen: false).setDefaultTranspose(value);
+                  Provider.of<SettingsProvider>(context, listen: false).setDefaultNotation(value);
                   setState(() {
-                    defaultTranspose = value;
+                    defaultNotation = value;
                   });
                 },
-                initialSelection: defaultTranspose,
+                initialSelection: defaultNotation,
                 enableSearch: false,
-                dropdownMenuEntries: List.generate(
-                  23,
-                  (index) {
-                    final value = (index - 11);
-                    return DropdownMenuEntry(value: value, label: value.toString());
-                  },
-                ),
+                dropdownMenuEntries: [
+                  DropdownMenuEntry(value: ChordNotation.Letter, label: localizations.letterNotation),
+                  DropdownMenuEntry(value: ChordNotation.Solfege, label: localizations.solfegeNotation),
+                ],
               ),
             ),
             SettingsRow(
@@ -72,6 +72,19 @@ class _MusicAndAudioSectionState extends State<MusicAndAudioSection> {
                     showChordsByDefault = value;
                   });
                   Provider.of<SettingsProvider>(context, listen: false).setShowChordsByDefault(value);
+                },
+              ),
+            ),
+            SettingsRow(
+              title: localizations.showSheetByDefault,
+              description: localizations.displaySheetMusicWhenOpeningSongs,
+              action: Switch(
+                value: showSheetByDefault,
+                onChanged: (value) {
+                  setState(() {
+                    showSheetByDefault = value;
+                  });
+                  Provider.of<SettingsProvider>(context, listen: false).setShowSheetByDefault(value);
                 },
               ),
             ),

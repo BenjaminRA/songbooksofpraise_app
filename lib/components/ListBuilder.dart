@@ -44,6 +44,29 @@ class _ListBuilderState extends State<ListBuilder> {
   late Map<String, List<ListBuilderItem>> groupedItems;
   Map<String, GlobalKey> groupKeys = {};
   final ScrollController _scrollController = ScrollController();
+  final ScrollController _groupScrollController = ScrollController();
+
+  bool showSlider = false;
+  String currentGroup = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeGroups();
+    _scrollController.addListener(scrollControllerListener);
+  }
+
+  @override
+  void didUpdateWidget(ListBuilder oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Reinitialize groups if items changed
+    if (oldWidget.items != widget.items ||
+        oldWidget.groupBy != widget.groupBy ||
+        oldWidget.sortBy != widget.sortBy ||
+        oldWidget.sortOrder != widget.sortOrder) {
+      _initializeGroups();
+    }
+  }
 
   void _sortItems(List<ListBuilderItem> items) {
     if (widget.sortBy != null) {
@@ -63,34 +86,36 @@ class _ListBuilderState extends State<ListBuilder> {
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-
+  void _initializeGroups() {
     final items = widget.items;
 
     if (widget.groupBy != null) {
-      groupedItems = {};
+      final Map<String, List<ListBuilderItem>> newGroupedItems = {};
+
       for (final item in items) {
         final groupKey = widget.groupBy!(item);
-        if (!groupedItems.containsKey(groupKey)) {
-          groupedItems[groupKey] = [];
+        if (!newGroupedItems.containsKey(groupKey)) {
+          newGroupedItems[groupKey] = [];
+          // Only create GlobalKey if it doesn't exist
+          if (!groupKeys.containsKey(groupKey)) {
+            groupKeys[groupKey] = GlobalKey(debugLabel: 'group_$groupKey');
+          }
         }
 
-        groupKeys[groupKey] = GlobalKey();
-        groupedItems[groupKey]!.add(item);
+        newGroupedItems[groupKey]!.add(item);
       }
+
+      // Remove GlobalKeys for groups that no longer exist
+      groupKeys.removeWhere((key, value) => !newGroupedItems.containsKey(key));
+      groupedItems = newGroupedItems;
     } else {
       groupedItems = {'': items};
+      groupKeys.clear();
     }
 
     for (final group in groupedItems.keys) {
       _sortItems(groupedItems[group]!);
     }
-
-    _scrollController.addListener(scrollControllerListener);
-
-    // setState(() {});
   }
 
   @override
@@ -105,9 +130,24 @@ class _ListBuilderState extends State<ListBuilder> {
       if (!mounted) return;
       if (!_scrollController.hasClients) return;
 
+      final shouldShowSlider = _scrollController.position.pixels > 150.0;
+
+      if (shouldShowSlider != showSlider) {
+        setState(() {
+          showSlider = shouldShowSlider;
+        });
+      }
+
       // Last groups
       if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent) {
-        print('current group: ${groupedItems.keys.last}');
+        _groupScrollController.animateTo(
+          _groupScrollController.position.maxScrollExtent,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+        setState(() {
+          currentGroup = groupedItems.keys.last;
+        });
         return;
       }
 
@@ -128,8 +168,34 @@ class _ListBuilderState extends State<ListBuilder> {
         final double groupVisibleFraction = viewport.getOffsetToReveal(groupRenderObject, 0.0).offset;
 
         if ((_scrollController.position.pixels - groupVisibleFraction).abs() < 20.0) {
-          print('current group: $group');
-          break;
+          if (currentGroup == group) break;
+          setState(() {
+            currentGroup = group;
+          });
+
+          // only scroll if the key is not visible in _groupScrollController
+          if (_groupScrollController.hasClients) {
+            final groupIndex = groupKeys.keys.toList().indexOf(group);
+            final itemHeight = 36.0;
+            final targetOffset = groupIndex * itemHeight;
+            final viewportHeight = _groupScrollController.position.viewportDimension;
+            final currentOffset = _groupScrollController.offset;
+
+            // Check if item is outside visible viewport
+            if (targetOffset < currentOffset || targetOffset > currentOffset + viewportHeight - itemHeight) {
+              // If scrolling down (target below viewport), align to bottom
+              // If scrolling up (target above viewport), align to top
+              final double alignedOffset = targetOffset < currentOffset
+                  ? targetOffset // Align to top
+                  : targetOffset - viewportHeight + itemHeight; // Align to bottom
+
+              _groupScrollController.animateTo(
+                alignedOffset.clamp(0.0, _groupScrollController.position.maxScrollExtent),
+                duration: Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+              );
+            }
+          }
         }
       }
     } catch (e) {
@@ -183,61 +249,143 @@ class _ListBuilderState extends State<ListBuilder> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> children = [];
+    List<Widget> slivers = widget.slivers != null ? List.from(widget.slivers!) : [];
+    double rightMargin = groupedItems.keys.length > 1 ? 30.0 : 0.0;
 
     // If no grouping, just list all items
     if (widget.groupBy == null || groupedItems.keys.length == 1) {
-      children = groupedItems[groupedItems.keys.first]!.map((item) {
-        return _renderListItem(item);
-      }).toList();
-    } else {
-      groupedItems.forEach((group, items) {
-        children.add(
-          Container(
-            key: groupKeys[group],
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: Text(
-              group,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).primaryColor,
-                  ),
-            ),
-          ),
-        );
-
-        children.addAll(
-          items.map((item) {
-            return _renderListItem(item);
-          }).toList(),
-        );
-      });
-
-      children.add(SizedBox(height: 20.0));
-    }
-
-    List<Widget> slivers = widget.slivers ?? [];
-
-    slivers.add(
-      SliverPadding(
-        padding: EdgeInsets.symmetric(horizontal: 16.0),
-        sliver: SliverToBoxAdapter(
-          child: Container(
-            margin: EdgeInsets.only(right: 10.0),
-            child: Column(
-              children: children,
+      slivers.add(
+        SliverPadding(
+          padding: EdgeInsets.symmetric(horizontal: 16.0),
+          sliver: SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                final items = groupedItems[groupedItems.keys.first]!;
+                if (index >= items.length) return null;
+                return Container(
+                  margin: EdgeInsets.only(right: rightMargin),
+                  child: _renderListItem(items[index]),
+                );
+              },
+              childCount: groupedItems[groupedItems.keys.first]!.length,
             ),
           ),
         ),
-      ),
-    );
+      );
+    } else {
+      // Build slivers for each group
+      groupedItems.forEach((group, items) {
+        // Group header with GlobalKey
+        slivers.add(
+          SliverPadding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            sliver: SliverToBoxAdapter(
+              child: Container(
+                key: groupKeys[group], // GlobalKey on individual sliver
+                margin: EdgeInsets.only(right: rightMargin),
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Text(
+                  group,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                ),
+              ),
+            ),
+          ),
+        );
+
+        // Group items
+        slivers.add(
+          SliverPadding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            sliver: SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  if (index >= items.length) return null;
+                  return Container(
+                    margin: EdgeInsets.only(right: rightMargin),
+                    child: _renderListItem(items[index]),
+                  );
+                },
+                childCount: items.length,
+              ),
+            ),
+          ),
+        );
+      });
+
+      slivers.add(
+        SliverToBoxAdapter(
+          child: SizedBox(height: 20.0),
+        ),
+      );
+    }
 
     return Scaffold(
-        body: CustomScrollView(
-      controller: _scrollController,
-      physics: BouncingScrollPhysics(),
-      slivers: slivers,
-    ));
+      body: Stack(
+        children: [
+          CustomScrollView(
+            controller: _scrollController,
+            physics: BouncingScrollPhysics(),
+            slivers: slivers,
+          ),
+          if (groupedItems.keys.length > 1)
+            AnimatedOpacity(
+              opacity: showSlider ? 1.0 : 0.0,
+              duration: Duration(milliseconds: 300),
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: Container(
+                  width: 50.0,
+                  margin: EdgeInsets.symmetric(vertical: 20.0),
+                  padding: EdgeInsets.only(left: 8.0, right: 4.0),
+                  // height: double.infinity,
+                  child: Card(
+                    color: Colors.white,
+                    elevation: 1.0,
+                    child: ListView(
+                      controller: _groupScrollController,
+                      shrinkWrap: true,
+                      children: groupedItems.keys.map((group) {
+                        final isSelected = group == currentGroup;
+                        return GestureDetector(
+                          onTap: () {
+                            final key = groupKeys[group];
+                            if (key == null) return;
+
+                            final BuildContext? keyContext = key.currentContext;
+                            if (keyContext == null) return;
+
+                            Scrollable.ensureVisible(
+                              keyContext,
+                              duration: Duration(milliseconds: 300),
+                              curve: Curves.easeInOut,
+                            );
+                          },
+                          child: Container(
+                            alignment: Alignment.center,
+                            padding: EdgeInsets.symmetric(vertical: 8.0),
+                            // color: isSelected ? Theme.of(context).primaryColor.withOpacity(0.1) : Colors.transparent,
+                            child: Text(
+                              group.isNotEmpty ? group[0] : '',
+                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                                    color: isSelected ? Theme.of(context).primaryColor : Colors.black,
+                                  ),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
   }
 }

@@ -72,13 +72,21 @@
   "@musicAndAudio": {
     "description": "Título de la sección de música y audio en configuración"
   },
-  "defaultTranspose": "Transposición Predeterminada",
-  "@defaultTranspose": {
-    "description": "Etiqueta de configuración de transposición predeterminada"
+  "defaultNotation": "Notación Predeterminada",
+  "@defaultNotation": {
+    "description": "Etiqueta de configuración de notación predeterminada"
   },
-  "automaticKeyAdjustment": "Ajuste Automático de Tonalidad",
-  "@automaticKeyAdjustment": {
-    "description": "Descripción de configuración de transposición predeterminada"
+  "defaultNotationHelperText": "Elige tu notación de acordes preferida",
+  "@defaultNotationHelperText": {
+    "description": "Descripción de configuración de notación predeterminada"
+  },
+  "letterNotation": "Americana",
+  "@letterNotation": {
+    "description": "Opción de notación americana"
+  },
+  "solfegeNotation": "Solfeo",
+  "@solfegeNotation": {
+    "description": "Opción de notación solfeo"
   },
   "showChordsByDefault": "Mostrar Acordes por Defecto",
   "@showChordsByDefault": {
@@ -87,6 +95,14 @@
   "displayChordsWhenOpeningSongs": "Mostrar acordes al abrir canciones",
   "@displayChordsWhenOpeningSongs": {
     "description": "Descripción de configuración mostrar acordes por defecto"
+  },
+  "showSheetByDefault": "Mostrar Partituras por Defecto",
+  "@showSheetByDefault": {
+    "description": "Etiqueta de configuración mostrar partituras por defecto"
+  },
+  "displaySheetMusicWhenOpeningSongs": "Mostrar partituras al abrir canciones",
+  "@displaySheetMusicWhenOpeningSongs": {
+    "description": "Descripción de configuración mostrar partituras por defecto"
   },
   "aboutAndSupport": "Acerca de y Soporte",
   "@aboutAndSupport": {
@@ -224,6 +240,10 @@
   "@availableSingular": {
     "description": "Marca de que un cancionero está disponible"
   },
+  "errorFetchingSongbooks": "Error al obtener los cancioneros. Por favor, inténtalo de nuevo más tarde.",
+  "@errorFetchingSongbooks": {
+    "description": "Mensaje de error al no poder obtener los cancioneros"
+  },
   "update": "Actualizar",
   "@update": {
     "description": "Texto del botón actualizar"
@@ -321,6 +341,14 @@
   "@sheet": {
     "description": "Etiqueta de partitura"
   },
+  "transpose": "Transponer",
+  "@transpose": {
+    "description": "Etiqueta de transponer"
+  },
+  "chordNotation": "Notación de acordes",
+  "@chordNotation": {
+    "description": "Etiqueta de configuración de notación de acordes"
+  },
   "verse": "Verso",
   "@verse": {
     "description": "Etiqueta de verso"
@@ -336,6 +364,22 @@
   "all": "Todos",
   "@all": {
     "description": "Opción de todas las categorías"
+  },
+  "chordsByInstrument": "Acordes por Instrumento",
+  "@chordsByInstrument": {
+    "description": "Título de la sección acordes por instrumento"
+  },
+  "guitar": "Guitarra",
+  "@guitar": {
+    "description": "Etiqueta de instrumento guitarra"
+  },
+  "piano": "Piano",
+  "@piano": {
+    "description": "Etiqueta de instrumento piano"
+  },
+  "ukulele": "Ukulele",
+  "@ukulele": {
+    "description": "Etiqueta de instrumento ukulele"
   },
   "genericCategoryDescription1": "Explora los himnos de esta categoría.",
   "@genericCategoryDescription1": {
