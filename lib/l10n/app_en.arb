@@ -156,6 +156,10 @@
   "@lastPlayed": {
     "description": "Last played label in explore section"
   },
+  "favorite": "Favorite",
+  "@favorite": {
+    "description": "Favorite option in explore section"
+  },
   "favorites": "Favorites",
   "@favorites": {
     "description": "Favorites option in explore section"
@@ -380,6 +384,14 @@
   "ukulele": "Ukulele",
   "@ukulele": {
     "description": "Ukulele instrument label"
+  },
+  "back": "Back",
+  "@back": {
+    "description": "Back label"
+  },
+  "close": "Close",
+  "@close": {
+    "description": "Close label"
   },
   "genericCategoryDescription1": "Explore the hymns in this category.",
   "@genericCategoryDescription1": {

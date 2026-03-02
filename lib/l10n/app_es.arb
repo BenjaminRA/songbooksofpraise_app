@@ -156,6 +156,10 @@
   "@lastPlayed": {
     "description": "Etiqueta últimas reproducidas en la sección explorar"
   },
+  "favorite": "Favorito",
+  "@favorite": {
+    "description": "Opción favorito en la sección explorar"
+  },
   "favorites": "Favoritos",
   "@favorites": {
     "description": "Opción favoritos en la sección explorar"
@@ -380,6 +384,14 @@
   "ukulele": "Ukulele",
   "@ukulele": {
     "description": "Etiqueta de instrumento ukulele"
+  },
+  "back": "Atrás",
+  "@back": {
+    "description": "Etiqueta de atrás"
+  },
+  "close": "Cerrar",
+  "@close": {
+    "description": "Etiqueta de cerrar"
   },
   "genericCategoryDescription1": "Explora los himnos de esta categoría.",
   "@genericCategoryDescription1": {

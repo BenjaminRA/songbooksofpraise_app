@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'package:sqflite/sqflite.dart';
+import 'package:synchronized/synchronized.dart';
 
 class DB {
   static String? _dbPath;
+  static final Lock _lock = Lock();
 
   static Future<String> _getPath() async {
     if (_dbPath == null) {
@@ -109,21 +111,24 @@ class DB {
       );
     ''');
 
-    await batch.commit();
+    // Add column favorite to table songs
+    try {
+      await db.execute('''
+        ALTER TABLE songs
+        ADD COLUMN favorite BOOLEAN DEFAULT FALSE
+      ''');
+    } catch (e) {
+      print('Table songs already has the column favorite');
+    }
 
-    db.close();
-  }
-
-  static Future<Null> updateDatabase(String sqlScript) async {
-    Database db = await openDatabase(await _getPath());
-
-    final batch = db.batch();
-
-    for (String statement in sqlScript.split(');')) {
-      String trimmedStatement = statement.trim();
-      if (trimmedStatement.isNotEmpty) {
-        batch.execute('$trimmedStatement);');
-      }
+    // Add column favorite to table songs
+    try {
+      await db.execute('''
+        ALTER TABLE songs
+        ADD COLUMN font_size INTEGER DEFAULT NULL
+      ''');
+    } catch (e) {
+      print('Table songs already has the column font_size');
     }
 
     await batch.commit();
@@ -131,40 +136,68 @@ class DB {
     db.close();
   }
 
+  static Future<Null> updateDatabase(String sqlScript) async {
+    await _lock.synchronized(() async {
+      Database db = await openDatabase(await _getPath());
+
+      final batch = db.batch();
+
+      for (String statement in sqlScript.split(');')) {
+        String trimmedStatement = statement.trim();
+        if (trimmedStatement.isNotEmpty) {
+          batch.execute('$trimmedStatement);');
+        }
+      }
+
+      await batch.commit();
+
+      db.close();
+    });
+  }
+
   static Future<Null> execute(String sql, {List<dynamic>? arguments}) async {
-    Database db = await openDatabase(await _getPath());
+    await _lock.synchronized(() async {
+      Database db = await openDatabase(await _getPath());
 
-    await db.execute(sql, arguments);
+      await db.execute(sql, arguments);
 
-    db.close();
+      db.close();
+    });
   }
 
   static dynamic rawQuery(String sql, {List<dynamic>? arguments}) async {
-    Database db = await openDatabase(await _getPath(), singleInstance: false);
+    dynamic res;
+    await _lock.synchronized(() async {
+      Database db = await openDatabase(await _getPath());
 
-    dynamic res = await db.rawQuery(sql, arguments);
+      res = await db.rawQuery(sql, arguments);
 
-    db.close();
-
+      db.close();
+    });
     return res;
   }
 
   static dynamic rawInsert(String sql, {List<dynamic>? arguments}) async {
-    Database db = await openDatabase(await _getPath());
+    dynamic res;
+    await _lock.synchronized(() async {
+      Database db = await openDatabase(await _getPath());
 
-    dynamic res = await db.rawInsert(sql, arguments);
+      res = await db.rawInsert(sql, arguments);
 
-    db.close();
-
+      db.close();
+    });
     return res;
   }
 
   static dynamic rawDelete(String sql, {List<dynamic>? arguments}) async {
-    Database db = await openDatabase(await _getPath());
+    dynamic res;
+    await _lock.synchronized(() async {
+      Database db = await openDatabase(await _getPath());
 
-    dynamic res = await db.rawDelete(sql, arguments);
+      res = await db.rawDelete(sql, arguments);
 
-    db.close();
+      db.close();
+    });
 
     return res;
   }

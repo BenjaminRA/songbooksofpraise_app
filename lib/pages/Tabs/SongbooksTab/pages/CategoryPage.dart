@@ -65,7 +65,7 @@ class _CategoryPageState extends State<CategoryPage> {
     });
   }
 
-  void onSongTapHandler(Song item) async {
+  Future<void> onSongTapHandler(Song item) async {
     setState(() => loadingSong = item.id);
     try {
       Song? song = await Song.getSongByID(item.id);
@@ -88,7 +88,7 @@ class _CategoryPageState extends State<CategoryPage> {
           iconColor: Theme.of(context).scaffoldBackgroundColor,
         ),
       );
-      Navigator.of(context).push(
+      await Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => SongPage(
             song: song!,
@@ -145,6 +145,11 @@ class _CategoryPageState extends State<CategoryPage> {
                   number: item.number,
                   onTap: () => onSongTapHandler(item),
                   loading: loadingSong == item.id,
+                  favorite: item.isInstalled ? item.favorite : null,
+                  onFavoriteToggle: (bool value) async {
+                    await item.setFavorite(value);
+                    setState(() {});
+                  },
                 ),
               )
               .toList(),

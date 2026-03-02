@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:songbooksofpraise_app/models/Chord.dart';
 import 'package:songbooksofpraise_app/pages/SongPage/components/ChordsByInstrument.dart';
 
 class UkuleleChordRenderer extends StatelessWidget {

@@ -23,15 +23,29 @@ class SongPage extends StatefulWidget {
   State<SongPage> createState() => _SongPageState();
 }
 
-class _SongPageState extends State<SongPage> {
+class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
   late double fontSize = getInitialFontSize();
   late bool showChords = getInitialShowChords();
   bool showTools = false;
+  Instrument? showChordsByInstrument;
   ChordNotation chordNotation = ChordNotation.Letter;
+
+  // ToolBar Animation Controller
+  late AnimationController _toolbarAnimationController;
 
   @override
   void initState() {
     super.initState();
+
+    // 400 ms fastEaseInToSlowEaseOut animation
+    _toolbarAnimationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 300),
+    );
+
+    _toolbarAnimationController.addListener(() {
+      setState(() {});
+    });
 
     widget.song.transposeChords(widget.song.transpose, chordNotation);
 
@@ -53,8 +67,9 @@ class _SongPageState extends State<SongPage> {
 
   @override
   void dispose() {
-    super.dispose();
+    _toolbarAnimationController.dispose();
     WakelockPlus.disable();
+    super.dispose();
   }
 
   void registerRecentlyPlayedSong() async {
@@ -73,6 +88,20 @@ class _SongPageState extends State<SongPage> {
         ),
         onPressed: () {
           setState(() {
+            if (!showTools) {
+              _toolbarAnimationController.animateTo(
+                1.0,
+                duration: Duration(milliseconds: 400),
+                curve: Curves.fastEaseInToSlowEaseOut,
+              );
+            } else {
+              _toolbarAnimationController.animateBack(
+                0.0,
+                duration: Duration(milliseconds: 400),
+                curve: Curves.fastEaseInToSlowEaseOut,
+              );
+            }
+
             showTools = !showTools;
           });
           _updateAppBarActions();
@@ -126,24 +155,26 @@ class _SongPageState extends State<SongPage> {
   }
 
   void openChordsByInstrument(Instrument instrument) async {
-    AppBarProvider appBarProvider = Provider.of<AppBarProvider>(context, listen: false);
+    setState(() => showChordsByInstrument = instrument);
 
-    appBarProvider.setTitle(appBarProvider.state.copyWith(
-      actions: [],
-    ));
+    // AppBarProvider appBarProvider = Provider.of<AppBarProvider>(context, listen: false);
 
-    await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ChordsByInstrument(
-          song: widget.song,
-          instrument: instrument,
-          chordNotation: chordNotation,
-        ),
-      ),
-    );
+    // appBarProvider.setTitle(appBarProvider.state.copyWith(
+    //   actions: [],
+    // ));
 
-    _updateAppBarActions();
+    // await Navigator.push(
+    //   context,
+    //   MaterialPageRoute(
+    //     builder: (context) => ChordsByInstrument(
+    //       song: widget.song,
+    //       instrument: instrument,
+    //       chordNotation: chordNotation,
+    //     ),
+    //   ),
+    // );
+
+    // _updateAppBarActions();
   }
 
   void openSheet() async {
@@ -169,7 +200,15 @@ class _SongPageState extends State<SongPage> {
   Widget build(BuildContext context) {
     AppLocalizations localizations = AppLocalizations.of(context)!;
     double chordsToolsHeight = (showChords && widget.song.hasChordsInLyrics()) ? 130.0 : 0.0;
-    double toolbarHeight = 105.0 + chordsToolsHeight;
+    double chordsByInstrumentToolsHeight = showChordsByInstrument != null ? 200.0 : 0.0;
+
+    double toolbarHeight = 105.0;
+
+    if (showChordsByInstrument != null) {
+      toolbarHeight += chordsByInstrumentToolsHeight;
+    } else {
+      toolbarHeight += chordsToolsHeight;
+    }
 
     List<Widget> toolbarChildren = [
       Padding(
@@ -220,7 +259,7 @@ class _SongPageState extends State<SongPage> {
             widget.song.transpose = widget.song.transpose - 1;
             widget.song.transposeChords(widget.song.transpose, chordNotation);
           }),
-        ),
+        )
       ]);
     }
 
@@ -230,32 +269,81 @@ class _SongPageState extends State<SongPage> {
         actualFontSize: fontSize,
         onIncreaseFontSize: () => setState(() => fontSize = fontSize + 1),
         onDecreaseFontSize: () => setState(() => fontSize = fontSize - 1),
+        isFavorite: widget.song.favorite,
+        onSetFavorite: (value) async {
+          await widget.song.setFavorite(value);
+          setState(() {});
+        },
       )
     ]);
 
     return Scaffold(
-      body: ListView(
+      body: CustomScrollView(
         physics: BouncingScrollPhysics(),
         // padding: const EdgeInsets.all(16.0),
-        children: [
-          AnimatedContainer(
-            duration: const Duration(milliseconds: 400),
-            curve: Curves.fastEaseInToSlowEaseOut,
-            height: showTools ? toolbarHeight : 0.0,
-            transform: Transform.translate(offset: Offset(0, showTools ? 0 : -toolbarHeight)).transform,
-            decoration: BoxDecoration(color: Colors.white),
-            padding: EdgeInsets.symmetric(horizontal: 12.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: toolbarChildren,
+        slivers: [
+          SliverAppBar(
+            pinned: true,
+            useDefaultSemanticsOrder: false,
+            automaticallyImplyLeading: false,
+            toolbarHeight: 0.0,
+            bottom: PreferredSize(
+              preferredSize: Size.fromHeight(toolbarHeight * _toolbarAnimationController.value),
+              child: Container(
+                // duration: const Duration(milliseconds: 400),
+                // curve: Curves.fastEaseInToSlowEaseOut,
+                height: toolbarHeight * _toolbarAnimationController.value,
+                transform: Transform.translate(offset: Offset(0, -toolbarHeight * (1 - _toolbarAnimationController.value))).transform,
+                decoration: BoxDecoration(color: Colors.white),
+                padding: EdgeInsets.symmetric(horizontal: 12.0),
+                child: LayoutBuilder(
+                  builder: (context, _) {
+                    if (showChordsByInstrument != null) {
+                      return Column(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Row(
+                            children: [
+                              IconButton(
+                                onPressed: () => setState(() => showChordsByInstrument = null),
+                                icon: Icon(Icons.arrow_back),
+                              ),
+                              Text(
+                                localizations.back,
+                                style: TextStyle(color: Theme.of(context).primaryColor),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            width: double.infinity,
+                            height: 250.0,
+                            child: ChordsByInstrument(
+                              song: widget.song,
+                              instrument: showChordsByInstrument!,
+                              chordNotation: chordNotation,
+                            ),
+                          )
+                        ],
+                      );
+                    }
+
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: toolbarChildren,
+                    );
+                  },
+                ),
+              ),
             ),
           ),
-          Padding(
+          SliverPadding(
             padding: EdgeInsetsGeometry.all(16.0),
-            child: SongLyrics(
-              song: widget.song,
-              fontSize: fontSize,
-              showChords: showChords,
+            sliver: SliverToBoxAdapter(
+              child: SongLyrics(
+                song: widget.song,
+                fontSize: fontSize,
+                showChords: showChords,
+              ),
             ),
           ),
         ],

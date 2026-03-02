@@ -52,6 +52,9 @@ class Songbook {
       FROM songbooks
     ''');
 
+    final test = await DB.rawQuery('SELECT * FROM categories WHERE songbook_id = 1;');
+    print(test);
+
     List<Songbook> songbooks = [];
 
     for (dynamic row in rows) {
@@ -128,8 +131,11 @@ class Songbook {
     return count;
   }
 
-  Future<void> delete() {
-    return DB.execute('DELETE FROM songbooks WHERE id = ?;', arguments: [id]);
+  Future<void> delete() async {
+    await DB.rawDelete('DELETE FROM song_categories WHERE song_id IN (SELECT id FROM songs WHERE songbook_id = ?);', arguments: [id]);
+    await DB.rawDelete('DELETE FROM songs WHERE songbook_id = ?;', arguments: [id]);
+    await DB.rawDelete('DELETE FROM categories WHERE songbook_id = ?;', arguments: [id]);
+    await DB.rawDelete('DELETE FROM songbooks WHERE id = ?;', arguments: [id]);
   }
 
   /// Search for songbooks by title

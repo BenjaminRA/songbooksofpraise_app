@@ -332,6 +332,12 @@ abstract class AppLocalizations {
   /// **'Last played'**
   String get lastPlayed;
 
+  /// Favorite option in explore section
+  ///
+  /// In en, this message translates to:
+  /// **'Favorite'**
+  String get favorite;
+
   /// Favorites option in explore section
   ///
   /// In en, this message translates to:
@@ -601,6 +607,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Ukulele'**
   String get ukulele;
+
+  /// Back label
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get back;
+
+  /// Close label
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get close;
 
   /// Generic category description 1
   ///

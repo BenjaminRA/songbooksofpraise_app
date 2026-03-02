@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ListBuilderItem {
   final String title;
   final String? subtitle;
   final int? number;
-  final VoidCallback onTap;
+  final Future<void> Function() onTap;
   final bool loading;
+  final bool? favorite;
+  final Function(bool value)? onFavoriteToggle;
 
   ListBuilderItem({
     required this.title,
@@ -15,6 +18,8 @@ class ListBuilderItem {
     this.number,
     required this.onTap,
     this.loading = false,
+    this.favorite,
+    this.onFavoriteToggle,
   });
 }
 
@@ -212,7 +217,10 @@ class _ListBuilderState extends State<ListBuilder> {
           borderRadius: BorderRadius.circular(10.0),
         ),
         color: Colors.white,
-        onPressed: item.onTap,
+        onPressed: () async {
+          await item.onTap();
+          print('${item.title}: ${item.favorite}');
+        },
         child: Container(
           width: double.infinity,
           padding: const EdgeInsets.symmetric(vertical: 18.0),
@@ -239,6 +247,18 @@ class _ListBuilderState extends State<ListBuilder> {
                 SpinKitThreeInOut(
                   color: Theme.of(context).primaryColor,
                   size: 18.0,
+                )
+              else if (item.favorite != null && item.favorite != null)
+                GestureDetector(
+                  onTap: () {
+                    if (item.onFavoriteToggle != null) {
+                      item.onFavoriteToggle!(!(item.favorite ?? false));
+                    }
+                  },
+                  child: Icon(
+                    item.favorite! ? Icons.favorite : Icons.favorite_border,
+                    color: Theme.of(context).primaryColor,
+                  ),
                 ),
             ],
           ),
@@ -365,10 +385,10 @@ class _ListBuilderState extends State<ListBuilder> {
                               curve: Curves.easeInOut,
                             );
                           },
+                          behavior: HitTestBehavior.opaque,
                           child: Container(
                             alignment: Alignment.center,
                             padding: EdgeInsets.symmetric(vertical: 8.0),
-                            // color: isSelected ? Theme.of(context).primaryColor.withOpacity(0.1) : Colors.transparent,
                             child: Text(
                               group.isNotEmpty ? group[0] : '',
                               style: Theme.of(context).textTheme.bodyMedium?.copyWith(

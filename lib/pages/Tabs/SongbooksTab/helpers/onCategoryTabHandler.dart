@@ -20,6 +20,11 @@ Future<void> onCategoryTapHandler(BuildContext context, Category item) async {
         final response = await API.get('songbooks/${item.songbookID}/categories/${item.id == -1 ? 'all' : item.id}');
 
         category = Category.fromJson(response['category']);
+
+        category.songs = category.songs.map((e) {
+          e.isInstalled = false;
+          return e;
+        }).toList();
       }
 
       category.songs.sort((a, b) {

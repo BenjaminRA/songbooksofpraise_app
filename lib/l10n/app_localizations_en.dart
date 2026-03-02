@@ -130,6 +130,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get lastPlayed => 'Last played';
 
   @override
+  String get favorite => 'Favorite';
+
+  @override
   String get favorites => 'Favorites';
 
   @override
@@ -283,6 +286,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ukulele => 'Ukulele';
+
+  @override
+  String get back => 'Back';
+
+  @override
+  String get close => 'Close';
 
   @override
   String get genericCategoryDescription1 =>

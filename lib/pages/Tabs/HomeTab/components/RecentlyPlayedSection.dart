@@ -44,7 +44,7 @@ class _RecentlyPlayedSectionState extends State<RecentlyPlayedSection> {
       loading = true;
     });
 
-    List<RecentlyPlayedSectionItem> songs = await Song.GetRecentlyPlayedSongs(3);
+    List<RecentlyPlayedSectionItem> songs = await Song.getRecentlyPlayedSongs(3);
 
     if (mounted) {
       setState(() {

@@ -1,4 +1,5 @@
 import 'package:songbooksofpraise_app/db/DB.dart';
+import 'package:songbooksofpraise_app/models/Chord.dart';
 import 'package:songbooksofpraise_app/pages/SongPage/SongPage.dart';
 import 'package:songbooksofpraise_app/pages/SongPage/components/ChordsByInstrument.dart';
 import 'package:songbooksofpraise_app/pages/Tabs/HomeTab/components/RecentlyPlayedSection.dart';
@@ -23,6 +24,9 @@ class Song {
   int transpose;
   int scroll_speed;
   int songbook_id;
+  bool favorite;
+  bool isInstalled;
+  int? font_size;
   DateTime created_at;
   DateTime updated_at;
 
@@ -42,6 +46,9 @@ class Song {
     this.voices_bass,
     this.transpose = 0,
     this.scroll_speed = 0,
+    this.favorite = false,
+    this.isInstalled = true,
+    this.font_size,
     required this.songbook_id,
     required this.created_at,
     required this.updated_at,
@@ -74,53 +81,15 @@ class Song {
       List<String> parts = chord.split('/');
 
       for (int i = 0; i < parts.length; i++) {
-        parts[i] = transposeChord(parts[i], transpose, notation);
+        final chord = Chord(name: parts[i]);
+        chord.transposeChord(transpose, notation);
+        parts[i] = chord.name;
       }
 
       chordsSet.add(parts.join('/'));
     }
 
     return chordsSet.map((chordName) => Chord(name: chordName)).toList();
-  }
-
-  String transposeChord(String chord, int semitones, ChordNotation notation) {
-    ChordNotation chordNotation = _getChordNotation(chord);
-    const List<String> letterChordsSharp = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
-    const List<String> letterChordsFlat = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
-
-    const List<String> solfegeChordsSharp = ['Do', 'Do#', 'Re', 'Re#', 'Mi', 'Fa', 'Fa#', 'Sol', 'Sol#', 'La', 'La#', 'Si'];
-    const List<String> solfegeChordsFlat = ['Do', 'Reb', 'Re', 'Mib', 'Mi', 'Fa', 'Solb', 'Sol', 'Lab', 'La', 'Sib', 'Si'];
-
-    List<String> originalChordNotationList = chordNotation == ChordNotation.Letter ? letterChordsSharp : solfegeChordsSharp;
-    List<String> finalChordNotationList = notation == ChordNotation.Letter ? letterChordsSharp : solfegeChordsSharp;
-
-    String baseChord = chord.toUpperCase();
-
-    int chordListIndex = originalChordNotationList.indexWhere((c) {
-      // If is not a sharp chord but the base chord contains a sharp version, skip it
-      if (!c.contains('#') && baseChord.contains('${c.toUpperCase()}#')) {
-        return false;
-      }
-
-      // If is flat
-      if (!c.contains('b') && baseChord.contains('${c.toUpperCase()}B')) {
-        return false;
-      }
-
-      return baseChord.startsWith(c.toUpperCase());
-    });
-
-    if (chordListIndex == -1) {
-      originalChordNotationList = chordNotation == ChordNotation.Letter ? letterChordsFlat : solfegeChordsFlat;
-      finalChordNotationList = notation == ChordNotation.Letter ? letterChordsFlat : solfegeChordsFlat;
-
-      chordListIndex = originalChordNotationList.indexWhere((c) => baseChord.startsWith(c.toUpperCase()));
-    }
-
-    return chord.toLowerCase().replaceAll(
-          originalChordNotationList[chordListIndex].toLowerCase(),
-          finalChordNotationList[(chordListIndex + semitones) % finalChordNotationList.length],
-        );
   }
 
   void transposeChords(int semitones, ChordNotation notation) {
@@ -138,25 +107,22 @@ class Song {
       String originalChord = match.group(1)!;
       List<String> parts = originalChord.split('/');
 
-      List<String> transposedParts = parts.map((part) => transposeChord(part, semitones, notation)).toList();
+      List<String> transposedParts = parts.map((part) {
+        final chord = Chord(name: part);
+        chord.transposeChord(semitones, notation);
+        return chord.name;
+      }).toList();
 
       String transposedChord = transposedParts.join('/');
 
       transposedLyrics = transposedLyrics.replaceRange(cursor + match.start + 1, cursor + match.end - 1, transposedChord);
       cursor = cursor + match.start + transposedChord.length + 2; // +2 for the brackets
     }
-  }
 
-  ChordNotation _getChordNotation(String chord) {
-    final solfegePattern = RegExp(r'\b(do|re|mi|fa|sol|la|si)', caseSensitive: false);
-
-    final hasSolfegeChords = solfegePattern.hasMatch(chord);
-
-    if (hasSolfegeChords) {
-      return ChordNotation.Solfege;
-    }
-
-    return ChordNotation.Letter;
+    DB.execute(
+      'UPDATE songs SET transpose = ? WHERE id = ?;',
+      arguments: [semitones, id],
+    );
   }
 
   static Future<List<Song>> getSongsByCategoryID(int categoryID) async {
@@ -185,6 +151,8 @@ class Song {
         voices_bass: row['voices_bass'],
         transpose: row['transpose'] ?? 0,
         scroll_speed: row['scroll_speed'] ?? 0,
+        favorite: row['favorite'] == 1,
+        font_size: row['font_size'],
         songbook_id: row['songbook_id'],
         created_at: DateTime.parse(row['created_at']),
         updated_at: DateTime.parse(row['updated_at']),
@@ -219,6 +187,8 @@ class Song {
       voices_bass: row['voices_bass'],
       transpose: row['transpose'] ?? 0,
       scroll_speed: row['scroll_speed'] ?? 0,
+      favorite: row['favorite'] == 1,
+      font_size: row['font_size'],
       songbook_id: row['songbook_id'],
       created_at: DateTime.parse(row['created_at']),
       updated_at: DateTime.parse(row['updated_at']),
@@ -242,13 +212,15 @@ class Song {
       voices_bass: json['voices_bass'],
       transpose: json['transpose'] ?? 0,
       scroll_speed: json['scroll_speed'] ?? 0,
+      favorite: json['favorite'] == 1,
+      font_size: json['font_size'],
       songbook_id: json['songbook_id'],
       created_at: DateTime.parse(json['created_at']),
       updated_at: DateTime.parse(json['updated_at']),
     );
   }
 
-  static Future<List<RecentlyPlayedSectionItem>> GetRecentlyPlayedSongs(int limit, [int offset = 0]) async {
+  static Future<List<RecentlyPlayedSectionItem>> getRecentlyPlayedSongs(int limit, [int offset = 0]) async {
     final rows = await DB.rawQuery('''
       SELECT 
         songs.*,
@@ -274,6 +246,24 @@ class Song {
     }
 
     return songs;
+  }
+
+  Future<void> setFontSize(int newFontSize) async {
+    font_size = newFontSize;
+
+    await DB.execute(
+      'UPDATE songs SET font_size = ? WHERE id = ?;',
+      arguments: [newFontSize, id],
+    );
+  }
+
+  Future<void> setFavorite(bool isFavorite) async {
+    favorite = isFavorite;
+
+    await DB.execute(
+      'UPDATE songs SET favorite = ? WHERE id = ?;',
+      arguments: [isFavorite ? 1 : 0, id],
+    );
   }
 
   /// Search for songs by title or number
