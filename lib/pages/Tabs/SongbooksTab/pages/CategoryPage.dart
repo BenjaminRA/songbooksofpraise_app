@@ -96,6 +96,7 @@ class _CategoryPageState extends State<CategoryPage> {
         ),
       );
     } catch (e) {
+      print('Error fetching song details: $e');
     } finally {
       if (mounted) {
         setState(() => loadingSong = null);

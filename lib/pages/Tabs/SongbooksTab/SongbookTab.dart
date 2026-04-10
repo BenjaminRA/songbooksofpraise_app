@@ -206,30 +206,5 @@ class _SongbookTabState extends State<SongbookTab> {
         ),
       ),
     );
-    // return ListView(
-    //   children: [
-    //     AppBar(
-    //       title: Row(
-    //         mainAxisSize: MainAxisSize.max,
-    //         children: [
-    //           Icon(
-    //             Icons.library_books,
-    //             color: Theme.of(context).primaryColor,
-    //           ),
-    //           const SizedBox(width: 10),
-    //           Flexible(
-    //             child: Text(
-    //               'Songbooks',
-    //               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-    //               maxLines: 2,
-    //             ),
-    //           ),
-    //         ],
-    //       ),
-    //     ),
-    //     ActiveSongbookSection(),
-    //     CategoriesSection(),
-    //   ],
-    // );
   }
 }
