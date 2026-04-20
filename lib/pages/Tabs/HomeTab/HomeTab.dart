@@ -36,7 +36,7 @@ class _HomeTabState extends State<HomeTab> {
                   children: const <Widget>[
                     ExploreSection(),
                     RecentlyPlayedSection(),
-                    PopularThisWeekSection(),
+                    // PopularThisWeekSection(),
                     SizedBox(height: 20.0),
                   ],
                 ),
