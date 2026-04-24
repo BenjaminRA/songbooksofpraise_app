@@ -21,6 +21,7 @@ class _RecentlyPlayedPageState extends State<RecentlyPlayedPage> {
 
   // Group songs by day
   Map<String, String> _groupByDayLabel = {};
+  Map<String, int> _sortByLastPlayed = {};
 
   @override
   void initState() {
@@ -56,9 +57,13 @@ class _RecentlyPlayedPageState extends State<RecentlyPlayedPage> {
 
   List<SongListBuilderItem> _buildItems(AppLocalizations localizations) {
     _groupByDayLabel.clear();
+    _sortByLastPlayed.clear();
+
     return _songs.map((recentlyPlayedItem) {
       final Song song = recentlyPlayedItem.song;
+
       _groupByDayLabel[song.id.toString()] = _dayLabel(recentlyPlayedItem.lastPlayed, localizations);
+      _sortByLastPlayed[song.id.toString()] = recentlyPlayedItem.lastPlayed?.millisecondsSinceEpoch ?? 0;
 
       final item = SongListBuilderItem(
         title: song.title,
@@ -203,6 +208,7 @@ class _RecentlyPlayedPageState extends State<RecentlyPlayedPage> {
     return SongListBuilder(
       items: items,
       groupBy: (item) => _groupByDayLabel[item.song.id.toString()] ?? '',
+      sortBy: (p0, p1) => (_sortByLastPlayed[p1.song.id.toString()] ?? 0).compareTo(_sortByLastPlayed[p0.song.id.toString()] ?? 0),
       slivers: [_buildDateFilterSliver(localizations)],
       enableSideBar: false,
       forceGroupHeaders: true,
