@@ -25,7 +25,7 @@ Future<void> navigateToSong(BuildContext context, int songID) async {
     ),
   );
 
-  Navigator.of(context).push(
+  await Navigator.of(context).push(
     MaterialPageRoute(
       builder: (context) => SongPage(song: fullSong!),
     ),

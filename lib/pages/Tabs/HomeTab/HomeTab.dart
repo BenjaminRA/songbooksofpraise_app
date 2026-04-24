@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:songbooksofpraise_app/Providers/AppBarProvider.dart';
 import 'package:songbooksofpraise_app/components/AppBarWithProvider.dart';
+import 'package:songbooksofpraise_app/components/PullToRefresh.dart';
 import 'package:songbooksofpraise_app/pages/RootPage.dart';
-import 'package:songbooksofpraise_app/pages/Tabs/HomeTab/components/PopularThisWeelSection.dart';
 import 'package:songbooksofpraise_app/pages/Tabs/HomeTab/components/ExploreSection.dart';
 import 'package:songbooksofpraise_app/pages/Tabs/HomeTab/components/RecentlyPlayedSection.dart';
 import 'package:songbooksofpraise_app/pages/Tabs/HomeTab/components/HomePageSearchBar.dart';
@@ -29,17 +27,18 @@ class _HomeTabState extends State<HomeTab> {
           children: [
             HomePageSearchBar(),
             Expanded(
-              child: RefreshIndicator(
-                child: ListView(
-                  key: _refreshKey,
-                  physics: AlwaysScrollableScrollPhysics(),
-                  children: const <Widget>[
-                    ExploreSection(),
-                    RecentlyPlayedSection(),
-                    // PopularThisWeekSection(),
-                    SizedBox(height: 20.0),
-                  ],
-                ),
+              child: PullToRefresh(
+                slivers: [
+                  SliverList(
+                    key: _refreshKey,
+                    delegate: SliverChildListDelegate(const <Widget>[
+                      ExploreSection(),
+                      RecentlyPlayedSection(),
+                      // PopularThisWeekSection(),
+                      SizedBox(height: 20.0),
+                    ]),
+                  ),
+                ],
                 onRefresh: () async {
                   // Force rebuild of all ListView items by changing the key
                   setState(() {

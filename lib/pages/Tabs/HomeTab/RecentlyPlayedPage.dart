@@ -19,10 +19,6 @@ class _RecentlyPlayedPageState extends State<RecentlyPlayedPage> {
   bool _loading = true;
   DateTimeRange? _selectedRange;
 
-  // Group songs by day
-  Map<String, String> _groupByDayLabel = {};
-  Map<String, int> _sortByLastPlayed = {};
-
   @override
   void initState() {
     super.initState();
@@ -56,18 +52,12 @@ class _RecentlyPlayedPageState extends State<RecentlyPlayedPage> {
   }
 
   List<SongListBuilderItem> _buildItems(AppLocalizations localizations) {
-    _groupByDayLabel.clear();
-    _sortByLastPlayed.clear();
-
     return _songs.map((recentlyPlayedItem) {
       final Song song = recentlyPlayedItem.song;
 
-      _groupByDayLabel[song.id.toString()] = _dayLabel(recentlyPlayedItem.lastPlayed, localizations);
-      _sortByLastPlayed[song.id.toString()] = recentlyPlayedItem.lastPlayed?.millisecondsSinceEpoch ?? 0;
-
       final item = SongListBuilderItem(
         title: song.title,
-        subtitle: '${recentlyPlayedItem.songbook} • ${renderLastPlayedText(context, recentlyPlayedItem.lastPlayed)}',
+        subtitle: '${recentlyPlayedItem.songbook} • ${renderLastPlayedText(context, song.lastPlayed)}',
         song: song,
       );
       return item;
@@ -77,7 +67,7 @@ class _RecentlyPlayedPageState extends State<RecentlyPlayedPage> {
   Future<void> _pickDateRange() async {
     final picked = await showDateRangePicker(
       context: context,
-      firstDate: DateTime(2020),
+      firstDate: DateTime(2025),
       lastDate: DateTime.now(),
       initialDateRange: _selectedRange,
       builder: (context, child) => Theme(
@@ -207,8 +197,8 @@ class _RecentlyPlayedPageState extends State<RecentlyPlayedPage> {
 
     return SongListBuilder(
       items: items,
-      groupBy: (item) => _groupByDayLabel[item.song.id.toString()] ?? '',
-      sortBy: (p0, p1) => (_sortByLastPlayed[p1.song.id.toString()] ?? 0).compareTo(_sortByLastPlayed[p0.song.id.toString()] ?? 0),
+      groupBy: (item) => _dayLabel(item.song.lastPlayed, localizations),
+      sortBy: (p0, p1) => p1.song.lastPlayed!.compareTo(p0.song.lastPlayed!), // Sort by last played date (newest first)
       slivers: [_buildDateFilterSliver(localizations)],
       enableSideBar: false,
       forceGroupHeaders: true,
@@ -217,6 +207,7 @@ class _RecentlyPlayedPageState extends State<RecentlyPlayedPage> {
         if (song.id > -1) {
           await navigateToSong(context, song.id);
         }
+        await _fetchSongs();
       },
       emptyStateWidget: Column(
         mainAxisAlignment: MainAxisAlignment.center,

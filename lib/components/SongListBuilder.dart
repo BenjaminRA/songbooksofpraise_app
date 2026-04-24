@@ -229,7 +229,9 @@ class _SongListBuilderState extends State<SongListBuilder> {
           widget.onTap != null ? await widget.onTap!(item) : null;
 
           await item.song.refresh(); // Refresh song data after potential edits in SongPage
-          setState(() {});
+          if (mounted) {
+            setState(() {});
+          }
         },
         child: Container(
           width: double.infinity,

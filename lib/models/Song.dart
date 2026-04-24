@@ -29,6 +29,7 @@ class Song {
   double? font_size;
   DateTime created_at;
   DateTime updated_at;
+  DateTime? lastPlayed;
 
   Song({
     required this.id,
@@ -52,6 +53,7 @@ class Song {
     required this.songbook_id,
     required this.created_at,
     required this.updated_at,
+    this.lastPlayed,
   }) {
     transposedLyrics = lyrics;
   }
@@ -217,6 +219,7 @@ class Song {
       songbook_id: json['songbook_id'],
       created_at: DateTime.parse(json['created_at']),
       updated_at: DateTime.parse(json['updated_at']),
+      lastPlayed: json['played_at'] != null ? DateTime.parse(json['played_at']) : null,
     );
   }
 
@@ -239,7 +242,6 @@ class Song {
       songs.add(RecentlyPlayedSectionItem(
         song: Song.fromJson(row),
         songbook: row['songbook_title'],
-        lastPlayed: row['played_at'] != null ? DateTime.parse(row['played_at']) : null,
       ));
     }
 
@@ -282,7 +284,6 @@ class Song {
       songs.add(RecentlyPlayedSectionItem(
         song: Song.fromJson(row),
         songbook: row['songbook_title'],
-        lastPlayed: row['played_at'] != null ? DateTime.parse(row['played_at']) : null,
       ));
     }
     return songs;

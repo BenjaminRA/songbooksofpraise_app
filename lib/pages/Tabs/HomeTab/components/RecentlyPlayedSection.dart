@@ -11,12 +11,10 @@ import 'package:songbooksofpraise_app/pages/Tabs/HomeTab/RecentlyPlayedPage.dart
 class RecentlyPlayedSectionItem {
   final Song song;
   final String songbook;
-  final DateTime? lastPlayed;
 
   RecentlyPlayedSectionItem({
     required this.song,
     required this.songbook,
-    this.lastPlayed,
   });
 }
 
@@ -104,7 +102,7 @@ class _RecentlyPlayedSectionState extends State<RecentlyPlayedSection> {
                   Text(item.song.title, style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold)),
                   const SizedBox(height: 2),
                   Text(
-                    '${item.songbook} • ${renderLastPlayedText(context, item.lastPlayed)}',
+                    '${item.songbook} • ${renderLastPlayedText(context, item.song.lastPlayed)}',
                     style: Theme.of(context).textTheme.labelSmall,
                   ),
                 ],
@@ -170,23 +168,38 @@ class _RecentlyPlayedSectionState extends State<RecentlyPlayedSection> {
                     children: [
                       _buildRecentlyPlayedItem(
                         RecentlyPlayedSectionItem(
-                          song: Song(id: -1, title: 'Loading...', songbook_id: -1, created_at: DateTime.now(), updated_at: DateTime.now()),
+                          song: Song(
+                              id: -1,
+                              title: 'Loading...',
+                              songbook_id: -1,
+                              created_at: DateTime.now(),
+                              updated_at: DateTime.now(),
+                              lastPlayed: DateTime.now()),
                           songbook: '...',
-                          lastPlayed: DateTime.now(),
                         ),
                       ),
                       _buildRecentlyPlayedItem(
                         RecentlyPlayedSectionItem(
-                          song: Song(id: -1, title: 'Loading...', songbook_id: -1, created_at: DateTime.now(), updated_at: DateTime.now()),
+                          song: Song(
+                              id: -1,
+                              title: 'Loading...',
+                              songbook_id: -1,
+                              created_at: DateTime.now(),
+                              updated_at: DateTime.now(),
+                              lastPlayed: DateTime.now()),
                           songbook: '...',
-                          lastPlayed: DateTime.now(),
                         ),
                       ),
                       _buildRecentlyPlayedItem(
                         RecentlyPlayedSectionItem(
-                          song: Song(id: -1, title: 'Loading...', songbook_id: -1, created_at: DateTime.now(), updated_at: DateTime.now()),
+                          song: Song(
+                              id: -1,
+                              title: 'Loading...',
+                              songbook_id: -1,
+                              created_at: DateTime.now(),
+                              updated_at: DateTime.now(),
+                              lastPlayed: DateTime.now()),
                           songbook: '...',
-                          lastPlayed: DateTime.now(),
                         ),
                       ),
                     ],
