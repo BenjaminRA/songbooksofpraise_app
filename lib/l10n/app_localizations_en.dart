@@ -400,4 +400,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noResults => 'No results found';
+
+  @override
+  String get from => 'From';
+
+  @override
+  String get to => 'To';
+
+  @override
+  String get today => 'Today';
+
+  @override
+  String get yesterday => 'Yesterday';
+
+  @override
+  String get allTime => 'All time';
+
+  @override
+  String get clearFilter => 'Clear filter';
+
+  @override
+  String get noItemsFound => 'No items found';
 }

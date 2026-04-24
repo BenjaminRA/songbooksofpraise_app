@@ -538,5 +538,33 @@
   "noResults": "No results found",
   "@noResults": {
     "description": "Text shown when no search results are found"
+  },
+  "from": "From",
+  "@from": {
+    "description": "From label for date range filter"
+  },
+  "to": "To",
+  "@to": {
+    "description": "To label for date range filter"
+  },
+  "today": "Today",
+  "@today": {
+    "description": "Today label"
+  },
+  "yesterday": "Yesterday",
+  "@yesterday": {
+    "description": "Yesterday label"
+  },
+  "allTime": "All time",
+  "@allTime": {
+    "description": "All time label for date range filter"
+  },
+  "clearFilter": "Clear filter",
+  "@clearFilter": {
+    "description": "Clear filter button text"
+  },
+  "noItemsFound": "No items found",
+  "@noItemsFound": {
+    "description": "Text shown when a list has no items"
   }
 }

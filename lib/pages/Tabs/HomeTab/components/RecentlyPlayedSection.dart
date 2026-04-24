@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:songbooksofpraise_app/Providers/AppBarProvider.dart';
 import 'package:songbooksofpraise_app/helpers/navigateToSong.dart';
-import 'package:songbooksofpraise_app/helpers/render_last_played_text.dart';
+import 'package:songbooksofpraise_app/helpers/renderLastPlayedText.dart';
 import 'package:songbooksofpraise_app/l10n/app_localizations.dart';
 import 'package:songbooksofpraise_app/models/Song.dart';
+import 'package:songbooksofpraise_app/pages/Tabs/HomeTab/RecentlyPlayedPage.dart';
 
 class RecentlyPlayedSectionItem {
-  final int? id;
-  final int? number;
-  final String title;
+  final Song song;
   final String songbook;
   final DateTime? lastPlayed;
 
   RecentlyPlayedSectionItem({
-    this.id,
-    this.number,
-    required this.title,
+    required this.song,
     required this.songbook,
     this.lastPlayed,
   });
@@ -55,7 +54,7 @@ class _RecentlyPlayedSectionState extends State<RecentlyPlayedSection> {
   }
 
   String _renderSongIconText(RecentlyPlayedSectionItem item) {
-    return item.number != null ? item.number.toString() : item.title.substring(0, 1).toUpperCase();
+    return item.song.number != null ? item.song.number.toString() : item.song.title.substring(0, 1).toUpperCase();
   }
 
   Widget _buildRecentlyPlayedItem(RecentlyPlayedSectionItem item) {
@@ -65,9 +64,9 @@ class _RecentlyPlayedSectionState extends State<RecentlyPlayedSection> {
         borderRadius: BorderRadius.circular(10.0),
       ),
       color: Colors.white,
-      onPressed: item.id != null
+      onPressed: item.song.id > -1
           ? () {
-              navigateToSong(context, item.id!);
+              navigateToSong(context, item.song.id);
             }
           : null,
       // onPressed: item.onPressed,
@@ -102,7 +101,7 @@ class _RecentlyPlayedSectionState extends State<RecentlyPlayedSection> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(item.title, style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold)),
+                  Text(item.song.title, style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold)),
                   const SizedBox(height: 2),
                   Text(
                     '${item.songbook} • ${renderLastPlayedText(context, item.lastPlayed)}',
@@ -136,7 +135,18 @@ class _RecentlyPlayedSectionState extends State<RecentlyPlayedSection> {
               ),
               GestureDetector(
                 onTap: () {
-                  // Handle "See All" action
+                  Provider.of<AppBarProvider>(context, listen: false).setTitle(
+                    AppBarState(
+                      title: localizations.recentlyPlayed,
+                      icon: Icons.access_time_filled,
+                      // backgroundColor: const Color.fromRGBO(47, 105, 243, 1.0),
+                      // titleColor: Colors.white,
+                      iconColor: const Color.fromRGBO(47, 105, 243, 1.0),
+                    ),
+                  );
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const RecentlyPlayedPage()),
+                  );
                 },
                 child: Text(
                   localizations.viewAll,
@@ -150,56 +160,75 @@ class _RecentlyPlayedSectionState extends State<RecentlyPlayedSection> {
           width: double.infinity,
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Skeletonizer(
-              enabled: loading,
-              child: Builder(
-                builder: (context) {
-                  if (loading) {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      spacing: 16.0,
-                      children: [
-                        _buildRecentlyPlayedItem(RecentlyPlayedSectionItem(title: 'Loading...', songbook: '...', lastPlayed: DateTime.now())),
-                        _buildRecentlyPlayedItem(RecentlyPlayedSectionItem(title: 'Loading...', songbook: '...', lastPlayed: DateTime.now())),
-                        _buildRecentlyPlayedItem(RecentlyPlayedSectionItem(title: 'Loading...', songbook: '...', lastPlayed: DateTime.now())),
-                      ],
-                    );
-                  }
-
-                  if (recentlyPlayedSongs.isEmpty) {
-                    return Card(
-                      elevation: 1.0,
-                      color: Colors.white,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 40.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.music_note_outlined,
-                              size: 48,
-                              color: Colors.grey[400],
-                            ),
-                            const SizedBox(height: 16),
-                            Text(
-                              localizations.noRecentlyPlayedSongs,
-                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    color: Colors.grey[600],
-                                  ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  }
-
+            enabled: loading,
+            child: Builder(
+              builder: (context) {
+                if (loading) {
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     spacing: 16.0,
-                    children: recentlyPlayedSongs.map((item) => _buildRecentlyPlayedItem(item)).toList(),
+                    children: [
+                      _buildRecentlyPlayedItem(
+                        RecentlyPlayedSectionItem(
+                          song: Song(id: -1, title: 'Loading...', songbook_id: -1, created_at: DateTime.now(), updated_at: DateTime.now()),
+                          songbook: '...',
+                          lastPlayed: DateTime.now(),
+                        ),
+                      ),
+                      _buildRecentlyPlayedItem(
+                        RecentlyPlayedSectionItem(
+                          song: Song(id: -1, title: 'Loading...', songbook_id: -1, created_at: DateTime.now(), updated_at: DateTime.now()),
+                          songbook: '...',
+                          lastPlayed: DateTime.now(),
+                        ),
+                      ),
+                      _buildRecentlyPlayedItem(
+                        RecentlyPlayedSectionItem(
+                          song: Song(id: -1, title: 'Loading...', songbook_id: -1, created_at: DateTime.now(), updated_at: DateTime.now()),
+                          songbook: '...',
+                          lastPlayed: DateTime.now(),
+                        ),
+                      ),
+                    ],
                   );
-                },
-              )),
+                }
+
+                if (recentlyPlayedSongs.isEmpty) {
+                  return Card(
+                    elevation: 1.0,
+                    color: Colors.white,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 40.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.music_note_outlined,
+                            size: 48,
+                            color: Colors.grey[400],
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            localizations.noRecentlyPlayedSongs,
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                  color: Colors.grey[600],
+                                ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }
+
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  spacing: 16.0,
+                  children: recentlyPlayedSongs.map((item) => _buildRecentlyPlayedItem(item)).toList(),
+                );
+              },
+            ),
+          ),
         )
       ],
     );

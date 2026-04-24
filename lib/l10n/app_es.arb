@@ -534,5 +534,33 @@
   "noResults": "No se encontraron resultados",
   "@noResults": {
     "description": "Texto mostrado cuando no se encuentran resultados de búsqueda"
+  },
+  "from": "De",
+  "@from": {
+    "description": "Etiqueta De para el filtro de rango de fechas"
+  },
+  "to": "Hasta",
+  "@to": {
+    "description": "Etiqueta Hasta para el filtro de rango de fechas"
+  },
+  "today": "Hoy",
+  "@today": {
+    "description": "Etiqueta Hoy"
+  },
+  "yesterday": "Ayer",
+  "@yesterday": {
+    "description": "Etiqueta Ayer"
+  },
+  "allTime": "Todo el tiempo",
+  "@allTime": {
+    "description": "Etiqueta Todo el tiempo para el filtro de rango de fechas"
+  },
+  "clearFilter": "Limpiar filtro",
+  "@clearFilter": {
+    "description": "Texto del botón limpiar filtro"
+  },
+  "noItemsFound": "No se encontraron elementos",
+  "@noItemsFound": {
+    "description": "Texto mostrado cuando una lista no tiene elementos"
   }
 }

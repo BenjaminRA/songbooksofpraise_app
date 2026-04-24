@@ -75,7 +75,7 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
   void registerRecentlyPlayedSong() async {
     DB.rawInsert('''
       INSERT INTO recently_played_songs (song_id, played_at)
-      VALUES (?, CURRENT_TIMESTAMP);
+      VALUES (?, datetime('now', 'localtime'));
     ''', arguments: [widget.song.id]);
   }
 
@@ -111,6 +111,10 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
   }
 
   double getInitialFontSize() {
+    if (widget.song.font_size != null) {
+      return widget.song.font_size!;
+    }
+
     // Get screen dimensions
     final screenWidth = MediaQuery.of(context).size.width;
     final textScaleFactor = MediaQuery.of(context).textScaler.scale(1.0);
@@ -140,6 +144,8 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
 
     // Clamp the font size within reasonable bounds
     double fontSize = idealFontSize.clamp(minFontSize, maxFontSize);
+
+    widget.song.setFontSize(fontSize);
 
     return fontSize;
   }
@@ -199,10 +205,10 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     AppLocalizations localizations = AppLocalizations.of(context)!;
-    double chordsToolsHeight = (showChords && widget.song.hasChordsInLyrics()) ? 130.0 : 0.0;
+    double chordsToolsHeight = (showChords && widget.song.hasChordsInLyrics()) ? 126.0 : 0.0;
     double chordsByInstrumentToolsHeight = showChordsByInstrument != null ? 200.0 : 0.0;
 
-    double toolbarHeight = 105.0;
+    double toolbarHeight = 108.0;
 
     if (showChordsByInstrument != null) {
       toolbarHeight += chordsByInstrumentToolsHeight;
@@ -234,7 +240,7 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
               disabled: widget.song.music_sheet == null,
               onSelected: openSheet,
             ),
-            Spacer(),
+            // Spacer(),
           ],
         ),
       ),
@@ -242,7 +248,10 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
 
     if (showChords && widget.song.hasChordsInLyrics()) {
       toolbarChildren.addAll([
-        Divider(height: 0.0),
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: 2.0),
+          child: Divider(height: 0.0),
+        ),
         ChordsButtonBar(
           transpose: widget.song.transpose,
           chordNotation: chordNotation,
@@ -264,11 +273,20 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
     }
 
     toolbarChildren.addAll([
-      Divider(height: 0.0),
+      Padding(
+        padding: EdgeInsets.symmetric(vertical: 2.0),
+        child: Divider(height: 0.0),
+      ),
       FontAdjustmentButtonBar(
         actualFontSize: fontSize,
-        onIncreaseFontSize: () => setState(() => fontSize = fontSize + 1),
-        onDecreaseFontSize: () => setState(() => fontSize = fontSize - 1),
+        onIncreaseFontSize: () => setState(() {
+          fontSize = fontSize + 1;
+          widget.song.setFontSize(fontSize);
+        }),
+        onDecreaseFontSize: () => setState(() {
+          fontSize = fontSize - 1;
+          widget.song.setFontSize(fontSize);
+        }),
         isFavorite: widget.song.favorite,
         onSetFavorite: (value) async {
           await widget.song.setFavorite(value);

@@ -24,9 +24,9 @@ class Song {
   int transpose;
   int scroll_speed;
   int songbook_id;
-  bool favorite;
+  bool? favorite;
   bool isInstalled;
-  int? font_size;
+  double? font_size;
   DateTime created_at;
   DateTime updated_at;
 
@@ -46,7 +46,7 @@ class Song {
     this.voices_bass,
     this.transpose = 0,
     this.scroll_speed = 0,
-    this.favorite = false,
+    this.favorite,
     this.isInstalled = true,
     this.font_size,
     required this.songbook_id,
@@ -151,7 +151,7 @@ class Song {
         voices_bass: row['voices_bass'],
         transpose: row['transpose'] ?? 0,
         scroll_speed: row['scroll_speed'] ?? 0,
-        favorite: row['favorite'] == 1,
+        favorite: row['favorite'] != null ? row['favorite'] == 1 : null,
         font_size: row['font_size'],
         songbook_id: row['songbook_id'],
         created_at: DateTime.parse(row['created_at']),
@@ -187,7 +187,7 @@ class Song {
       voices_bass: row['voices_bass'],
       transpose: row['transpose'] ?? 0,
       scroll_speed: row['scroll_speed'] ?? 0,
-      favorite: row['favorite'] == 1,
+      favorite: row['favorite'] != null ? row['favorite'] == 1 : null,
       font_size: row['font_size'],
       songbook_id: row['songbook_id'],
       created_at: DateTime.parse(row['created_at']),
@@ -212,7 +212,7 @@ class Song {
       voices_bass: json['voices_bass'],
       transpose: json['transpose'] ?? 0,
       scroll_speed: json['scroll_speed'] ?? 0,
-      favorite: json['favorite'] == 1,
+      favorite: json['favorite'] != null ? json['favorite'] == 1 : null,
       font_size: json['font_size'],
       songbook_id: json['songbook_id'],
       created_at: DateTime.parse(json['created_at']),
@@ -228,7 +228,7 @@ class Song {
         songbooks.title AS songbook_title 
       FROM songs
       JOIN songbooks ON songs.songbook_id = songbooks.id
-      LEFT JOIN recently_played_songs ON songs.id = recently_played_songs.song_id
+      JOIN recently_played_songs ON songs.id = recently_played_songs.song_id
       ORDER BY recently_played_songs.played_at DESC
       LIMIT ? OFFSET ?;
     ''', arguments: [limit, offset]);
@@ -237,9 +237,7 @@ class Song {
 
     for (dynamic row in rows) {
       songs.add(RecentlyPlayedSectionItem(
-        id: row['id'],
-        number: row['number'],
-        title: row['title'],
+        song: Song.fromJson(row),
         songbook: row['songbook_title'],
         lastPlayed: row['played_at'] != null ? DateTime.parse(row['played_at']) : null,
       ));
@@ -248,7 +246,49 @@ class Song {
     return songs;
   }
 
-  Future<void> setFontSize(int newFontSize) async {
+  static Future<List<RecentlyPlayedSectionItem>> getRecentlyPlayedSongsByDateRange(
+    DateTime? from,
+    DateTime? to, {
+    int limit = 200,
+    int offset = 0,
+  }) async {
+    String whereClause = '';
+    List<dynamic> arguments = [];
+
+    if (from != null && to != null) {
+      final String fromStr = '${from.year}-${from.month.toString().padLeft(2, '0')}-${from.day.toString().padLeft(2, '0')} 00:00:00';
+      final String toStr = '${to.year}-${to.month.toString().padLeft(2, '0')}-${to.day.toString().padLeft(2, '0')} 23:59:59';
+      whereClause = 'WHERE recently_played_songs.played_at >= ? AND recently_played_songs.played_at <= ?';
+      arguments = [fromStr, toStr, limit, offset];
+    } else {
+      arguments = [limit, offset];
+    }
+
+    final rows = await DB.rawQuery('''
+      SELECT 
+        songs.*,
+        recently_played_songs.played_at,
+        songbooks.title AS songbook_title 
+      FROM songs
+      JOIN songbooks ON songs.songbook_id = songbooks.id
+      JOIN recently_played_songs ON songs.id = recently_played_songs.song_id
+      $whereClause
+      ORDER BY recently_played_songs.played_at DESC
+      LIMIT ? OFFSET ?;
+    ''', arguments: arguments);
+
+    List<RecentlyPlayedSectionItem> songs = [];
+    for (dynamic row in rows) {
+      songs.add(RecentlyPlayedSectionItem(
+        song: Song.fromJson(row),
+        songbook: row['songbook_title'],
+        lastPlayed: row['played_at'] != null ? DateTime.parse(row['played_at']) : null,
+      ));
+    }
+    return songs;
+  }
+
+  Future<void> setFontSize(double newFontSize) async {
     font_size = newFontSize;
 
     await DB.execute(
@@ -264,6 +304,15 @@ class Song {
       'UPDATE songs SET favorite = ? WHERE id = ?;',
       arguments: [isFavorite ? 1 : 0, id],
     );
+  }
+
+  /// Refresh song data from the database, useful after coming back from the SongPage where the song might have been edited
+  Future<void> refresh() async {
+    final song = await Song.getSongByID(id);
+
+    if (song != null) {
+      favorite = song.favorite;
+    }
   }
 
   /// Search for songs by title or number

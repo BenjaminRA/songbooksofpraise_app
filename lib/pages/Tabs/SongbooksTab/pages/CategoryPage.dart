@@ -5,15 +5,12 @@ import 'package:provider/provider.dart';
 import 'package:songbooksofpraise_app/Providers/AppBarProvider.dart';
 import 'package:songbooksofpraise_app/api/api.dart';
 import 'package:songbooksofpraise_app/components/Breadcrumbs.dart';
-import 'package:songbooksofpraise_app/components/ListBuilder.dart';
+import 'package:songbooksofpraise_app/components/SongListBuilder.dart';
 import 'package:songbooksofpraise_app/l10n/app_localizations.dart';
 import 'package:songbooksofpraise_app/models/Category.dart';
 import 'package:songbooksofpraise_app/models/Song.dart';
-import 'package:songbooksofpraise_app/models/Songbook.dart';
-import 'package:songbooksofpraise_app/pages/RootPage.dart';
 import 'package:songbooksofpraise_app/pages/Tabs/SongbooksTab/helpers/onCategoryTabHandler.dart';
 import 'package:songbooksofpraise_app/pages/Tabs/SongbooksTab/helpers/renderCategories.dart';
-import 'package:songbooksofpraise_app/pages/Tabs/SongbooksTab/helpers/renderSongs.dart';
 import 'package:songbooksofpraise_app/pages/SongPage/SongPage.dart';
 
 class CategoryPage extends StatefulWidget {
@@ -113,7 +110,7 @@ class _CategoryPageState extends State<CategoryPage> {
 
     if (widget.category.subcategories.isEmpty) {
       return Scaffold(
-        body: ListBuilder(
+        body: SongListBuilder(
           slivers: [
             SliverToBoxAdapter(
               child: Breadcrumbs(items: breadcrumbsItems),
@@ -138,19 +135,18 @@ class _CategoryPageState extends State<CategoryPage> {
               ),
             ),
           ],
-          groupBy: (item) => item.number != null ? '#' : item.title[0].toUpperCase(),
+          onTap: (item) async {
+            if (item.song.id > -1) {
+              await onSongTapHandler(item.song);
+            }
+          },
+          groupBy: (item) => item.song.number != null ? '#' : item.title[0].toUpperCase(),
           items: widget.category.songs
               .map(
-                (item) => ListBuilderItem(
+                (item) => SongListBuilderItem(
                   title: item.title,
-                  number: item.number,
-                  onTap: () => onSongTapHandler(item),
                   loading: loadingSong == item.id,
-                  favorite: item.isInstalled ? item.favorite : null,
-                  onFavoriteToggle: (bool value) async {
-                    await item.setFavorite(value);
-                    setState(() {});
-                  },
+                  song: item,
                 ),
               )
               .toList(),

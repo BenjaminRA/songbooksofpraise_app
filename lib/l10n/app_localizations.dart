@@ -793,6 +793,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No results found'**
   String get noResults;
+
+  /// From label for date range filter
+  ///
+  /// In en, this message translates to:
+  /// **'From'**
+  String get from;
+
+  /// To label for date range filter
+  ///
+  /// In en, this message translates to:
+  /// **'To'**
+  String get to;
+
+  /// Today label
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get today;
+
+  /// Yesterday label
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday'**
+  String get yesterday;
+
+  /// All time label for date range filter
+  ///
+  /// In en, this message translates to:
+  /// **'All time'**
+  String get allTime;
+
+  /// Clear filter button text
+  ///
+  /// In en, this message translates to:
+  /// **'Clear filter'**
+  String get clearFilter;
+
+  /// Text shown when a list has no items
+  ///
+  /// In en, this message translates to:
+  /// **'No items found'**
+  String get noItemsFound;
 }
 
 class _AppLocalizationsDelegate

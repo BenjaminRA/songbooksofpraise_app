@@ -7,7 +7,7 @@ class FontAdjustmentButtonBar extends StatelessWidget {
   final double actualFontSize;
   final void Function() onDecreaseFontSize;
   final void Function() onIncreaseFontSize;
-  final bool isFavorite;
+  final bool? isFavorite;
   final Function(bool value) onSetFavorite;
 
   const FontAdjustmentButtonBar({
@@ -15,7 +15,7 @@ class FontAdjustmentButtonBar extends StatelessWidget {
     required this.actualFontSize,
     required this.onIncreaseFontSize,
     required this.onDecreaseFontSize,
-    required this.isFavorite,
+    this.isFavorite,
     required this.onSetFavorite,
   });
 
@@ -29,26 +29,27 @@ class FontAdjustmentButtonBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
-          IconButton(
-            visualDensity: VisualDensity.compact,
-            onPressed: () => onSetFavorite(!isFavorite),
-            icon: Row(
-              children: [
-                Icon(
-                  isFavorite ? Icons.favorite : Icons.favorite_border,
-                  color: Theme.of(context).primaryColor,
-                ),
-                SizedBox(width: 4.0),
-                Text(
-                  localizations.favorite,
-                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        fontWeight: FontWeight.w500,
-                        color: Theme.of(context).primaryColor,
-                      ),
-                ),
-              ],
+          if (isFavorite != null)
+            IconButton(
+              visualDensity: VisualDensity.compact,
+              onPressed: () => onSetFavorite(!isFavorite!),
+              icon: Row(
+                children: [
+                  Icon(
+                    isFavorite! ? Icons.favorite : Icons.favorite_border,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  SizedBox(width: 4.0),
+                  Text(
+                    localizations.favorite,
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          fontWeight: FontWeight.w500,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                  ),
+                ],
+              ),
             ),
-          ),
           Expanded(child: Container()),
           IconButton(
             visualDensity: VisualDensity.compact,

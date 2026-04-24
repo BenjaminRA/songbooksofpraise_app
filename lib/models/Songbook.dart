@@ -52,9 +52,6 @@ class Songbook {
       FROM songbooks
     ''');
 
-    final test = await DB.rawQuery('SELECT * FROM categories WHERE songbook_id = 1;');
-    print(test);
-
     List<Songbook> songbooks = [];
 
     for (dynamic row in rows) {

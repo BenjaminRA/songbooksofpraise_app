@@ -2,51 +2,55 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:songbooksofpraise_app/l10n/app_localizations.dart';
+import 'package:songbooksofpraise_app/models/Song.dart';
 
-class ListBuilderItem {
+class SongListBuilderItem {
   final String title;
   final String? subtitle;
-  final int? number;
-  final Future<void> Function() onTap;
   final bool loading;
-  final bool? favorite;
-  final Function(bool value)? onFavoriteToggle;
+  final Song song;
 
-  ListBuilderItem({
+  SongListBuilderItem({
     required this.title,
     this.subtitle,
-    this.number,
-    required this.onTap,
     this.loading = false,
-    this.favorite,
-    this.onFavoriteToggle,
+    required this.song,
   });
 }
 
 enum SortOrder { asc, desc }
 
-class ListBuilder extends StatefulWidget {
-  final List<ListBuilderItem> items;
-  final String Function(ListBuilderItem)? groupBy;
-  final int Function(ListBuilderItem, ListBuilderItem)? sortBy;
+class SongListBuilder extends StatefulWidget {
+  final List<SongListBuilderItem> items;
+  final String Function(SongListBuilderItem)? groupBy;
+  final int Function(SongListBuilderItem, SongListBuilderItem)? sortBy;
   final SortOrder sortOrder;
   final List<Widget>? slivers;
+  final bool enableSideBar;
+  final bool forceGroupHeaders;
+  final Widget? emptyStateWidget;
+  final Future<void> Function(SongListBuilderItem item)? onTap;
 
-  const ListBuilder({
+  const SongListBuilder({
     super.key,
     required this.items,
     this.groupBy,
     this.sortBy,
     this.sortOrder = SortOrder.asc,
     this.slivers,
+    this.enableSideBar = true,
+    this.forceGroupHeaders = false,
+    this.emptyStateWidget,
+    this.onTap,
   });
 
   @override
-  State<ListBuilder> createState() => _ListBuilderState();
+  State<SongListBuilder> createState() => _SongListBuilderState();
 }
 
-class _ListBuilderState extends State<ListBuilder> {
-  late Map<String, List<ListBuilderItem>> groupedItems;
+class _SongListBuilderState extends State<SongListBuilder> {
+  late Map<String, List<SongListBuilderItem>> groupedItems;
   Map<String, GlobalKey> groupKeys = {};
   final ScrollController _scrollController = ScrollController();
   final ScrollController _groupScrollController = ScrollController();
@@ -62,7 +66,7 @@ class _ListBuilderState extends State<ListBuilder> {
   }
 
   @override
-  void didUpdateWidget(ListBuilder oldWidget) {
+  void didUpdateWidget(SongListBuilder oldWidget) {
     super.didUpdateWidget(oldWidget);
     // Reinitialize groups if items changed
     if (oldWidget.items != widget.items ||
@@ -73,15 +77,16 @@ class _ListBuilderState extends State<ListBuilder> {
     }
   }
 
-  void _sortItems(List<ListBuilderItem> items) {
+  void _sortItems(List<SongListBuilderItem> items) {
     if (widget.sortBy != null) {
       items.sort(widget.sortBy);
     } else {
       items.sort((a, b) {
-        if (a.number != null && b.number != null) {
-          return a.number!.compareTo(b.number!);
+        if (a.song.number != null && b.song.number != null) {
+          return a.song.number!.compareTo(b.song.number!);
         } else {
-          return (a.number == null ? a.title : '${a.number} - ${a.title}').compareTo(b.number == null ? b.title : '${b.number} - ${b.title}');
+          return (a.song.number == null ? a.title : '${a.song.number} - ${a.title}')
+              .compareTo(b.song.number == null ? b.title : '${b.song.number} - ${b.title}');
         }
       });
     }
@@ -95,7 +100,7 @@ class _ListBuilderState extends State<ListBuilder> {
     final items = widget.items;
 
     if (widget.groupBy != null) {
-      final Map<String, List<ListBuilderItem>> newGroupedItems = {};
+      final Map<String, List<SongListBuilderItem>> newGroupedItems = {};
 
       for (final item in items) {
         final groupKey = widget.groupBy!(item);
@@ -208,7 +213,10 @@ class _ListBuilderState extends State<ListBuilder> {
     }
   }
 
-  Widget _renderListItem(ListBuilderItem item) {
+  Widget _renderListItem(SongListBuilderItem item) {
+    bool showFavorite = item.song.favorite != null;
+    bool isFavorite = item.song.favorite ?? false;
+
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 8.0),
       child: MaterialButton(
@@ -218,8 +226,10 @@ class _ListBuilderState extends State<ListBuilder> {
         ),
         color: Colors.white,
         onPressed: () async {
-          await item.onTap();
-          print('${item.title}: ${item.favorite}');
+          widget.onTap != null ? await widget.onTap!(item) : null;
+
+          await item.song.refresh(); // Refresh song data after potential edits in SongPage
+          setState(() {});
         },
         child: Container(
           width: double.infinity,
@@ -232,7 +242,7 @@ class _ListBuilderState extends State<ListBuilder> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(item.number != null ? '${item.number} - ${item.title}' : item.title,
+                  Text(item.song.number != null ? '${item.song.number} - ${item.song.title}' : item.song.title,
                       style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold)),
                   const SizedBox(height: 2),
                   if (item.subtitle != null)
@@ -248,15 +258,14 @@ class _ListBuilderState extends State<ListBuilder> {
                   color: Theme.of(context).primaryColor,
                   size: 18.0,
                 )
-              else if (item.favorite != null && item.favorite != null)
+              else if (showFavorite)
                 GestureDetector(
                   onTap: () {
-                    if (item.onFavoriteToggle != null) {
-                      item.onFavoriteToggle!(!(item.favorite ?? false));
-                    }
+                    item.song.setFavorite(!isFavorite);
+                    setState(() {});
                   },
                   child: Icon(
-                    item.favorite! ? Icons.favorite : Icons.favorite_border,
+                    item.song.favorite! ? Icons.favorite : Icons.favorite_border,
                     color: Theme.of(context).primaryColor,
                   ),
                 ),
@@ -270,10 +279,30 @@ class _ListBuilderState extends State<ListBuilder> {
   @override
   Widget build(BuildContext context) {
     List<Widget> slivers = widget.slivers != null ? List.from(widget.slivers!) : [];
-    double rightMargin = groupedItems.keys.length > 1 ? 30.0 : 0.0;
+    bool shouldShowSideBar = widget.enableSideBar == true && groupedItems.keys.length > 1;
+    double rightMargin = shouldShowSideBar ? 30.0 : 0.0;
+
+    if (widget.emptyStateWidget != null && widget.items.isEmpty) {
+      slivers.add(
+        SliverFillRemaining(
+          child: Center(child: widget.emptyStateWidget),
+        ),
+      );
+    } else if (widget.items.isEmpty) {
+      slivers.add(
+        SliverFillRemaining(
+          child: Center(
+            child: Text(
+              AppLocalizations.of(context)!.noItemsFound,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
+            ),
+          ),
+        ),
+      );
+    }
 
     // If no grouping, just list all items
-    if (widget.groupBy == null || groupedItems.keys.length == 1) {
+    if (widget.groupBy == null || (groupedItems.keys.length == 1 && !widget.forceGroupHeaders)) {
       slivers.add(
         SliverPadding(
           padding: EdgeInsets.symmetric(horizontal: 16.0),
@@ -352,7 +381,7 @@ class _ListBuilderState extends State<ListBuilder> {
             physics: BouncingScrollPhysics(),
             slivers: slivers,
           ),
-          if (groupedItems.keys.length > 1)
+          if (shouldShowSideBar)
             AnimatedOpacity(
               opacity: showSlider ? 1.0 : 0.0,
               duration: Duration(milliseconds: 300),

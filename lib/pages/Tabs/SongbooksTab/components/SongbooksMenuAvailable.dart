@@ -5,7 +5,7 @@ import 'package:songbooksofpraise_app/l10n/app_localizations.dart';
 import 'package:songbooksofpraise_app/Providers/AppBarProvider.dart';
 import 'package:songbooksofpraise_app/api/api.dart';
 import 'package:songbooksofpraise_app/db/DB.dart';
-import 'package:songbooksofpraise_app/helpers/render_date.dart';
+import 'package:songbooksofpraise_app/helpers/renderDate.dart';
 import 'package:songbooksofpraise_app/models/Category.dart';
 import 'package:songbooksofpraise_app/models/Songbook.dart';
 import 'package:songbooksofpraise_app/pages/RootPage.dart';

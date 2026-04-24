@@ -106,10 +106,12 @@ class DB {
     batch.execute('''
       CREATE TABLE IF NOT EXISTS recently_played_songs (
         song_id INTEGER NOT NULL,
-        played_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        played_at DATETIME DEFAULT (datetime('now', 'localtime')),
         FOREIGN KEY (song_id) REFERENCES songs(id) ON DELETE CASCADE
       );
     ''');
+
+    await batch.commit();
 
     // Add column favorite to table songs
     try {
@@ -121,17 +123,15 @@ class DB {
       print('Table songs already has the column favorite');
     }
 
-    // Add column favorite to table songs
+    // Add column font_size to table songs
     try {
       await db.execute('''
         ALTER TABLE songs
-        ADD COLUMN font_size INTEGER DEFAULT NULL
+        ADD COLUMN font_size REAL DEFAULT NULL
       ''');
     } catch (e) {
       print('Table songs already has the column font_size');
     }
-
-    await batch.commit();
 
     db.close();
   }

@@ -1,8 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:songbooksofpraise_app/Providers/AppBarProvider.dart';
 import 'package:songbooksofpraise_app/api/api.dart';
 import 'package:songbooksofpraise_app/l10n/app_localizations.dart';
+import 'package:songbooksofpraise_app/pages/Tabs/HomeTab/RecentlyPlayedPage.dart';
 
 class ExploreSectionItem {
   final IconData icon;
@@ -49,7 +52,20 @@ class _ExploreSectionState extends State<ExploreSection> {
         label: localizations.recent,
         subLabel: localizations.lastPlayed,
         color: const Color.fromRGBO(47, 105, 243, 1.0),
-        onPressed: () {},
+        onPressed: () {
+          Provider.of<AppBarProvider>(context, listen: false).setTitle(
+            AppBarState(
+              title: localizations.recentlyPlayed,
+              icon: Icons.access_time_filled,
+              // backgroundColor: const Color.fromRGBO(47, 105, 243, 1.0),
+              // titleColor: Colors.white,
+              iconColor: const Color.fromRGBO(47, 105, 243, 1.0),
+            ),
+          );
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => const RecentlyPlayedPage()),
+          );
+        },
       ),
       ExploreSectionItem(
         icon: Icons.favorite,

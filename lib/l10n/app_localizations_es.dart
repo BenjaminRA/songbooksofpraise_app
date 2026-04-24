@@ -405,4 +405,25 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get noResults => 'No se encontraron resultados';
+
+  @override
+  String get from => 'De';
+
+  @override
+  String get to => 'Hasta';
+
+  @override
+  String get today => 'Hoy';
+
+  @override
+  String get yesterday => 'Ayer';
+
+  @override
+  String get allTime => 'Todo el tiempo';
+
+  @override
+  String get clearFilter => 'Limpiar filtro';
+
+  @override
+  String get noItemsFound => 'No se encontraron elementos';
 }
