@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:songbooksofpraise_app/components/CustonRefreshIndicator.dart';
+import 'package:songbooksofpraise_app/components/PullToRefresh.dart';
 import 'package:songbooksofpraise_app/l10n/app_localizations.dart';
 import 'package:songbooksofpraise_app/models/Songbook.dart';
 import 'package:songbooksofpraise_app/pages/Tabs/SongbooksTab/SongbookTab.dart';
@@ -84,23 +85,25 @@ class _SongbooksMenuState extends State<SongbooksMenu> {
           ),
         ),
         Expanded(
-          child: RefreshIndicator(
+          child: PullToRefresh(
             onRefresh: widget.callbacks.refresh,
-            child: ListView(
-              children: [
-                if (currentSongbookTabIndex == 0)
-                  SongbooksMenuInstalled(
-                    songbooks: widget.installed,
-                    callbacks: widget.callbacks,
-                  )
-                else
-                  SongbooksMenuAvailable(
-                    songbooks: widget.available,
-                    callbacks: widget.callbacks,
-                  ),
-                SizedBox(height: 20.0),
-              ],
-            ),
+            slivers: [
+              SliverList(
+                delegate: SliverChildListDelegate([
+                  if (currentSongbookTabIndex == 0)
+                    SongbooksMenuInstalled(
+                      songbooks: widget.installed,
+                      callbacks: widget.callbacks,
+                    )
+                  else
+                    SongbooksMenuAvailable(
+                      songbooks: widget.available,
+                      callbacks: widget.callbacks,
+                    ),
+                  SizedBox(height: 20.0),
+                ]),
+              )
+            ],
           ),
         ),
         // PageView(

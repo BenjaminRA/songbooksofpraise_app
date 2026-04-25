@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:songbooksofpraise_app/auth/AppTokenGenerator.dart';
 
 class API {
-  // static const String baseUrl = 'http://localhost:5342/app';
+  // static const String baseUrl = 'http://10.0.2.2:5342/app';
   static const String baseUrl = kReleaseMode ? 'https://backend.songbooksofpraise.com/app' : 'http://localhost:5342/app';
 
   static String _authToken() {
