@@ -237,24 +237,27 @@ class _SongListBuilderState extends State<SongListBuilder> {
           width: double.infinity,
           padding: const EdgeInsets.symmetric(vertical: 18.0),
           child: Row(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(item.song.number != null ? '${item.song.number} - ${item.song.title}' : item.song.title,
-                      style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 2),
-                  if (item.subtitle != null)
-                    Text(
-                      '${item.subtitle}',
-                      style: Theme.of(context).textTheme.labelSmall,
-                    ),
-                ],
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(item.song.number != null ? '${item.song.number} - ${item.song.title}' : item.song.title,
+                        style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 2),
+                    if (item.subtitle != null)
+                      Text(
+                        '${item.subtitle}',
+                        style: Theme.of(context).textTheme.labelSmall,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                  ],
+                ),
               ),
-              const Spacer(),
               if (item.loading)
                 SpinKitThreeInOut(
                   color: Theme.of(context).primaryColor,
