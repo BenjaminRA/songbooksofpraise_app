@@ -14,10 +14,11 @@ import 'package:songbooksofpraise_app/pages/SongPage/SongPage.dart';
 import 'package:songbooksofpraise_app/pages/Tabs/SongbooksTab/pages/CategoryPage.dart';
 import 'package:songbooksofpraise_app/pages/Tabs/SongbooksTab/pages/SongbookPage.dart';
 
-enum SearchFilter { songs, categories, songbooks }
+enum SearchFilter { songs, categories, songbooks, favorites }
 
 class SongSearch extends StatefulWidget {
-  const SongSearch({super.key});
+  final Set<SearchFilter>? initialFilters;
+  const SongSearch({super.key, this.initialFilters});
 
   @override
   State<SongSearch> createState() => _SongSearchState();
@@ -25,13 +26,18 @@ class SongSearch extends StatefulWidget {
 
 class _SongSearchState extends State<SongSearch> {
   final TextEditingController _searchController = TextEditingController();
-  final Set<SearchFilter> _activeFilters = {SearchFilter.songs, SearchFilter.categories, SearchFilter.songbooks};
+  late final Set<SearchFilter> _activeFilters;
   List<SearchResult> _searchResults = [];
   bool _isSearching = false;
 
   @override
   void initState() {
     super.initState();
+
+    _activeFilters = widget.initialFilters ?? {SearchFilter.songs, SearchFilter.categories, SearchFilter.songbooks};
+
+    // Automatically perform search if initial query is provided
+    _performSearch('');
   }
 
   @override
@@ -41,7 +47,9 @@ class _SongSearchState extends State<SongSearch> {
   }
 
   Future<void> _performSearch(String query) async {
-    if (query.trim().isEmpty) {
+    bool favoritesOnly = _activeFilters.contains(SearchFilter.favorites);
+
+    if (query.trim().isEmpty && !favoritesOnly) {
       setState(() {
         _searchResults = [];
         _isSearching = false;
@@ -55,7 +63,10 @@ class _SongSearchState extends State<SongSearch> {
 
     // Search songs if filter is active
     if (_activeFilters.contains(SearchFilter.songs)) {
-      final songResults = await Song.search(query);
+      final songResults = await Song.search(
+        query,
+        favoritesOnly: favoritesOnly,
+      );
       results.addAll(songResults.map((item) => SearchResult(
             type: SearchResultType.song,
             data: item['song'],
@@ -63,23 +74,25 @@ class _SongSearchState extends State<SongSearch> {
           )));
     }
 
-    // Search categories if filter is active
-    if (_activeFilters.contains(SearchFilter.categories)) {
-      final categoryResults = await Category.search(query);
-      results.addAll(categoryResults.map((item) => SearchResult(
-            type: SearchResultType.category,
-            data: item['category'],
-            songbookTitle: item['songbook_title'],
-          )));
-    }
+    if (!favoritesOnly) {
+      // Search categories if filter is active
+      if (_activeFilters.contains(SearchFilter.categories)) {
+        final categoryResults = await Category.search(query);
+        results.addAll(categoryResults.map((item) => SearchResult(
+              type: SearchResultType.category,
+              data: item['category'],
+              songbookTitle: item['songbook_title'],
+            )));
+      }
 
-    // Search songbooks if filter is active
-    if (_activeFilters.contains(SearchFilter.songbooks)) {
-      final songbookResults = await Songbook.search(query);
-      results.addAll(songbookResults.map((songbook) => SearchResult(
-            type: SearchResultType.songbook,
-            data: songbook,
-          )));
+      // Search songbooks if filter is active
+      if (_activeFilters.contains(SearchFilter.songbooks)) {
+        final songbookResults = await Songbook.search(query);
+        results.addAll(songbookResults.map((songbook) => SearchResult(
+              type: SearchResultType.songbook,
+              data: songbook,
+            )));
+      }
     }
 
     setState(() {
@@ -226,7 +239,7 @@ class _SongSearchState extends State<SongSearch> {
                   ),
                   const SizedBox(height: 12.0),
                   Wrap(
-                    alignment: WrapAlignment.spaceEvenly,
+                    alignment: WrapAlignment.start,
                     spacing: 8.0,
                     children: [
                       FilterChip(
@@ -250,6 +263,13 @@ class _SongSearchState extends State<SongSearch> {
                         selectedColor: Color.fromRGBO(254, 247, 218, 1.0),
                         checkmarkColor: Color.fromRGBO(140, 147, 159, 1),
                       ),
+                      FilterChip(
+                        label: Text(localizations.favorites),
+                        selected: _activeFilters.contains(SearchFilter.favorites),
+                        onSelected: (_) => _toggleFilter(SearchFilter.favorites),
+                        selectedColor: Color.fromRGBO(254, 247, 218, 1.0),
+                        checkmarkColor: Color.fromRGBO(140, 147, 159, 1),
+                      ),
                     ],
                   ),
                 ],
@@ -258,7 +278,7 @@ class _SongSearchState extends State<SongSearch> {
             Expanded(
               child: _isSearching
                   ? Center(child: SpinKitThreeBounce(color: Theme.of(context).primaryColor))
-                  : _searchController.text.isEmpty
+                  : _searchController.text.isEmpty && !_activeFilters.contains(SearchFilter.favorites)
                       ? Center(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -318,6 +338,9 @@ class _SongSearchState extends State<SongSearch> {
   }
 
   Widget _buildHighlightedText(String text, String query) {
+    if (query.isEmpty) {
+      return Text(text);
+    }
     final queryLower = query.toLowerCase();
     final textLower = text.toLowerCase();
 

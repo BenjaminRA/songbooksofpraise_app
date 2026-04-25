@@ -31,6 +31,7 @@ class SongListBuilder extends StatefulWidget {
   final bool forceGroupHeaders;
   final Widget? emptyStateWidget;
   final Future<void> Function(SongListBuilderItem item)? onTap;
+  final void Function(SongListBuilderItem item, bool isFavorite)? onToggleFavorite;
 
   const SongListBuilder({
     super.key,
@@ -43,6 +44,7 @@ class SongListBuilder extends StatefulWidget {
     this.forceGroupHeaders = false,
     this.emptyStateWidget,
     this.onTap,
+    this.onToggleFavorite,
   });
 
   @override
@@ -267,6 +269,10 @@ class _SongListBuilderState extends State<SongListBuilder> {
                 GestureDetector(
                   onTap: () {
                     item.song.setFavorite(!isFavorite);
+                    if (widget.onToggleFavorite != null) {
+                      widget.onToggleFavorite!(item, !isFavorite);
+                    }
+
                     setState(() {});
                   },
                   child: Icon(

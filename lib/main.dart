@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:songbooksofpraise_app/Providers/SettingsProvider.dart';
+import 'package:songbooksofpraise_app/Providers/TabNavigatorProvider.dart';
 import 'package:songbooksofpraise_app/db/DB.dart';
 import 'package:songbooksofpraise_app/l10n/app_localizations.dart';
 import 'package:songbooksofpraise_app/models/Song.dart';
@@ -66,6 +67,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Songbooks of Praise',
       supportedLocales: L18n.all,
+      debugShowCheckedModeBanner: false,
       // locale: Locale('es'),
       localizationsDelegates: const [
         AppLocalizations.delegate,
@@ -182,7 +184,10 @@ class MyApp extends StatelessWidget {
           child: child!,
         );
       },
-      home: const RootPage(),
+      home: ChangeNotifierProvider(
+        create: (_) => TabNavigatorProvider(initialTabIndex: 0),
+        child: const RootPage(),
+      ),
     );
   }
 }

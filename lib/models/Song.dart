@@ -289,6 +289,11 @@ class Song {
     return songs;
   }
 
+  static Future<int> getFavoritesCount() async {
+    final row = await DB.rawQuery('SELECT COUNT(*) as count FROM songs WHERE favorite = 1;');
+    return row.first['count'] ?? 0;
+  }
+
   Future<void> setFontSize(double newFontSize) async {
     font_size = newFontSize;
 
@@ -317,19 +322,24 @@ class Song {
   }
 
   /// Search for songs by title or number
-  static Future<List<Map<String, dynamic>>> search(String query) async {
-    if (query.isEmpty) return [];
+  static Future<List<Map<String, dynamic>>> search(
+    String query, {
+    bool favoritesOnly = false,
+  }) async {
+    if (query.isEmpty && !favoritesOnly) return [];
 
     // Check if query is a number
     final isNumericQuery = int.tryParse(query) != null;
 
-    final rows = await DB.rawQuery('''
+    const String selectClause = '''
       SELECT 
         songs.*,
         songbooks.title AS songbook_title
       FROM songs
       JOIN songbooks ON songs.songbook_id = songbooks.id
-      WHERE songs.title LIKE ? OR (songs.number IS NOT NULL AND songs.number = ?)
+    ''';
+
+    const String orderByClause = '''
       ORDER BY 
         CASE 
           WHEN songs.number = ? THEN 0
@@ -337,12 +347,33 @@ class Song {
           ELSE 2
         END,
         songs.title ASC;
+    ''';
+
+    // Build where clause based on whether it's a favorites-only search and whether the query is numeric or not
+    dynamic rows;
+
+    if (query.isEmpty && favoritesOnly) {
+      rows = await DB.rawQuery('''
+        $selectClause
+        WHERE songs.favorite = 1
+        $orderByClause
+      ''', arguments: [
+        -1, // For number match, we want it to be last since there's no query
+        '%', // For title match, we want all since there's no query
+      ]);
+    } else {
+      rows = await DB.rawQuery('''
+      $selectClause
+      WHERE (songs.title LIKE ? OR (songs.number IS NOT NULL AND songs.number = ?))
+      ${favoritesOnly ? 'AND songs.favorite = 1' : ''}
+      $orderByClause
     ''', arguments: [
-      '%$query%',
-      isNumericQuery ? int.parse(query) : -1,
-      isNumericQuery ? int.parse(query) : -1,
-      '$query%',
-    ]);
+        '%$query%',
+        isNumericQuery ? int.parse(query) : -1,
+        isNumericQuery ? int.parse(query) : -1,
+        '$query%',
+      ]);
+    }
 
     return rows
         .map((row) => {

@@ -3,8 +3,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:songbooksofpraise_app/Providers/AppBarProvider.dart';
+import 'package:songbooksofpraise_app/Providers/TabNavigatorProvider.dart';
 import 'package:songbooksofpraise_app/api/api.dart';
 import 'package:songbooksofpraise_app/l10n/app_localizations.dart';
+import 'package:songbooksofpraise_app/models/Song.dart';
+import 'package:songbooksofpraise_app/pages/RootPage.dart';
+import 'package:songbooksofpraise_app/pages/SongSearch/SongSearch.dart';
 import 'package:songbooksofpraise_app/pages/Tabs/HomeTab/RecentlyPlayedPage.dart';
 
 class ExploreSectionItem {
@@ -31,21 +35,47 @@ class ExploreSection extends StatefulWidget {
 }
 
 class _ExploreSectionState extends State<ExploreSection> {
+  int favoritesCount = 0;
+
+  @override
+  void initState() {
+    super.initState();
+
+    fetchFavoritesCount();
+  }
+
+  Future<void> fetchFavoritesCount() async {
+    int count = await Song.getFavoritesCount();
+    if (mounted) {
+      setState(() {
+        favoritesCount = count;
+      });
+    }
+  }
+
   List<Widget> _exploreItems(AppLocalizations localizations) {
+    AppLocalizations localizations = AppLocalizations.of(context)!;
+    AppBarProvider appBarProvider = Provider.of<AppBarProvider>(context, listen: false);
+    TabNavigatorProvider tabNavigatorProvider = Provider.of<TabNavigatorProvider>(context, listen: false);
+
     List<ExploreSectionItem> items = [
       ExploreSectionItem(
         icon: Icons.list,
         label: localizations.browse,
         subLabel: localizations.categories,
         color: const Color.fromRGBO(119, 24, 40, 1.0),
-        onPressed: () {},
+        onPressed: () {
+          tabNavigatorProvider.setTabIndex(1);
+        },
       ),
       ExploreSectionItem(
         icon: Icons.menu_book,
         label: localizations.songbooks,
         subLabel: localizations.manage,
         color: const Color.fromRGBO(201, 161, 42, 1.0),
-        onPressed: () {},
+        onPressed: () {
+          tabNavigatorProvider.setTabIndex(1);
+        },
       ),
       ExploreSectionItem(
         icon: Icons.access_time_filled,
@@ -70,9 +100,22 @@ class _ExploreSectionState extends State<ExploreSection> {
       ExploreSectionItem(
         icon: Icons.favorite,
         label: localizations.favorites,
-        subLabel: localizations.songsCount(21),
+        subLabel: localizations.songsCount(favoritesCount),
         color: const Color.fromRGBO(232, 43, 53, 1.0),
-        onPressed: () {},
+        onPressed: () async {
+          appBarProvider.setTitle(AppBarState(title: localizations.search, icon: Icons.search));
+          await homeTabKey.currentState?.push(
+            MaterialPageRoute(
+              builder: (context) => const SongSearch(
+                initialFilters: {
+                  SearchFilter.favorites,
+                  SearchFilter.songs,
+                },
+              ),
+            ),
+          );
+          appBarProvider.popTitle();
+        },
       ),
     ];
 

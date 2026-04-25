@@ -220,6 +220,9 @@ class _RecentlyPlayedPageState extends State<RecentlyPlayedPage> {
           ),
         ],
       ),
+      onToggleFavorite: (item, isFavorite) {
+        _fetchSongs();
+      },
     );
   }
 }

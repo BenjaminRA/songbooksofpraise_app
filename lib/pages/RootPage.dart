@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:songbooksofpraise_app/Providers/TabNavigatorProvider.dart';
 import 'package:songbooksofpraise_app/l10n/app_localizations.dart';
 import 'package:songbooksofpraise_app/pages/Tabs/HomeTab/HomeTab.dart';
 import 'package:songbooksofpraise_app/pages/Tabs/SettingsTab/SettingsTab.dart';
@@ -22,16 +23,17 @@ class RootPage extends StatefulWidget {
 }
 
 class _RootPageState extends State<RootPage> {
-  int currentTabIndex = 0;
+  // int currentTabIndex = 0;
 
-  void setTabIndex(int index) {
-    setState(() {
-      currentTabIndex = index;
-    });
-  }
+  // void setTabIndex(int index) {
+  //   setState(() {
+  //     currentTabIndex = index;
+  //   });
+  // }
 
   GlobalKey<NavigatorState>? _getCurrentNavigatorKey() {
-    switch (currentTabIndex) {
+    final tabNavigatorProvider = Provider.of<TabNavigatorProvider>(context, listen: false);
+    switch (tabNavigatorProvider.tabIndex) {
       case 0:
         return homeTabKey;
       case 1:
@@ -62,6 +64,7 @@ class _RootPageState extends State<RootPage> {
   @override
   Widget build(BuildContext context) {
     AppLocalizations localizations = AppLocalizations.of(context)!;
+    final tabNavigatorProvider = Provider.of<TabNavigatorProvider>(context);
 
     return WillPopScope(
       onWillPop: _onWillPop,
@@ -71,7 +74,7 @@ class _RootPageState extends State<RootPage> {
           builder: (context) {
             return Scaffold(
               body: IndexedStack(
-                index: currentTabIndex,
+                index: tabNavigatorProvider.tabIndex,
                 children: <Widget>[
                   ChangeNotifierProvider(
                     create: (_) => AppBarProvider(
@@ -123,8 +126,8 @@ class _RootPageState extends State<RootPage> {
                   highlightColor: Colors.transparent,
                 ),
                 child: BottomNavigationBar(
-                  currentIndex: currentTabIndex,
-                  onTap: setTabIndex,
+                  currentIndex: tabNavigatorProvider.tabIndex,
+                  onTap: (index) => tabNavigatorProvider.setTabIndex(index),
                   type: BottomNavigationBarType.fixed,
                   items: <BottomNavigationBarItem>[
                     BottomNavigationBarItem(
