@@ -8,15 +8,12 @@ import 'package:photo_view/photo_view.dart';
 import 'package:songbooksofpraise_app/l10n/app_localizations.dart';
 import 'package:songbooksofpraise_app/models/Chord.dart';
 import 'package:songbooksofpraise_app/models/Song.dart';
+import 'package:songbooksofpraise_app/pages/SongPage/components/Chords/BanjoChord.dart';
 import 'package:songbooksofpraise_app/pages/SongPage/components/Chords/GuitarChord.dart';
 import 'package:songbooksofpraise_app/pages/SongPage/components/Chords/PianoChord.dart';
 import 'package:songbooksofpraise_app/pages/SongPage/components/Chords/UkuleleChord.dart';
 
-enum Instrument {
-  guitar,
-  piano,
-  ukulele,
-}
+enum Instrument { guitar, piano, ukulele, banjo }
 
 class ChordsByInstrument extends StatefulWidget {
   final Song song;
@@ -56,6 +53,36 @@ class _ChordsByInstrumentState extends State<ChordsByInstrument> {
     return jsonDecode(jsonString);
   }
 
+  List<List<int>> _parsePositions(dynamic chordInfo) {
+    return List<List<int>>.from(
+      chordInfo.map(
+        (chord) => List<int>.from(
+          chord['positions'].map(
+            (e) {
+              if (e == 'x') return -1;
+              return int.parse(e);
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  List<List<int>> _parseFingerings(dynamic chordInfo) {
+    return List<List<int>>.from(
+      chordInfo.map(
+        (chord) => List<int>.from(
+          chord['fingerings'][0].map(
+            (e) {
+              if (e == 'x') return -1;
+              return int.parse(e);
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
   void initChords() async {
     dynamic chordsData = await fetchChordsData();
 
@@ -73,15 +100,22 @@ class _ChordsByInstrumentState extends State<ChordsByInstrument> {
           case Instrument.guitar:
             chord = GuitarChord(
               name: songChord.name,
-              positions: List<List<int>>.from(chordInfo.map((chord) => List<int>.from(chord['positions'].map((e) => int.parse(e))))),
-              fingerings: List<List<int>>.from(chordInfo.map((chord) => List<int>.from(chord['fingerings'][0].map((e) => int.parse(e))))),
+              positions: _parsePositions(chordInfo),
+              fingerings: _parseFingerings(chordInfo),
             );
             break;
           case Instrument.ukulele:
             chord = UkuleleChord(
               name: songChord.name,
-              positions: List<List<int>>.from(chordInfo.map((chord) => List<int>.from(chord['positions'].map((e) => int.parse(e))))),
-              fingerings: List<List<int>>.from(chordInfo.map((chord) => List<int>.from(chord['fingerings'][0].map((e) => int.parse(e))))),
+              positions: _parsePositions(chordInfo),
+              fingerings: _parseFingerings(chordInfo),
+            );
+            break;
+          case Instrument.banjo:
+            chord = BanjoChord(
+              name: songChord.name,
+              positions: _parsePositions(chordInfo),
+              fingerings: _parseFingerings(chordInfo),
             );
             break;
           case Instrument.piano:
@@ -125,11 +159,14 @@ class _ChordsByInstrumentState extends State<ChordsByInstrument> {
       case Instrument.guitar:
         instrumentName = localizations.guitar;
         break;
-      case Instrument.piano:
-        instrumentName = localizations.piano;
-        break;
       case Instrument.ukulele:
         instrumentName = localizations.ukulele;
+        break;
+      case Instrument.banjo:
+        instrumentName = localizations.banjo;
+        break;
+      case Instrument.piano:
+        instrumentName = localizations.piano;
         break;
     }
 
@@ -175,6 +212,10 @@ class _ChordsByInstrumentState extends State<ChordsByInstrument> {
                     UkuleleChordRenderer(
                       chord: chord,
                       // scale: 0.65,
+                    ),
+                  if (chord is BanjoChord)
+                    BanjoChordRenderer(
+                      chord: chord,
                     ),
                   if (chord is PianoChord)
                     PianoChordRenderer(

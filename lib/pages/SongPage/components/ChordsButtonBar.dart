@@ -153,6 +153,14 @@ class ChordsButtonBar extends StatelessWidget {
                           style: TextStyle(fontSize: 16.0, color: Theme.of(context).primaryColor),
                         ),
                       ),
+                      // IconButton(
+                      //   visualDensity: VisualDensity.compact,
+                      //   onPressed: () => onOpenChordsByInstrument(Instrument.banjo),
+                      //   icon: Text(
+                      //     localizations.banjo,
+                      //     style: TextStyle(fontSize: 16.0, color: Theme.of(context).primaryColor),
+                      //   ),
+                      // ),
                     ],
                   ),
                 )

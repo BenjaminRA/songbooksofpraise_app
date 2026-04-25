@@ -291,6 +291,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ukulele => 'Ukulele';
 
   @override
+  String get banjo => 'Banjo';
+
+  @override
   String get back => 'Atrás';
 
   @override

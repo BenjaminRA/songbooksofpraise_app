@@ -385,6 +385,10 @@
   "@ukulele": {
     "description": "Etiqueta de instrumento ukulele"
   },
+  "banjo": "Banjo",
+  "@banjo": {
+    "description": "Etiqueta de instrumento banjo"
+  },
   "back": "Atrás",
   "@back": {
     "description": "Etiqueta de atrás"

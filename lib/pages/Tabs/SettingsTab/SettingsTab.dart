@@ -20,7 +20,7 @@ class _SettingsTabState extends State<SettingsTab> {
     const List<Widget> children = [
       DisplaySection(),
       MusicAndAudioSection(),
-      AboutSection(),
+      // AboutSection(),
     ];
 
     return Scaffold(

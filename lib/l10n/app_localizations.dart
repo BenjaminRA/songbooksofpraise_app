@@ -608,6 +608,12 @@ abstract class AppLocalizations {
   /// **'Ukulele'**
   String get ukulele;
 
+  /// Banjo instrument label
+  ///
+  /// In en, this message translates to:
+  /// **'Banjo'**
+  String get banjo;
+
   /// Back label
   ///
   /// In en, this message translates to:

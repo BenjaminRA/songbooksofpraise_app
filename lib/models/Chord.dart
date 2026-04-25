@@ -76,6 +76,13 @@ class UkuleleChord extends Chord {
   UkuleleChord({required String name, required this.positions, required this.fingerings}) : super(name: name);
 }
 
+class BanjoChord extends Chord {
+  final List<List<int>> positions;
+  final List<List<int>> fingerings;
+
+  BanjoChord({required String name, required this.positions, required this.fingerings}) : super(name: name);
+}
+
 class PianoChord extends Chord {
   final List<List<String>> keys;
 

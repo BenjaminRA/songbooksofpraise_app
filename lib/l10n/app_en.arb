@@ -385,6 +385,10 @@
   "@ukulele": {
     "description": "Ukulele instrument label"
   },
+  "banjo": "Banjo",
+  "@banjo": {
+    "description": "Banjo instrument label"
+  },
   "back": "Back",
   "@back": {
     "description": "Back label"
