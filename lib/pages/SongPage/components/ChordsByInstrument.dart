@@ -9,6 +9,7 @@ import 'package:songbooksofpraise_app/l10n/app_localizations.dart';
 import 'package:songbooksofpraise_app/models/Chord.dart';
 import 'package:songbooksofpraise_app/models/Song.dart';
 import 'package:songbooksofpraise_app/pages/SongPage/components/Chords/GuitarChord.dart';
+import 'package:songbooksofpraise_app/pages/SongPage/components/Chords/PianoChord.dart';
 import 'package:songbooksofpraise_app/pages/SongPage/components/Chords/UkuleleChord.dart';
 
 enum Instrument {
@@ -86,7 +87,7 @@ class _ChordsByInstrumentState extends State<ChordsByInstrument> {
           case Instrument.piano:
             chord = PianoChord(
               name: songChord.name,
-              keys: List<String>.from(chordInfo['keys']),
+              keys: List<List<String>>.from(chordInfo.map((keyList) => List<String>.from(keyList['notes']))),
             );
             break;
         }
@@ -136,9 +137,17 @@ class _ChordsByInstrumentState extends State<ChordsByInstrument> {
       scrollDirection: Axis.horizontal,
       itemBuilder: (context, index) {
         Chord chord = chords[index];
+        double deviceWidth = MediaQuery.of(context).size.width;
+        double cardWidth = (chord is PianoChord) ? deviceWidth - 20.0 : 200.0;
+
+        // If tablet or landscape, set card to fixed width of 250.0
+        if (deviceWidth > 600.0) {
+          cardWidth = 350.0;
+        }
+
         return SizedBox(
           // height: 250.0,
-          width: 200.0,
+          width: cardWidth,
           child: Card(
             elevation: 1.0,
             color: Colors.white,
@@ -166,6 +175,10 @@ class _ChordsByInstrumentState extends State<ChordsByInstrument> {
                     UkuleleChordRenderer(
                       chord: chord,
                       // scale: 0.65,
+                    ),
+                  if (chord is PianoChord)
+                    PianoChordRenderer(
+                      chord: chord,
                     ),
                 ],
               ),

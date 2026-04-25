@@ -77,7 +77,7 @@ class UkuleleChord extends Chord {
 }
 
 class PianoChord extends Chord {
-  final List<String> keys;
+  final List<List<String>> keys;
 
   PianoChord({required String name, required this.keys}) : super(name: name);
 }

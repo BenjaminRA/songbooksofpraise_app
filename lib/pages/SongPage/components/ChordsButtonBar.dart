@@ -114,8 +114,7 @@ class ChordsButtonBar extends StatelessWidget {
           ),
           SizedBox(
             height: 35.0,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
+            child: Row(
               children: [
                 Center(
                   child: Text(
@@ -126,30 +125,37 @@ class ChordsButtonBar extends StatelessWidget {
                     ),
                   ),
                 ),
-                IconButton(
-                  visualDensity: VisualDensity.compact,
-                  onPressed: () => onOpenChordsByInstrument(Instrument.guitar),
-                  icon: Text(
-                    localizations.guitar,
-                    style: TextStyle(fontSize: 16.0, color: Theme.of(context).primaryColor),
+                Expanded(
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      IconButton(
+                        visualDensity: VisualDensity.compact,
+                        onPressed: () => onOpenChordsByInstrument(Instrument.guitar),
+                        icon: Text(
+                          localizations.guitar,
+                          style: TextStyle(fontSize: 16.0, color: Theme.of(context).primaryColor),
+                        ),
+                      ),
+                      IconButton(
+                        visualDensity: VisualDensity.compact,
+                        onPressed: () => onOpenChordsByInstrument(Instrument.piano),
+                        icon: Text(
+                          localizations.piano,
+                          style: TextStyle(fontSize: 16.0, color: Theme.of(context).primaryColor),
+                        ),
+                      ),
+                      IconButton(
+                        visualDensity: VisualDensity.compact,
+                        onPressed: () => onOpenChordsByInstrument(Instrument.ukulele),
+                        icon: Text(
+                          localizations.ukulele,
+                          style: TextStyle(fontSize: 16.0, color: Theme.of(context).primaryColor),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                // IconButton(
-                //   visualDensity: VisualDensity.compact,
-                //   onPressed: () => onOpenChordsByInstrument(Instrument.piano),
-                //   icon: Text(
-                //     localizations.piano,
-                //     style: TextStyle(fontSize: 16.0, color: Theme.of(context).primaryColor),
-                //   ),
-                // ),
-                IconButton(
-                  visualDensity: VisualDensity.compact,
-                  onPressed: () => onOpenChordsByInstrument(Instrument.ukulele),
-                  icon: Text(
-                    localizations.ukulele,
-                    style: TextStyle(fontSize: 16.0, color: Theme.of(context).primaryColor),
-                  ),
-                ),
+                )
               ],
             ),
           )
