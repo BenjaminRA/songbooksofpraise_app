@@ -154,21 +154,21 @@ class _ChordsByInstrumentState extends State<ChordsByInstrument> {
       );
     }
 
-    String instrumentName;
-    switch (widget.instrument) {
-      case Instrument.guitar:
-        instrumentName = localizations.guitar;
-        break;
-      case Instrument.ukulele:
-        instrumentName = localizations.ukulele;
-        break;
-      case Instrument.banjo:
-        instrumentName = localizations.banjo;
-        break;
-      case Instrument.piano:
-        instrumentName = localizations.piano;
-        break;
-    }
+    // String instrumentName;
+    // switch (widget.instrument) {
+    //   case Instrument.guitar:
+    //     instrumentName = localizations.guitar;
+    //     break;
+    //   case Instrument.ukulele:
+    //     instrumentName = localizations.ukulele;
+    //     break;
+    //   case Instrument.banjo:
+    //     instrumentName = localizations.banjo;
+    //     break;
+    //   case Instrument.piano:
+    //     instrumentName = localizations.piano;
+    //     break;
+    // }
 
     return ListView.builder(
       scrollDirection: Axis.horizontal,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:songbooksofpraise_app/l10n/app_localizations.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class AboutSectionItem {
   final IconData icon;
@@ -25,12 +26,32 @@ class AboutSection extends StatelessWidget {
         icon: Icons.info,
         label: localizations.about,
         onPressed: () {
-          print('asdasdasd');
+          launchUrlString(
+            'https://support.songbooksofpraise.com',
+            mode: LaunchMode.externalApplication,
+          );
         },
       ),
-      AboutSectionItem(icon: Icons.privacy_tip, label: localizations.privacyPolicy),
-      AboutSectionItem(icon: Icons.announcement, label: localizations.announcements),
-      AboutSectionItem(icon: Icons.contact_support, label: localizations.contactUs),
+      AboutSectionItem(
+          icon: Icons.privacy_tip,
+          label: localizations.privacyPolicy,
+          onPressed: () {
+            launchUrlString(
+              'https://www.termsfeed.com/live/c35f9ac1-6b65-477b-b8ae-406722bab11e',
+              mode: LaunchMode.externalApplication,
+            );
+          }),
+      // AboutSectionItem(icon: Icons.announcement, label: localizations.announcements),
+      AboutSectionItem(
+        icon: Icons.contact_support,
+        label: localizations.contactUs,
+        onPressed: () {
+          launchUrlString(
+            'https://support.songbooksofpraise.com/#contact',
+            mode: LaunchMode.externalApplication,
+          );
+        },
+      ),
     ];
 
     List<Widget> children = [
@@ -44,7 +65,7 @@ class AboutSection extends StatelessWidget {
     for (var i = 0; i < items.length; i++) {
       children.addAll([
         GestureDetector(
-          onTap: () {},
+          onTap: items[i].onPressed,
           behavior: HitTestBehavior.translucent,
           child: Row(
             mainAxisSize: MainAxisSize.max,
