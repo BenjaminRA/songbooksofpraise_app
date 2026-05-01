@@ -68,11 +68,14 @@ class _SongSearchState extends State<SongSearch> {
         query,
         favoritesOnly: favoritesOnly,
       );
-      results.addAll(songResults.map((item) => SearchResult(
-            type: SearchResultType.song,
-            data: item['song'],
-            songbookTitle: item['songbook_title'],
-          )));
+      results.addAll(songResults.map((item) {
+        return SongSearchResult(
+          type: SearchResultType.song,
+          data: item['song'],
+          songbookTitle: item['songbook_title'],
+          isLyricsMatchOnly: item['isLyricsMatchOnly'],
+        );
+      }));
     }
 
     if (!favoritesOnly) {
@@ -411,6 +414,7 @@ class _SongSearchState extends State<SongSearch> {
     IconData icon;
     Color iconColor;
     String typeLabel;
+    bool isLyricsMatchOnly = result is SongSearchResult ? result.isLyricsMatchOnly : false;
 
     switch (result.type) {
       case SearchResultType.song:

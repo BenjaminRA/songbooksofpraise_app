@@ -162,6 +162,15 @@ class DB {
       print('Table songbooks already has the column title_normalized');
     }
 
+    try {
+      await db.execute('''
+        ALTER TABLE songs
+        ADD COLUMN lyrics_normalized TEXT
+      ''');
+    } catch (e) {
+      print('Table songs already has the column lyrics_normalized');
+    }
+
     // Migrate existing data to populate normalized columns
     await _migrateNormalizedColumns(db);
 
@@ -243,17 +252,19 @@ class DB {
     final songsNeedMigration = await db.rawQuery('SELECT COUNT(*) as count FROM songs WHERE title_normalized IS NULL;');
     final categoriesNeedMigration = await db.rawQuery('SELECT COUNT(*) as count FROM categories WHERE name_normalized IS NULL;');
     final songbooksNeedMigration = await db.rawQuery('SELECT COUNT(*) as count FROM songbooks WHERE title_normalized IS NULL;');
+    final songsLyricsNeedMigration = await db.rawQuery('SELECT COUNT(*) as count FROM songs WHERE lyrics IS NOT NULL AND lyrics_normalized IS NULL;');
 
     final songsCount = songsNeedMigration[0]['count'] as int;
     final categoriesCount = categoriesNeedMigration[0]['count'] as int;
     final songbooksCount = songbooksNeedMigration[0]['count'] as int;
+    final songsLyricsCount = songsLyricsNeedMigration[0]['count'] as int;
 
-    if (songsCount == 0 && categoriesCount == 0 && songbooksCount == 0) {
+    if (songsCount == 0 && categoriesCount == 0 && songbooksCount == 0 && songsLyricsCount == 0) {
       print('Normalized columns already populated, skipping migration');
       return;
     }
 
-    print('Migrating normalized columns: $songsCount songs, $categoriesCount categories, $songbooksCount songbooks');
+    print('Migrating normalized columns: $songsCount songs, $categoriesCount categories, $songbooksCount songbooks, $songsLyricsCount song lyrics');
 
     // Update songs - fetch, normalize in Dart, and update
     if (songsCount > 0) {
@@ -304,6 +315,23 @@ class DB {
 
       await batch.commit(noResult: true);
       print('Migrated $songbooksCount songbooks');
+    }
+
+    // Update song lyrics - fetch, normalize in Dart, and update
+    if (songsLyricsCount > 0) {
+      final songsWithLyrics = await db.rawQuery('SELECT id, lyrics FROM songs WHERE lyrics IS NOT NULL AND lyrics_normalized IS NULL;');
+      final batch = db.batch();
+
+      for (final song in songsWithLyrics) {
+        final normalizedLyrics = normalizeText(song['lyrics'] as String);
+        batch.rawUpdate(
+          'UPDATE songs SET lyrics_normalized = ? WHERE id = ?;',
+          [normalizedLyrics, song['id']],
+        );
+      }
+
+      await batch.commit(noResult: true);
+      print('Migrated $songsLyricsCount song lyrics');
     }
 
     print('Normalized columns migration completed');

@@ -4,6 +4,17 @@ import 'package:songbooksofpraise_app/models/Songbook.dart';
 
 enum SearchResultType { song, category, songbook }
 
+class SongSearchResult extends SearchResult {
+  final bool isLyricsMatchOnly;
+
+  SongSearchResult({
+    required super.type,
+    required super.data,
+    super.songbookTitle,
+    this.isLyricsMatchOnly = false,
+  });
+}
+
 class SearchResult {
   final SearchResultType type;
   final dynamic data;

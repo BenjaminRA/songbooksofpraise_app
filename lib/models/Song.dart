@@ -331,14 +331,20 @@ class Song {
 
     // Check if query is a number
     final isNumericQuery = int.tryParse(query) != null;
-    
+
     // Normalize the query for accent-insensitive search
     final normalizedQuery = normalizeText(query);
 
     const String selectClause = '''
       SELECT 
         songs.*,
-        songbooks.title AS songbook_title
+        songbooks.title AS songbook_title,
+        (
+          CASE 
+            WHEN songs.lyrics_normalized LIKE ? AND songs.title_normalized NOT LIKE ? THEN 1
+            ELSE 0
+          END
+        ) as isLyricsMatchOnly
       FROM songs
       JOIN songbooks ON songs.songbook_id = songbooks.id
     ''';
@@ -368,12 +374,19 @@ class Song {
     } else {
       rows = await DB.rawQuery('''
       $selectClause
-      WHERE (songs.title_normalized LIKE ? OR (songs.number IS NOT NULL AND songs.number = ?))
+      WHERE (
+        (songs.title_normalized LIKE ?)
+        OR (songs.number IS NOT NULL AND songs.number = ?)
+        OR (songs.lyrics_normalized LIKE ?)
+      )
       ${favoritesOnly ? 'AND songs.favorite = 1' : ''}
       $orderByClause
     ''', arguments: [
         '%$normalizedQuery%',
+        '%$normalizedQuery%',
+        '%$normalizedQuery%',
         isNumericQuery ? int.parse(query) : -1,
+        '%$normalizedQuery%',
         isNumericQuery ? int.parse(query) : -1,
         '$normalizedQuery%',
       ]);
@@ -383,6 +396,7 @@ class Song {
         .map((row) => {
               'song': Song.fromJson(row),
               'songbook_title': row['songbook_title'],
+              'isLyricsMatchOnly': row['isLyricsMatchOnly'] == 1,
             })
         .toList()
         .cast<Map<String, dynamic>>();
