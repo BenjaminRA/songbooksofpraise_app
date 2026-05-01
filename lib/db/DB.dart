@@ -323,7 +323,13 @@ class DB {
       final batch = db.batch();
 
       for (final song in songsWithLyrics) {
-        final normalizedLyrics = normalizeText(song['lyrics'] as String);
+        String lyricsWithChords = song['lyrics'] as String;
+
+        // Remove chords (text within square brackets) before normalization
+        String lyricsWithoutChords = lyricsWithChords.replaceAll(RegExp(r'\[.*?\]'), '');
+
+        String normalizedLyrics = normalizeText(lyricsWithoutChords);
+
         batch.rawUpdate(
           'UPDATE songs SET lyrics_normalized = ? WHERE id = ?;',
           [normalizedLyrics, song['id']],
