@@ -1,4 +1,5 @@
 import 'package:songbooksofpraise_app/db/DB.dart';
+import 'package:songbooksofpraise_app/helpers/textNormalization.dart';
 import 'package:songbooksofpraise_app/models/Chord.dart';
 import 'package:songbooksofpraise_app/pages/SongPage/SongPage.dart';
 import 'package:songbooksofpraise_app/pages/SongPage/components/ChordsByInstrument.dart';
@@ -330,6 +331,9 @@ class Song {
 
     // Check if query is a number
     final isNumericQuery = int.tryParse(query) != null;
+    
+    // Normalize the query for accent-insensitive search
+    final normalizedQuery = normalizeText(query);
 
     const String selectClause = '''
       SELECT 
@@ -343,7 +347,7 @@ class Song {
       ORDER BY 
         CASE 
           WHEN songs.number = ? THEN 0
-          WHEN songs.title LIKE ? THEN 1
+          WHEN songs.title_normalized LIKE ? THEN 1
           ELSE 2
         END,
         songs.title ASC;
@@ -364,14 +368,14 @@ class Song {
     } else {
       rows = await DB.rawQuery('''
       $selectClause
-      WHERE (songs.title LIKE ? OR (songs.number IS NOT NULL AND songs.number = ?))
+      WHERE (songs.title_normalized LIKE ? OR (songs.number IS NOT NULL AND songs.number = ?))
       ${favoritesOnly ? 'AND songs.favorite = 1' : ''}
       $orderByClause
     ''', arguments: [
-        '%$query%',
+        '%$normalizedQuery%',
         isNumericQuery ? int.parse(query) : -1,
         isNumericQuery ? int.parse(query) : -1,
-        '$query%',
+        '$normalizedQuery%',
       ]);
     }
 

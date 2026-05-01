@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:sqflite/sqflite.dart';
 import 'package:synchronized/synchronized.dart';
+import 'package:songbooksofpraise_app/helpers/textNormalization.dart';
 
 class DB {
   static String? _dbPath;
@@ -133,6 +134,37 @@ class DB {
       print('Table songs already has the column font_size');
     }
 
+    // Add normalized columns for accent-insensitive search
+    try {
+      await db.execute('''
+        ALTER TABLE songs
+        ADD COLUMN title_normalized TEXT
+      ''');
+    } catch (e) {
+      print('Table songs already has the column title_normalized');
+    }
+
+    try {
+      await db.execute('''
+        ALTER TABLE categories
+        ADD COLUMN name_normalized TEXT
+      ''');
+    } catch (e) {
+      print('Table categories already has the column name_normalized');
+    }
+
+    try {
+      await db.execute('''
+        ALTER TABLE songbooks
+        ADD COLUMN title_normalized TEXT
+      ''');
+    } catch (e) {
+      print('Table songbooks already has the column title_normalized');
+    }
+
+    // Migrate existing data to populate normalized columns
+    await _migrateNormalizedColumns(db);
+
     db.close();
   }
 
@@ -150,6 +182,8 @@ class DB {
       }
 
       await batch.commit();
+
+      await _migrateNormalizedColumns(db);
 
       db.close();
     });
@@ -200,5 +234,78 @@ class DB {
     });
 
     return res;
+  }
+
+  /// Migrates existing data to populate normalized columns for accent-insensitive search
+  /// Uses Dart normalization to avoid SQLite parser stack overflow from deeply nested REPLACE functions
+  static Future<void> _migrateNormalizedColumns(Database db) async {
+    // Check if migration is needed by checking if any normalized column is NULL
+    final songsNeedMigration = await db.rawQuery('SELECT COUNT(*) as count FROM songs WHERE title_normalized IS NULL;');
+    final categoriesNeedMigration = await db.rawQuery('SELECT COUNT(*) as count FROM categories WHERE name_normalized IS NULL;');
+    final songbooksNeedMigration = await db.rawQuery('SELECT COUNT(*) as count FROM songbooks WHERE title_normalized IS NULL;');
+
+    final songsCount = songsNeedMigration[0]['count'] as int;
+    final categoriesCount = categoriesNeedMigration[0]['count'] as int;
+    final songbooksCount = songbooksNeedMigration[0]['count'] as int;
+
+    if (songsCount == 0 && categoriesCount == 0 && songbooksCount == 0) {
+      print('Normalized columns already populated, skipping migration');
+      return;
+    }
+
+    print('Migrating normalized columns: $songsCount songs, $categoriesCount categories, $songbooksCount songbooks');
+
+    // Update songs - fetch, normalize in Dart, and update
+    if (songsCount > 0) {
+      final songs = await db.rawQuery('SELECT id, title FROM songs WHERE title_normalized IS NULL;');
+      final batch = db.batch();
+
+      for (final song in songs) {
+        final normalizedTitle = normalizeText(song['title'] as String);
+        batch.rawUpdate(
+          'UPDATE songs SET title_normalized = ? WHERE id = ?;',
+          [normalizedTitle, song['id']],
+        );
+      }
+
+      await batch.commit(noResult: true);
+      print('Migrated $songsCount songs');
+    }
+
+    // Update categories - fetch, normalize in Dart, and update
+    if (categoriesCount > 0) {
+      final categories = await db.rawQuery('SELECT id, name FROM categories WHERE name_normalized IS NULL;');
+      final batch = db.batch();
+
+      for (final category in categories) {
+        final normalizedName = normalizeText(category['name'] as String);
+        batch.rawUpdate(
+          'UPDATE categories SET name_normalized = ? WHERE id = ?;',
+          [normalizedName, category['id']],
+        );
+      }
+
+      await batch.commit(noResult: true);
+      print('Migrated $categoriesCount categories');
+    }
+
+    // Update songbooks - fetch, normalize in Dart, and update
+    if (songbooksCount > 0) {
+      final songbooks = await db.rawQuery('SELECT id, title FROM songbooks WHERE title_normalized IS NULL;');
+      final batch = db.batch();
+
+      for (final songbook in songbooks) {
+        final normalizedTitle = normalizeText(songbook['title'] as String);
+        batch.rawUpdate(
+          'UPDATE songbooks SET title_normalized = ? WHERE id = ?;',
+          [normalizedTitle, songbook['id']],
+        );
+      }
+
+      await batch.commit(noResult: true);
+      print('Migrated $songbooksCount songbooks');
+    }
+
+    print('Normalized columns migration completed');
   }
 }

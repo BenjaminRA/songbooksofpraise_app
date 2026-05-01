@@ -1,4 +1,5 @@
 import 'package:songbooksofpraise_app/db/DB.dart';
+import 'package:songbooksofpraise_app/helpers/textNormalization.dart';
 import 'package:songbooksofpraise_app/models/Category.dart';
 
 class Songbook {
@@ -139,19 +140,22 @@ class Songbook {
   static Future<List<Songbook>> search(String query) async {
     if (query.isEmpty) return [];
 
+    // Normalize the query for accent-insensitive search
+    final normalizedQuery = normalizeText(query);
+
     final rows = await DB.rawQuery('''
       SELECT 
         *,
         (SELECT COUNT(*) FROM songs WHERE songs.songbook_id = songbooks.id) as song_count
       FROM songbooks
-      WHERE title LIKE ?
+      WHERE title_normalized LIKE ?
       ORDER BY 
         CASE 
-          WHEN title LIKE ? THEN 0
+          WHEN title_normalized LIKE ? THEN 0
           ELSE 1
         END,
         title ASC;
-    ''', arguments: ['%$query%', '$query%']);
+    ''', arguments: ['%$normalizedQuery%', '$normalizedQuery%']);
 
     List<Songbook> songbooks = [];
 

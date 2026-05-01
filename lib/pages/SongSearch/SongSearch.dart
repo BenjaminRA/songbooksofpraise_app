@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:songbooksofpraise_app/helpers/navigateToSong.dart';
+import 'package:songbooksofpraise_app/helpers/textNormalization.dart';
 import 'package:songbooksofpraise_app/l10n/app_localizations.dart';
 import 'package:songbooksofpraise_app/models/SearchResult.dart';
 import 'package:songbooksofpraise_app/models/Song.dart';
@@ -341,31 +342,44 @@ class _SongSearchState extends State<SongSearch> {
     if (query.isEmpty) {
       return Text(text);
     }
-    final queryLower = query.toLowerCase();
-    final textLower = text.toLowerCase();
+
+    // Normalize both query and text for accent-insensitive matching
+    final normalizedQuery = normalizeText(query);
+    final normalizedText = normalizeText(text);
 
     List<TextSpan> spans = [];
     int start = 0;
 
-    while (true) {
-      final index = textLower.indexOf(queryLower, start);
-      if (index < 0) {
+    while (start < text.length) {
+      // Find the next match position in the normalized text
+      final normalizedStart = normalizeText(text.substring(0, start)).length;
+      final matchIndex = normalizedText.indexOf(normalizedQuery, normalizedStart);
+
+      if (matchIndex < 0) {
+        // No more matches, add the rest of the text
         spans.add(TextSpan(text: text.substring(start)));
         break;
       }
 
-      if (index > start) {
-        spans.add(TextSpan(text: text.substring(start, index)));
+      // Find the corresponding position in the original text
+      // We need to map from normalized position back to original position
+      int originalMatchStart = _findOriginalPosition(text, matchIndex);
+      int originalMatchEnd = _findOriginalPosition(text, matchIndex + normalizedQuery.length);
+
+      // Add text before the match
+      if (originalMatchStart > start) {
+        spans.add(TextSpan(text: text.substring(start, originalMatchStart)));
       }
 
+      // Add the matched text with bold styling
       spans.add(
         TextSpan(
-          text: text.substring(index, index + query.length),
+          text: text.substring(originalMatchStart, originalMatchEnd),
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
       );
 
-      start = index + query.length;
+      start = originalMatchEnd;
     }
 
     return RichText(
@@ -374,6 +388,23 @@ class _SongSearchState extends State<SongSearch> {
         children: spans,
       ),
     );
+  }
+
+  /// Maps a position in normalized text back to the original text position
+  int _findOriginalPosition(String originalText, int normalizedPosition) {
+    int currentNormalizedPos = 0;
+
+    for (int i = 0; i < originalText.length; i++) {
+      if (currentNormalizedPos >= normalizedPosition) {
+        return i;
+      }
+
+      // Get the normalized version of the substring up to current position
+      String normalizedSubstring = normalizeText(originalText.substring(0, i + 1));
+      currentNormalizedPos = normalizedSubstring.length;
+    }
+
+    return originalText.length;
   }
 
   Widget _buildResultItem(SearchResult result, AppLocalizations localizations) {
