@@ -20,6 +20,18 @@
   "@settings": {
     "description": "Etiqueta de la página de configuración"
   },
+  "general": "General",
+  "@general": {
+    "description": "Título de la sección general en configuración"
+  },
+  "autoSongbooksUpdate": "Actualización Automática de Cancioneros",
+  "@autoSongbooksUpdate": {
+    "description": "Etiqueta de configuración de actualización automática de cancioneros"
+  },
+  "enableAutoSongbooksUpdate": "Habilitar actualizaciones automáticas para cancioneros al abrir la aplicación",
+  "@enableAutoSongbooksUpdate": {
+    "description": "Descripción de configuración de actualización automática de cancioneros"
+  },
   "display": "Pantalla",
   "@display": {
     "description": "Título de la sección de pantalla en configuración"

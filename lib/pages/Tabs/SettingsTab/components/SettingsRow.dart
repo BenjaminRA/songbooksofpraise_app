@@ -4,12 +4,14 @@ class SettingsRow extends StatelessWidget {
   final String title;
   final String? description;
   final Widget action;
+  final double spacing;
 
   const SettingsRow({
     super.key,
     required this.title,
     this.description,
     required this.action,
+    this.spacing = 16.0,
   });
 
   @override
@@ -26,7 +28,7 @@ class SettingsRow extends StatelessWidget {
         const SizedBox(height: 2),
         Text(
           description!,
-          maxLines: 2,
+          maxLines: 3,
           overflow: TextOverflow.visible,
           style: Theme.of(context).textTheme.labelSmall,
         ),
@@ -42,7 +44,7 @@ class SettingsRow extends StatelessWidget {
           flex: 4,
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: children),
         ),
-        const SizedBox(width: 16),
+        SizedBox(width: spacing),
         Flexible(
           flex: 3,
           child: action,

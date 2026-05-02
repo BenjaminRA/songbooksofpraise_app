@@ -128,6 +128,24 @@ abstract class AppLocalizations {
   /// **'Settings'**
   String get settings;
 
+  /// General section title in settings
+  ///
+  /// In en, this message translates to:
+  /// **'General'**
+  String get general;
+
+  /// Auto songbooks update setting label
+  ///
+  /// In en, this message translates to:
+  /// **'Auto Songbooks Update'**
+  String get autoSongbooksUpdate;
+
+  /// Auto songbooks update setting description
+  ///
+  /// In en, this message translates to:
+  /// **'Enable automatic updates for songbooks when opening the app'**
+  String get enableAutoSongbooksUpdate;
+
   /// Display section title in settings
   ///
   /// In en, this message translates to:

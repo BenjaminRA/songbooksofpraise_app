@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:songbooksofpraise_app/Providers/SettingsProvider.dart';
 import 'package:songbooksofpraise_app/api/api.dart';
 import 'package:songbooksofpraise_app/components/AppBarWithProvider.dart';
 import 'package:songbooksofpraise_app/db/DB.dart';
@@ -43,7 +44,26 @@ class _SongbookTabState extends State<SongbookTab> {
   void initState() {
     super.initState();
 
-    onRefresh();
+    onRefresh().then((_) {
+      final autoSongbooksUpdate = Provider.of<SettingsProvider>(context, listen: false).autoSongbooksUpdate;
+
+      if (autoSongbooksUpdate) {
+        updateAllSongbooks();
+      }
+    });
+  }
+
+  Future<void> updateAllSongbooks() async {
+    List<Future<void>> updateFutures = [];
+
+    for (Songbook songbook in installed) {
+      if (songbook.updateAvailable) {
+        updateFutures.add(performSongbookUpdate(songbook));
+      }
+    }
+    await Future.wait(updateFutures);
+
+    await onRefresh();
   }
 
   Future<void> onDownloadSongbook(Songbook songbook) async {
@@ -76,32 +96,36 @@ class _SongbookTabState extends State<SongbookTab> {
     }
   }
 
-  Future<void> onUpdateSongbook(Songbook songbook) async {
+  Future<void> performSongbookUpdate(Songbook songbook) async {
     setState(() {
       installed[installed.indexWhere((sb) => sb.id == songbook.id)].isDownloading = true;
       available[available.indexWhere((sb) => sb.id == songbook.id)].isDownloading = true;
     });
 
+    final response = await API.get('songbooks/${songbook.id}/export');
+
+    await songbook.delete();
+
+    await DB.updateDatabase(response.toString());
+
+    if (mounted) {
+      toastification.show(
+        context: context,
+        alignment: Alignment.bottomCenter,
+        title: Text(AppLocalizations.of(context)!.updatedSuccessfully(songbook.title)),
+        type: ToastificationType.success,
+        // primaryColor: Theme.of(context).primaryColor,
+        icon: Icon(Icons.update),
+        dragToClose: true,
+        applyBlurEffect: true,
+        autoCloseDuration: const Duration(seconds: 5),
+      );
+    }
+  }
+
+  Future<void> onUpdateSongbook(Songbook songbook) async {
     try {
-      final response = await API.get('songbooks/${songbook.id}/export');
-
-      await songbook.delete();
-
-      await DB.updateDatabase(response.toString());
-
-      if (context.mounted) {
-        toastification.show(
-          context: context,
-          alignment: Alignment.bottomCenter,
-          title: Text(AppLocalizations.of(context)!.updatedSuccessfully(songbook.title)),
-          type: ToastificationType.success,
-          // primaryColor: Theme.of(context).primaryColor,
-          icon: Icon(Icons.update),
-          dragToClose: true,
-          applyBlurEffect: true,
-          autoCloseDuration: const Duration(seconds: 5),
-        );
-      }
+      await performSongbookUpdate(songbook);
     } catch (e) {
       print('Error fetching export data: $e');
     } finally {
@@ -149,9 +173,9 @@ class _SongbookTabState extends State<SongbookTab> {
 
         Map<int, bool> updateAvailable = {};
 
-        for (Songbook available in available) {
-          if (available.updateAvailable) {
-            updateAvailable[available.id] = true;
+        for (Songbook songbook in available) {
+          if (songbook.updateAvailable) {
+            updateAvailable[songbook.id] = true;
           }
         }
 

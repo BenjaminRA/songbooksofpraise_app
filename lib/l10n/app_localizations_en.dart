@@ -24,6 +24,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings => 'Settings';
 
   @override
+  String get general => 'General';
+
+  @override
+  String get autoSongbooksUpdate => 'Auto Songbooks Update';
+
+  @override
+  String get enableAutoSongbooksUpdate =>
+      'Enable automatic updates for songbooks when opening the app';
+
+  @override
   String get display => 'Display';
 
   @override

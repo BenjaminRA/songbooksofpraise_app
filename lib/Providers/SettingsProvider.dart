@@ -15,6 +15,7 @@ class SettingsProvider extends ChangeNotifier {
   ChordNotation _defaultNotation = ChordNotation.Letter;
   bool _showChordsByDefault = false;
   bool _showSheetByDefault = false;
+  bool _autoSongbooksUpdate = false;
 
   SettingsProvider({
     SettingsProviderTextSize textSize = SettingsProviderTextSize.medium,
@@ -23,17 +24,20 @@ class SettingsProvider extends ChangeNotifier {
     ChordNotation defaultNotation = ChordNotation.Letter,
     bool showChordsByDefault = false,
     bool showSheetByDefault = false,
+    bool autoSongbooksUpdate = false,
   })  : _textSize = textSize,
         _brightness = brightness,
         _keepScreenOn = keepScreenOn,
         _defaultNotation = defaultNotation,
         _showChordsByDefault = showChordsByDefault,
-        _showSheetByDefault = showSheetByDefault;
+        _showSheetByDefault = showSheetByDefault,
+        _autoSongbooksUpdate = autoSongbooksUpdate;
 
   SettingsProviderTextSize get textSize => _textSize;
   Brightness get brightness => _brightness;
   bool get keepScreenOn => _keepScreenOn;
   ChordNotation get defaultNotation => _defaultNotation;
+  bool get autoSongbooksUpdate => _autoSongbooksUpdate;
   bool get showChordsByDefault => _showChordsByDefault;
   bool get showSheetByDefault => _showSheetByDefault;
 
@@ -92,6 +96,16 @@ class SettingsProvider extends ChangeNotifier {
 
     SharedPreferences.getInstance().then((prefs) {
       prefs.setBool('showSheetByDefault', value);
+    });
+
+    notifyListeners();
+  }
+
+  void setAutoSongbooksUpdate(bool value) {
+    _autoSongbooksUpdate = value;
+
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.setBool('autoSongbooksUpdate', value);
     });
 
     notifyListeners();

@@ -20,6 +20,18 @@
   "@settings": {
     "description": "Settings Page label"
   },
+  "general": "General",
+  "@general": {
+    "description": "General section title in settings"
+  },
+  "autoSongbooksUpdate": "Auto Songbooks Update",
+  "@autoSongbooksUpdate": {
+    "description": "Auto songbooks update setting label"
+  },
+  "enableAutoSongbooksUpdate": "Enable automatic updates for songbooks when opening the app",
+  "@enableAutoSongbooksUpdate": {
+    "description": "Auto songbooks update setting description"
+  },
   "display": "Display",
   "@display": {
     "description": "Display section title in settings"

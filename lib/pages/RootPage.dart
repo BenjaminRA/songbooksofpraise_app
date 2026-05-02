@@ -23,14 +23,6 @@ class RootPage extends StatefulWidget {
 }
 
 class _RootPageState extends State<RootPage> {
-  // int currentTabIndex = 0;
-
-  // void setTabIndex(int index) {
-  //   setState(() {
-  //     currentTabIndex = index;
-  //   });
-  // }
-
   GlobalKey<NavigatorState>? _getCurrentNavigatorKey() {
     final tabNavigatorProvider = Provider.of<TabNavigatorProvider>(context, listen: false);
     switch (tabNavigatorProvider.tabIndex) {

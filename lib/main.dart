@@ -23,6 +23,7 @@ void main() async {
   ChordNotation defaultNotation = prefs.getString('defaultNotation') == 'Letter' ? ChordNotation.Letter : ChordNotation.Solfege;
   final showChordsByDefault = prefs.getBool('showChordsByDefault') ?? false;
   final showSheetByDefault = prefs.getBool('showSheetByDefault') ?? false;
+  final autoSongbooksUpdate = prefs.getBool('autoSongbooksUpdate') ?? false;
 
   if (prefs.getString('defaultNotation') == null) {
     final locale = WidgetsBinding.instance.platformDispatcher.locale;
@@ -45,6 +46,7 @@ void main() async {
         defaultNotation: defaultNotation,
         showChordsByDefault: showChordsByDefault,
         showSheetByDefault: showSheetByDefault,
+        autoSongbooksUpdate: autoSongbooksUpdate,
       ),
       child: const MyApp(),
     ),

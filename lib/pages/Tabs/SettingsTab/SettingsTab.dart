@@ -4,6 +4,7 @@ import 'package:songbooksofpraise_app/components/AppBarWithProvider.dart';
 import 'package:songbooksofpraise_app/pages/RootPage.dart';
 import 'package:songbooksofpraise_app/pages/Tabs/SettingsTab/components/AboutSection.dart';
 import 'package:songbooksofpraise_app/pages/Tabs/SettingsTab/components/DisplaySection.dart';
+import 'package:songbooksofpraise_app/pages/Tabs/SettingsTab/components/GeneralSection.dart';
 import 'package:songbooksofpraise_app/pages/Tabs/SettingsTab/components/MusicAndAudioSection.dart';
 import 'package:songbooksofpraise_app/Providers/AppBarProvider.dart';
 
@@ -18,6 +19,7 @@ class _SettingsTabState extends State<SettingsTab> {
   @override
   Widget build(BuildContext context) {
     const List<Widget> children = [
+      GeneralSection(),
       DisplaySection(),
       MusicAndAudioSection(),
       AboutSection(),
