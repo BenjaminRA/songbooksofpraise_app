@@ -341,7 +341,7 @@ class _SongSearchState extends State<SongSearch> {
     );
   }
 
-  Widget _buildHighlightedText(String text, String query) {
+  Widget _buildHighlightedText(String text, String query, {TextStyle? baseStyle}) {
     if (query.isEmpty) {
       return Text(text);
     }
@@ -387,7 +387,7 @@ class _SongSearchState extends State<SongSearch> {
 
     return RichText(
       text: TextSpan(
-        style: TextStyle(color: Colors.black),
+        style: baseStyle ?? const TextStyle(color: Colors.black),
         children: spans,
       ),
     );
@@ -408,6 +408,37 @@ class _SongSearchState extends State<SongSearch> {
     }
 
     return originalText.length;
+  }
+
+  String _extractLyricsSnippet(String lyrics, String query) {
+    // Strip chord annotations like [Am], [G7] and normalize whitespace
+    final cleaned = lyrics.replaceAll(RegExp(r'\[[^\]]+\]'), '').replaceAll(RegExp(r'[\r\n]+'), ' ').replaceAll(RegExp(r' +'), ' ').trim();
+
+    if (query.isEmpty) {
+      return cleaned.length > 80 ? '${cleaned.substring(0, 80)}...' : cleaned;
+    }
+
+    final normalizedQuery = normalizeText(query);
+    final normalizedCleaned = normalizeText(cleaned);
+    final matchIndex = normalizedCleaned.indexOf(normalizedQuery);
+
+    if (matchIndex < 0) {
+      return cleaned.length > 80 ? '${cleaned.substring(0, 80)}...' : cleaned;
+    }
+
+    // Map normalized match position back to original text
+    final originalMatchStart = _findOriginalPosition(cleaned, matchIndex);
+    final originalMatchEnd = _findOriginalPosition(cleaned, matchIndex + normalizedQuery.length);
+
+    // Build context window of ~40 chars on each side
+    const contextChars = 40;
+    final snippetStart = (originalMatchStart - contextChars).clamp(0, cleaned.length);
+    final snippetEnd = (originalMatchEnd + contextChars).clamp(0, cleaned.length);
+
+    final prefix = snippetStart > 0 ? '...' : '';
+    final suffix = snippetEnd < cleaned.length ? '...' : '';
+
+    return '$prefix${cleaned.substring(snippetStart, snippetEnd)}$suffix';
   }
 
   Widget _buildResultItem(SearchResult result, AppLocalizations localizations) {
@@ -490,6 +521,16 @@ class _SongSearchState extends State<SongSearch> {
                   //   maxLines: 2,
                   //   overflow: TextOverflow.ellipsis,
                   // ),
+                  if (isLyricsMatchOnly) ...[
+                    const SizedBox(height: 2.0),
+                    _buildHighlightedText(
+                      _extractLyricsSnippet((result.data as Song).lyrics, _searchController.text),
+                      _searchController.text,
+                      baseStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: const Color.fromRGBO(140, 147, 159, 1),
+                          ),
+                    ),
+                  ],
                   const SizedBox(height: 4.0),
                   Row(
                     children: [
