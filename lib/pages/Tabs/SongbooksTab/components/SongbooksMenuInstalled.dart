@@ -6,6 +6,7 @@ import 'package:songbooksofpraise_app/Providers/AppBarProvider.dart';
 import 'package:songbooksofpraise_app/models/Songbook.dart';
 import 'package:songbooksofpraise_app/pages/RootPage.dart';
 import 'package:songbooksofpraise_app/pages/Tabs/SongbooksTab/SongbookTab.dart';
+import 'package:songbooksofpraise_app/pages/Tabs/SongbooksTab/helpers/onCategoryTabHandler.dart';
 import 'package:songbooksofpraise_app/pages/Tabs/SongbooksTab/pages/SongbookPage.dart';
 
 class SongbooksMenuInstalled extends StatefulWidget {
@@ -27,6 +28,25 @@ class _SongbooksMenuInstalledState extends State<SongbooksMenuInstalled> {
     await widget.callbacks.deleteSongbook(item);
   }
 
+  void onSongbookTapHandler(Songbook item) {
+    if (item.categories.length == 1) {
+      onCategoryTapHandler(context, item.categories[0], appBarTitle: item.title);
+      return;
+    }
+
+    Provider.of<AppBarProvider>(context, listen: false).setTitle(
+      AppBarState(
+        title: item.title,
+        icon: Icons.library_books,
+      ),
+    );
+    songbookTabKey.currentState?.push(
+      MaterialPageRoute(
+        builder: (context) => SongbookPage(songbook: item),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -39,19 +59,7 @@ class _SongbooksMenuInstalledState extends State<SongbooksMenuInstalled> {
           borderRadius: BorderRadius.circular(10.0),
         ),
         color: Colors.white,
-        onPressed: () {
-          Provider.of<AppBarProvider>(context, listen: false).setTitle(
-            AppBarState(
-              title: item.title,
-              icon: Icons.library_books,
-            ),
-          );
-          songbookTabKey.currentState?.push(
-            MaterialPageRoute(
-              builder: (context) => SongbookPage(songbook: item),
-            ),
-          );
-        },
+        onPressed: () => onSongbookTapHandler(item),
         // onPressed: item.onPressed,
         child: Container(
           width: double.infinity,

@@ -10,6 +10,7 @@ import 'package:songbooksofpraise_app/models/Category.dart';
 import 'package:songbooksofpraise_app/models/Songbook.dart';
 import 'package:songbooksofpraise_app/pages/RootPage.dart';
 import 'package:songbooksofpraise_app/pages/Tabs/SongbooksTab/SongbookTab.dart';
+import 'package:songbooksofpraise_app/pages/Tabs/SongbooksTab/helpers/onCategoryTabHandler.dart';
 import 'package:songbooksofpraise_app/pages/Tabs/SongbooksTab/pages/SongbookPage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:toastification/toastification.dart';
@@ -47,18 +48,21 @@ class _SongbooksMenuAvailableState extends State<SongbooksMenuAvailable> {
           songCount: item.songCount,
         ),
       );
-
-      Provider.of<AppBarProvider>(context, listen: false).setTitle(
-        AppBarState(
-          title: item.title,
-          icon: Icons.library_books,
-        ),
-      );
-      songbookTabKey.currentState?.push(
-        MaterialPageRoute(
-          builder: (context) => SongbookPage(songbook: item),
-        ),
-      );
+      if (item.categories.length == 1) {
+        onCategoryTapHandler(context, item.categories[0], appBarTitle: item.title);
+      } else {
+        Provider.of<AppBarProvider>(context, listen: false).setTitle(
+          AppBarState(
+            title: item.title,
+            icon: Icons.library_books,
+          ),
+        );
+        songbookTabKey.currentState?.push(
+          MaterialPageRoute(
+            builder: (context) => SongbookPage(songbook: item),
+          ),
+        );
+      }
     } catch (e) {
       print('Error fetching categories: $e');
     }

@@ -8,7 +8,7 @@ import 'package:songbooksofpraise_app/models/Category.dart';
 import 'package:songbooksofpraise_app/models/Songbook.dart';
 import 'package:songbooksofpraise_app/pages/Tabs/SongbooksTab/pages/CategoryPage.dart';
 
-Future<void> onCategoryTapHandler(BuildContext context, Category item) async {
+Future<void> onCategoryTapHandler(BuildContext context, Category item, {String? appBarTitle, String? appBarSubtitle}) async {
   AppLocalizations localizations = AppLocalizations.of(context)!;
 
   if (item.subcategories.isEmpty) {
@@ -40,9 +40,9 @@ Future<void> onCategoryTapHandler(BuildContext context, Category item) async {
 
       Provider.of<AppBarProvider>(context, listen: false).setTitle(
         AppBarState(
-          subtitle:
-              Provider.of<AppBarProvider>(context, listen: false).state.subtitle ?? Provider.of<AppBarProvider>(context, listen: false).state.title,
-          title: item.id == -1 ? localizations.all : item.name,
+          subtitle: appBarSubtitle ??
+              (Provider.of<AppBarProvider>(context, listen: false).state.subtitle ?? Provider.of<AppBarProvider>(context, listen: false).state.title),
+          title: appBarTitle ?? (item.id == -1 ? localizations.all : item.name),
           icon: Icons.library_books,
         ),
       );
@@ -57,8 +57,8 @@ Future<void> onCategoryTapHandler(BuildContext context, Category item) async {
   } else {
     Provider.of<AppBarProvider>(context, listen: false).setTitle(
       AppBarState(
-        subtitle: Provider.of<AppBarProvider>(context, listen: false).state.title,
-        title: item.name,
+        subtitle: appBarSubtitle ?? Provider.of<AppBarProvider>(context, listen: false).state.title,
+        title: appBarTitle ?? item.name,
         icon: Icons.library_books,
       ),
     );

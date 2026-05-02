@@ -70,7 +70,7 @@ class MyApp extends StatelessWidget {
       title: 'Songbooks of Praise',
       supportedLocales: L18n.all,
       debugShowCheckedModeBanner: false,
-      // locale: Locale('es'),
+      locale: Locale('es'),
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
