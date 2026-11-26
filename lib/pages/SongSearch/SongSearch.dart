@@ -10,8 +10,6 @@ import 'package:songbooksofpraise_app/models/Category.dart';
 import 'package:songbooksofpraise_app/models/Songbook.dart';
 import 'package:songbooksofpraise_app/Providers/AppBarProvider.dart';
 import 'package:songbooksofpraise_app/api/api.dart';
-import 'package:songbooksofpraise_app/pages/RootPage.dart';
-import 'package:songbooksofpraise_app/pages/SongPage/SongPage.dart';
 import 'package:songbooksofpraise_app/pages/Tabs/SongbooksTab/pages/CategoryPage.dart';
 import 'package:songbooksofpraise_app/pages/Tabs/SongbooksTab/pages/SongbookPage.dart';
 
@@ -27,7 +25,7 @@ class SongSearch extends StatefulWidget {
 
 class _SongSearchState extends State<SongSearch> {
   final TextEditingController _searchController = TextEditingController();
-  late final Set<SearchFilter> _activeFilters;
+  late Set<SearchFilter> _activeFilters;
   List<SearchResult> _searchResults = [];
   bool _isSearching = false;
 
@@ -35,7 +33,14 @@ class _SongSearchState extends State<SongSearch> {
   void initState() {
     super.initState();
 
-    _activeFilters = widget.initialFilters ?? {SearchFilter.songs, SearchFilter.categories, SearchFilter.songbooks};
+    _activeFilters = Set.of(
+      widget.initialFilters ??
+          {
+            SearchFilter.songs,
+            SearchFilter.categories,
+            SearchFilter.songbooks,
+          },
+    );
 
     // Automatically perform search if initial query is provided
     _performSearch('');
@@ -117,8 +122,8 @@ class _SongSearchState extends State<SongSearch> {
       }
     });
 
-    // Re-run search if there's a query
-    if (_searchController.text.isNotEmpty) {
+    // Re-run search for queries and favorites-only searches.
+    if (_searchController.text.isNotEmpty || filter == SearchFilter.favorites) {
       _performSearch(_searchController.text);
     }
   }

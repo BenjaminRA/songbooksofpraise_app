@@ -5,7 +5,7 @@ import 'package:songbooksofpraise_app/auth/AppTokenGenerator.dart';
 
 class API {
   // static const String baseUrl = 'http://10.0.2.2:5342/app';
-  static const String baseUrl = kReleaseMode ? 'https://backend.songbooksofpraise.com/app' : 'http://localhost:5342/app';
+  static const String baseUrl = kReleaseMode || true ? 'https://backend.songbooksofpraise.com/app' : 'http://localhost:5342/app';
 
   static String _authToken() {
     String secret = 'EYzSF!HVIUyBTUlAe79wOw1%LU\$\$X9mdDk6B^5WOv45#2c\$4*\$dNp!2Pzt6sr^B&';

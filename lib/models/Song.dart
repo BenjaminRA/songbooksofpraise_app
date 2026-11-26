@@ -368,6 +368,8 @@ class Song {
         WHERE songs.favorite = 1
         $orderByClause
       ''', arguments: [
+        '%$normalizedQuery%',
+        '%$normalizedQuery%',
         -1, // For number match, we want it to be last since there's no query
         '%', // For title match, we want all since there's no query
       ]);

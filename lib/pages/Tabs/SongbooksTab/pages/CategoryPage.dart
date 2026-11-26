@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:songbooksofpraise_app/Providers/AppBarProvider.dart';
+import 'package:songbooksofpraise_app/Providers/TabNavigatorProvider.dart';
 import 'package:songbooksofpraise_app/api/api.dart';
 import 'package:songbooksofpraise_app/components/Breadcrumbs.dart';
 import 'package:songbooksofpraise_app/components/SongListBuilder.dart';
@@ -26,12 +27,33 @@ class _CategoryPageState extends State<CategoryPage> {
   int? loadingCategory;
   int? loadingSong;
   String categoryDescription = '';
+  int? _previousTabIndex;
 
   @override
   void initState() {
     super.initState();
 
     getCategoryDescription();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final tabIndex = context.watch<TabNavigatorProvider>().tabIndex;
+    if (_previousTabIndex != null &&
+        _previousTabIndex != 1 &&
+        tabIndex == 1) {
+      _refreshCategory();
+    }
+    _previousTabIndex = tabIndex;
+  }
+
+  Future<void> _refreshCategory() async {
+    await widget.category.refresh();
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   Future<void> getCategoryDescription() async {

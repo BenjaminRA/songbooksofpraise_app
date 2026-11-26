@@ -277,4 +277,17 @@ class Category {
 
     return result;
   }
+
+  /// Refresh song data from the database, useful after coming back from the SongPage where the song might have been edited
+  Future<void> refresh() async {
+    final category = await getCategoryByID(id, songbookID);
+    if (category != null) {
+      Map<int, Song> songMap = {for (var song in category.songs) song.id: song};
+      for (Song song in songs) {
+        if (songMap.containsKey(song.id)) {
+          song.favorite = songMap[song.id]!.favorite;
+        }
+      }
+    }
+  }
 }

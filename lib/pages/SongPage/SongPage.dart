@@ -1,9 +1,9 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:songbooksofpraise_app/Providers/AppBarProvider.dart';
 import 'package:songbooksofpraise_app/Providers/SettingsProvider.dart';
+import 'package:songbooksofpraise_app/Providers/TabNavigatorProvider.dart';
 import 'package:songbooksofpraise_app/db/DB.dart';
 import 'package:songbooksofpraise_app/pages/SongPage/components/ChordsButtonBar.dart';
 import 'package:songbooksofpraise_app/pages/SongPage/components/ChordsByInstrument.dart';
@@ -29,6 +29,8 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
   bool showTools = false;
   Instrument? showChordsByInstrument;
   ChordNotation chordNotation = ChordNotation.Letter;
+  int? _songTabIndex;
+  int? _previousTabIndex;
 
   // ToolBar Animation Controller
   late AnimationController _toolbarAnimationController;
@@ -63,6 +65,26 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
 
       checkShowSheetByDefault();
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final tabIndex = context.watch<TabNavigatorProvider>().tabIndex;
+    _songTabIndex ??= tabIndex;
+
+    if (_previousTabIndex != null && tabIndex == _songTabIndex && _previousTabIndex != tabIndex) {
+      _refreshSong();
+    }
+    _previousTabIndex = tabIndex;
+  }
+
+  Future<void> _refreshSong() async {
+    await widget.song.refresh();
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
