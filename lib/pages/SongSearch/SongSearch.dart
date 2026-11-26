@@ -9,6 +9,7 @@ import 'package:songbooksofpraise_app/models/Song.dart';
 import 'package:songbooksofpraise_app/models/Category.dart';
 import 'package:songbooksofpraise_app/models/Songbook.dart';
 import 'package:songbooksofpraise_app/Providers/AppBarProvider.dart';
+import 'package:songbooksofpraise_app/Providers/TabNavigatorProvider.dart';
 import 'package:songbooksofpraise_app/api/api.dart';
 import 'package:songbooksofpraise_app/pages/Tabs/SongbooksTab/pages/CategoryPage.dart';
 import 'package:songbooksofpraise_app/pages/Tabs/SongbooksTab/pages/SongbookPage.dart';
@@ -28,6 +29,8 @@ class _SongSearchState extends State<SongSearch> {
   late Set<SearchFilter> _activeFilters;
   List<SearchResult> _searchResults = [];
   bool _isSearching = false;
+  int? _searchTabIndex;
+  int? _previousTabIndex;
 
   @override
   void initState() {
@@ -44,6 +47,19 @@ class _SongSearchState extends State<SongSearch> {
 
     // Automatically perform search if initial query is provided
     _performSearch('');
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final tabIndex = context.watch<TabNavigatorProvider>().tabIndex;
+    _searchTabIndex ??= tabIndex;
+
+    if (_previousTabIndex != null && tabIndex == _searchTabIndex && _previousTabIndex != tabIndex) {
+      _performSearch(_searchController.text);
+    }
+    _previousTabIndex = tabIndex;
   }
 
   @override
@@ -140,12 +156,16 @@ class _SongSearchState extends State<SongSearch> {
         await _navigateToSongbook(result.data as Songbook);
         break;
     }
+
+    if (mounted) {
+      await _performSearch(_searchController.text);
+    }
   }
 
   Future<void> _navigateToSong(Song song) async {
     if (!mounted) return;
 
-    navigateToSong(context, song.id);
+    await navigateToSong(context, song.id);
   }
 
   Future<void> _navigateToCategory(Category category) async {
@@ -169,7 +189,7 @@ class _SongSearchState extends State<SongSearch> {
       ),
     );
 
-    Navigator.of(context).push(
+    await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => CategoryPage(category: fullCategory!),
       ),
@@ -190,7 +210,7 @@ class _SongSearchState extends State<SongSearch> {
       ),
     );
 
-    Navigator.of(context).push(
+    await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => SongbookPage(songbook: songbook),
       ),
