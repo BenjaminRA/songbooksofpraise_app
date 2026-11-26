@@ -54,19 +54,20 @@ class FontAdjustmentButtonBar extends StatelessWidget {
           IconButton(
             visualDensity: VisualDensity.compact,
             onPressed: onDecreaseFontSize,
-            icon: const Icon(
+            icon: const FaIcon(
               FontAwesomeIcons.minus,
               size: 16.0,
             ),
           ),
           Container(
             margin: EdgeInsets.symmetric(horizontal: 9.0),
-            child: Icon(FontAwesomeIcons.a, size: 18.0, color: Theme.of(context).primaryColor),
+            child: FaIcon(FontAwesomeIcons.a,
+                size: 18.0, color: Theme.of(context).primaryColor),
           ),
           IconButton(
             visualDensity: VisualDensity.compact,
             onPressed: onIncreaseFontSize,
-            icon: const Icon(
+            icon: const FaIcon(
               FontAwesomeIcons.plus,
               size: 16.0,
             ),

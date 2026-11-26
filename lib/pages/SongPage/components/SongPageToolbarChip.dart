@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SongPageToolbarChip extends StatelessWidget {
   final bool disabled;
   final bool selected;
   final String label;
-  final IconData? icon;
+  final FaIconData? icon;
   final VoidCallback? onSelected;
 
-  const SongPageToolbarChip({super.key, this.disabled = false, this.selected = false, required this.label, this.icon, required this.onSelected});
+  const SongPageToolbarChip(
+      {super.key,
+      this.disabled = false,
+      this.selected = false,
+      required this.label,
+      this.icon,
+      required this.onSelected});
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +44,7 @@ class SongPageToolbarChip extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               if (icon != null) ...[
-                Icon(
+                FaIcon(
                   icon,
                   size: 16.0,
                   color: disabled

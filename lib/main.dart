@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,9 +19,13 @@ void main() async {
 
   SharedPreferences prefs = await SharedPreferences.getInstance();
   final textSize = prefs.getString('textSize') ?? 'medium';
-  final brightness = prefs.getString('brightness') == 'dark' ? Brightness.dark : Brightness.light;
+  final brightness = prefs.getString('brightness') == 'dark'
+      ? Brightness.dark
+      : Brightness.light;
   final keepScreenOn = prefs.getBool('keepScreenOn') ?? true;
-  ChordNotation defaultNotation = prefs.getString('defaultNotation') == 'Letter' ? ChordNotation.Letter : ChordNotation.Solfege;
+  ChordNotation defaultNotation = prefs.getString('defaultNotation') == 'Letter'
+      ? ChordNotation.Letter
+      : ChordNotation.Solfege;
   final showChordsByDefault = prefs.getBool('showChordsByDefault') ?? false;
   final showSheetByDefault = prefs.getBool('showSheetByDefault') ?? false;
   final autoSongbooksUpdate = prefs.getBool('autoSongbooksUpdate') ?? false;
@@ -28,7 +33,9 @@ void main() async {
   if (prefs.getString('defaultNotation') == null) {
     final locale = WidgetsBinding.instance.platformDispatcher.locale;
     // Set default based on locale, e.g., Letter for English, Solfege for Spanish
-    defaultNotation = locale.languageCode == 'en' ? ChordNotation.Letter : ChordNotation.Solfege;
+    defaultNotation = locale.languageCode == 'en'
+        ? ChordNotation.Letter
+        : ChordNotation.Solfege;
     await prefs.setString('defaultNotation', defaultNotation.name);
   }
 
@@ -60,9 +67,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const primaryColor = Color.fromRGBO(132, 14, 23, 1.0);
-    final textScaleFactor = context.watch<SettingsProvider>().textSize == SettingsProviderTextSize.small
+    final textScaleFactor = context.watch<SettingsProvider>().textSize ==
+            SettingsProviderTextSize.small
         ? 0.9
-        : context.watch<SettingsProvider>().textSize == SettingsProviderTextSize.large
+        : context.watch<SettingsProvider>().textSize ==
+                SettingsProviderTextSize.large
             ? 1.2
             : 1.0;
 
@@ -128,7 +137,8 @@ class MyApp extends StatelessWidget {
           contentPadding: EdgeInsets.all(10.0),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),
-            borderSide: const BorderSide(color: Color.fromRGBO(248, 249, 251, 1), width: 1.0),
+            borderSide: const BorderSide(
+                color: Color.fromRGBO(248, 249, 251, 1), width: 1.0),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8.0),
@@ -171,8 +181,10 @@ class MyApp extends StatelessWidget {
             contentPadding: const EdgeInsets.symmetric(horizontal: 12.0),
           ),
           menuStyle: MenuStyle(
-            maximumSize: WidgetStateProperty.all<Size>(const Size(double.infinity, double.infinity)),
-            minimumSize: WidgetStateProperty.all<Size>(const Size(double.infinity, 0)),
+            maximumSize: WidgetStateProperty.all<Size>(
+                const Size(double.infinity, double.infinity)),
+            minimumSize:
+                WidgetStateProperty.all<Size>(const Size(double.infinity, 0)),
             backgroundColor: WidgetStateProperty.all<Color>(Colors.white),
             shape: WidgetStateProperty.all<RoundedRectangleBorder>(
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
@@ -182,7 +194,8 @@ class MyApp extends StatelessWidget {
       ),
       builder: (context, child) {
         return MediaQuery(
-          data: MediaQuery.of(context).copyWith(textScaler: TextScaler.linear(textScaleFactor)),
+          data: MediaQuery.of(context)
+              .copyWith(textScaler: TextScaler.linear(textScaleFactor)),
           child: child!,
         );
       },
