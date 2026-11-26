@@ -112,6 +112,7 @@ class _RecentlyPlayedPageState extends State<RecentlyPlayedPage> {
                 Expanded(
                   child: GestureDetector(
                     onTap: _pickDateRange,
+                    behavior: HitTestBehavior.opaque,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -141,6 +142,7 @@ class _RecentlyPlayedPageState extends State<RecentlyPlayedPage> {
                 Expanded(
                   child: GestureDetector(
                     onTap: _pickDateRange,
+                    behavior: HitTestBehavior.opaque,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
