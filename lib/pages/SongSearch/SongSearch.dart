@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:songbooksofpraise_app/helpers/navigateToSong.dart';
+import 'package:songbooksofpraise_app/helpers/routeAwareMixin.dart';
 import 'package:songbooksofpraise_app/helpers/textNormalization.dart';
 import 'package:songbooksofpraise_app/l10n/app_localizations.dart';
 import 'package:songbooksofpraise_app/models/SearchResult.dart';
@@ -24,13 +25,11 @@ class SongSearch extends StatefulWidget {
   State<SongSearch> createState() => _SongSearchState();
 }
 
-class _SongSearchState extends State<SongSearch> {
+class _SongSearchState extends State<SongSearch> with RouteAwareMixin {
   final TextEditingController _searchController = TextEditingController();
   late Set<SearchFilter> _activeFilters;
   List<SearchResult> _searchResults = [];
   bool _isSearching = false;
-  int? _searchTabIndex;
-  int? _previousTabIndex;
 
   @override
   void initState() {
@@ -50,22 +49,14 @@ class _SongSearchState extends State<SongSearch> {
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    final tabIndex = context.watch<TabNavigatorProvider>().tabIndex;
-    _searchTabIndex ??= tabIndex;
-
-    if (_previousTabIndex != null && tabIndex == _searchTabIndex && _previousTabIndex != tabIndex) {
-      _performSearch(_searchController.text);
-    }
-    _previousTabIndex = tabIndex;
-  }
-
-  @override
   void dispose() {
     _searchController.dispose();
     super.dispose();
+  }
+
+  @override
+  Future<void> onBackFromAnotherTab() async {
+    _performSearch(_searchController.text);
   }
 
   Future<void> _performSearch(String query) async {

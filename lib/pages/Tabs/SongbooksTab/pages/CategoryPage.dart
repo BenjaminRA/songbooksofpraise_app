@@ -7,6 +7,7 @@ import 'package:songbooksofpraise_app/Providers/TabNavigatorProvider.dart';
 import 'package:songbooksofpraise_app/api/api.dart';
 import 'package:songbooksofpraise_app/components/Breadcrumbs.dart';
 import 'package:songbooksofpraise_app/components/SongListBuilder.dart';
+import 'package:songbooksofpraise_app/helpers/routeAwareMixin.dart';
 import 'package:songbooksofpraise_app/l10n/app_localizations.dart';
 import 'package:songbooksofpraise_app/models/Category.dart';
 import 'package:songbooksofpraise_app/models/Song.dart';
@@ -23,11 +24,10 @@ class CategoryPage extends StatefulWidget {
   State<CategoryPage> createState() => _CategoryPageState();
 }
 
-class _CategoryPageState extends State<CategoryPage> {
+class _CategoryPageState extends State<CategoryPage> with RouteAwareMixin {
   int? loadingCategory;
   int? loadingSong;
   String categoryDescription = '';
-  int? _previousTabIndex;
 
   @override
   void initState() {
@@ -37,16 +37,8 @@ class _CategoryPageState extends State<CategoryPage> {
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    final tabIndex = context.watch<TabNavigatorProvider>().tabIndex;
-    if (_previousTabIndex != null &&
-        _previousTabIndex != 1 &&
-        tabIndex == 1) {
-      _refreshCategory();
-    }
-    _previousTabIndex = tabIndex;
+  Future<void> onBackFromAnotherTab() async {
+    _refreshCategory();
   }
 
   Future<void> _refreshCategory() async {

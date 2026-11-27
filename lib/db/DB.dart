@@ -328,6 +328,12 @@ class DB {
         // Remove chords (text within square brackets) before normalization
         String lyricsWithoutChords = lyricsWithChords.replaceAll(RegExp(r'\[.*?\]'), '');
 
+        // Remove text inside || ||
+        lyricsWithoutChords = lyricsWithoutChords.replaceAll(RegExp(r'\|\|.*?\|\|'), '');
+
+        // Remove any set of %%
+        lyricsWithoutChords = lyricsWithoutChords.replaceAll(RegExp(r'%%'), '');
+
         String normalizedLyrics = normalizeText(lyricsWithoutChords);
 
         batch.rawUpdate(

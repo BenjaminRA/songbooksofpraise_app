@@ -590,6 +590,12 @@ abstract class AppLocalizations {
   /// **'Chorus'**
   String get chorus;
 
+  /// Refrain label
+  ///
+  /// In en, this message translates to:
+  /// **'Refrain'**
+  String get refrain;
+
   /// Bridge label
   ///
   /// In en, this message translates to:

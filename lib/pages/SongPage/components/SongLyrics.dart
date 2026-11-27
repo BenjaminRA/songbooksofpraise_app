@@ -1,8 +1,122 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:songbooksofpraise_app/l10n/app_localizations.dart';
 import 'package:songbooksofpraise_app/models/Song.dart';
+
+class _LyricsText {
+  final String text;
+  final bool bold;
+  final bool italic;
+
+  const _LyricsText(this.text, {this.bold = false, this.italic = false});
+}
+
+class _ChordPosition {
+  final String chord;
+  final int textOffset;
+
+  const _ChordPosition(this.chord, this.textOffset);
+}
+
+class _ParsedLyricsLine {
+  final List<_LyricsText> text;
+  final List<_ChordPosition> chords;
+
+  const _ParsedLyricsLine(this.text, this.chords);
+}
+
+_ParsedLyricsLine _parseLyricsLine(String line, bool showChords) {
+  final text = <_LyricsText>[];
+  final chords = <_ChordPosition>[];
+  var textLength = 0;
+
+  void appendText(String value, bool bold, bool italic) {
+    if (value.isEmpty) return;
+    text.add(_LyricsText(value, bold: bold, italic: italic));
+    textLength += value.length;
+  }
+
+  int parseRange(int start, int end, bool bold, bool italic) {
+    var cursor = start;
+
+    while (cursor < end) {
+      final chordEnd = line.indexOf(']', cursor);
+      if (line.startsWith('[', cursor) && chordEnd > cursor + 1 && chordEnd < end) {
+        if (showChords) {
+          chords.add(_ChordPosition(line.substring(cursor + 1, chordEnd), textLength));
+        }
+        cursor = chordEnd + 1;
+        continue;
+      }
+
+      final marker = line.startsWith('**', cursor)
+          ? '**'
+          : line.startsWith('%%', cursor)
+              ? '%%'
+              : line.startsWith('||', cursor)
+                  ? '||'
+                  : line.startsWith('*', cursor)
+                      ? '*'
+                      : null;
+
+      if (marker != null) {
+        final markerEnd = line.indexOf(marker, cursor + marker.length);
+        if (markerEnd != -1 && markerEnd < end) {
+          final contentVisible = marker == '**' || marker == '*' || (marker == '||' ? showChords : !showChords);
+
+          if (contentVisible) {
+            var contentStart = cursor + marker.length;
+            var contentEnd = markerEnd;
+
+            if (marker == '%%' || marker == '||') {
+              while (contentStart < contentEnd && line[contentStart].trim().isEmpty) {
+                contentStart++;
+              }
+              while (contentEnd > contentStart && line[contentEnd - 1].trim().isEmpty) {
+                contentEnd--;
+              }
+            }
+
+            parseRange(
+              contentStart,
+              contentEnd,
+              bold || marker == '**',
+              italic || marker == '*',
+            );
+          }
+          cursor = markerEnd + marker.length;
+          continue;
+        }
+      }
+
+      var nextCursor = cursor + 1;
+      while (nextCursor < end &&
+          !line.startsWith('[', nextCursor) &&
+          !line.startsWith('*', nextCursor) &&
+          !line.startsWith('%', nextCursor) &&
+          !line.startsWith('|', nextCursor)) {
+        nextCursor++;
+      }
+      appendText(line.substring(cursor, nextCursor), bold, italic);
+      cursor = nextCursor;
+    }
+
+    return cursor;
+  }
+
+  parseRange(0, line.length, false, false);
+  return _ParsedLyricsLine(text, chords);
+}
+
+bool _isStructureLine(String line) {
+  return RegExp(r'^(verse|chorus|refrain|bridge)(( \d+)*)', caseSensitive: false).hasMatch(line);
+}
+
+bool _hasVisibleContent(String line, bool showChords) {
+  if (_isStructureLine(line)) return true;
+
+  final parsedLine = _parseLyricsLine(line, showChords);
+  return parsedLine.text.any((part) => part.text.trim().isNotEmpty) || parsedLine.chords.isNotEmpty;
+}
 
 class SongLyrics extends StatelessWidget {
   final Song song;
@@ -28,14 +142,13 @@ class SongLyrics extends StatelessWidget {
       bool isChorus = false;
 
       // Split paragraphs into lines
-      final lines = paragraphs.split('\n');
+      final lines = paragraphs.split('\n').map((line) => line.trim()).where((line) => _hasVisibleContent(line, showChords)).toList();
       for (int i = 0; i < lines.length; i++) {
         bool lastLine = i == lines.length - 1;
         String line = lines[i];
-        line = line.trim();
 
-        // Check if the line is a structure line (verse, chorus, bridge)
-        if (RegExp(r'^(verse|chorus|bridge)(( \d+)*)', caseSensitive: false).hasMatch(line)) {
+        // Check if the line is a structure line (verse, chorus, refrain bridge)
+        if (_isStructureLine(line)) {
           isChorus = line.toLowerCase().contains('chorus');
 
           String structureLine = line.toUpperCase().split(' ')[0];
@@ -46,49 +159,44 @@ class SongLyrics extends StatelessWidget {
             translatedStructureLine = localizations.chorus + line.substring(6); // Add chorus number if present
           } else if (structureLine == 'BRIDGE') {
             translatedStructureLine = localizations.bridge + line.substring(6); // Add bridge number if present
+          } else if (structureLine == 'REFRAIN') {
+            translatedStructureLine = localizations.refrain + line.substring(7); // Add refrain number if present
           }
 
           // Structure line
           lyricsSpans.add(TextSpan(
-            text: '${translatedStructureLine.toUpperCase()}\n',
+            text: '${translatedStructureLine.toUpperCase()}${lastLine ? '' : '\n'}',
             style: TextStyle(
               fontSize: fontSize,
               color: Theme.of(context).primaryColor,
             ),
           ));
         } else {
-          final chordRegex = RegExp(r'\[([^\]]+)\]');
-          String lyricsLine = line.replaceAll(chordRegex, '').trim();
-          int lastChordEnd = 0;
-          int lastChordSize = 0;
+          final parsedLine = _parseLyricsLine(line, showChords);
+          final lyricsLine = parsedLine.text.map((part) => part.text).join();
+          var lastChordOffset = 0;
 
           // To match the chords with the lyrics we print the lyrics but make them transparent
-          if (showChords) {
+          if (showChords && parsedLine.chords.isNotEmpty) {
             // If chords are to be shown, format the line with chords
-            for (var match in chordRegex.allMatches(line)) {
+            for (final chord in parsedLine.chords) {
               // The lyrics between the chords
-              lyricsSpans.add(
-                TextSpan(
-                  text: line.substring(
-                    lastChordEnd,
-                    max(
-                        lastChordEnd + 1, // In case there are no lyrics between chords
-                        max(0, match.start - 1 - lastChordSize) // In case the lyrics start with a chord
-                        ),
+              if (chord.textOffset > lastChordOffset) {
+                lyricsSpans.add(
+                  TextSpan(
+                    text: lyricsLine.substring(lastChordOffset, chord.textOffset),
+                    style: const TextStyle(
+                      color: Colors.transparent,
+                    ),
                   ),
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.transparent,
-                  ),
-                ),
-              );
-              lastChordEnd = match.end;
-              lastChordSize = match.group(0)!.length - 2; // Exclude the brackets
+                );
+              }
+              lastChordOffset = chord.textOffset;
 
               // Add the chord
               lyricsSpans.add(
                 TextSpan(
-                  text: '${match.group(1)![0].toUpperCase()}${match.group(1)!.substring(1)}',
+                  text: '${chord.chord[0].toUpperCase()}${chord.chord.substring(1)}',
                   style: TextStyle(
                     fontSize: fontSize * 0.9,
                     fontWeight: FontWeight.bold,
@@ -98,29 +206,36 @@ class SongLyrics extends StatelessWidget {
               );
             }
 
-            if (lastChordEnd > 0) {
-              lyricsSpans.add(
-                TextSpan(
-                  text: '\n',
-                  style: TextStyle(
-                    fontSize: fontSize * 0.9,
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).primaryColor,
-                  ),
+            lyricsSpans.add(
+              TextSpan(
+                text: '\n',
+                style: TextStyle(
+                  fontSize: fontSize * 0.9,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).primaryColor,
                 ),
-              );
-            }
-          }
-          lyricsSpans.add(
-            TextSpan(
-              text: '$lyricsLine${lastLine ? '' : '\n'}',
-              style: TextStyle(
-                fontSize: fontSize,
               ),
-            ),
-          );
+            );
+          }
+          for (final part in parsedLine.text) {
+            lyricsSpans.add(
+              TextSpan(
+                text: part.text,
+                style: TextStyle(
+                  fontSize: fontSize,
+                  fontWeight: part.bold ? FontWeight.bold : null,
+                  fontStyle: part.italic ? FontStyle.italic : null,
+                ),
+              ),
+            );
+          }
+          if (!lastLine) {
+            lyricsSpans.add(TextSpan(text: '\n', style: TextStyle(fontSize: fontSize)));
+          }
         }
       }
+
+      if (lyricsSpans.isEmpty) continue;
 
       Widget widget = RichText(
         text: TextSpan(

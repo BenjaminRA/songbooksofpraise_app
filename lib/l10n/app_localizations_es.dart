@@ -283,6 +283,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get chorus => 'Coro';
 
   @override
+  String get refrain => 'Estribillo';
+
+  @override
   String get bridge => 'Puente';
 
   @override

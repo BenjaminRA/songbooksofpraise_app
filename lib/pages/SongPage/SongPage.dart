@@ -3,10 +3,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:songbooksofpraise_app/Providers/AppBarProvider.dart';
 import 'package:songbooksofpraise_app/Providers/SettingsProvider.dart';
-import 'package:songbooksofpraise_app/Providers/TabNavigatorProvider.dart';
 import 'package:songbooksofpraise_app/db/DB.dart';
+import 'package:songbooksofpraise_app/helpers/routeAwareMixin.dart';
 import 'package:songbooksofpraise_app/pages/SongPage/components/ChordsButtonBar.dart';
 import 'package:songbooksofpraise_app/pages/SongPage/components/ChordsByInstrument.dart';
+import 'package:songbooksofpraise_app/pages/SongPage/components/FontSizePinchDetector.dart';
 import 'package:songbooksofpraise_app/pages/SongPage/components/SongLyrics.dart';
 import 'package:songbooksofpraise_app/l10n/app_localizations.dart';
 import 'package:songbooksofpraise_app/models/Song.dart';
@@ -23,14 +24,15 @@ class SongPage extends StatefulWidget {
   State<SongPage> createState() => _SongPageState();
 }
 
-class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
+class _SongPageState extends State<SongPage> with TickerProviderStateMixin, RouteAwareMixin {
+  static const double _minimumFontSize = 8.0;
+  static const double _maximumFontSize = 40.0;
+
   late double fontSize = getInitialFontSize();
   late bool showChords = getInitialShowChords();
   bool showTools = false;
   Instrument? showChordsByInstrument;
   ChordNotation chordNotation = ChordNotation.Letter;
-  int? _songTabIndex;
-  int? _previousTabIndex;
 
   // ToolBar Animation Controller
   late AnimationController _toolbarAnimationController;
@@ -68,16 +70,8 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    final tabIndex = context.watch<TabNavigatorProvider>().tabIndex;
-    _songTabIndex ??= tabIndex;
-
-    if (_previousTabIndex != null && tabIndex == _songTabIndex && _previousTabIndex != tabIndex) {
-      _refreshSong();
-    }
-    _previousTabIndex = tabIndex;
+  Future<void> onBackFromAnotherTab() async {
+    _refreshSong();
   }
 
   Future<void> _refreshSong() async {
@@ -92,6 +86,24 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
     _toolbarAnimationController.dispose();
     WakelockPlus.disable();
     super.dispose();
+  }
+
+  void _setFontSize(double newFontSize) {
+    final clampedFontSize = newFontSize.clamp(_minimumFontSize, _maximumFontSize).toDouble();
+
+    if (clampedFontSize == fontSize) {
+      return;
+    }
+
+    setState(() {
+      fontSize = clampedFontSize;
+    });
+  }
+
+  void _saveFontSize() {
+    if (widget.song.font_size != fontSize) {
+      widget.song.setFontSize(fontSize);
+    }
   }
 
   void registerRecentlyPlayedSong() async {
@@ -301,14 +313,14 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
       ),
       FontAdjustmentButtonBar(
         actualFontSize: fontSize,
-        onIncreaseFontSize: () => setState(() {
-          fontSize = fontSize + 1;
-          widget.song.setFontSize(fontSize);
-        }),
-        onDecreaseFontSize: () => setState(() {
-          fontSize = fontSize - 1;
-          widget.song.setFontSize(fontSize);
-        }),
+        onIncreaseFontSize: () {
+          _setFontSize(fontSize + 1);
+          _saveFontSize();
+        },
+        onDecreaseFontSize: () {
+          _setFontSize(fontSize - 1);
+          _saveFontSize();
+        },
         isFavorite: widget.song.favorite,
         onSetFavorite: (value) async {
           await widget.song.setFavorite(value);
@@ -379,10 +391,17 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
           SliverPadding(
             padding: EdgeInsetsGeometry.all(16.0),
             sliver: SliverToBoxAdapter(
-              child: SongLyrics(
-                song: widget.song,
+              child: FontSizePinchDetector(
                 fontSize: fontSize,
-                showChords: showChords,
+                minimumFontSize: _minimumFontSize,
+                maximumFontSize: _maximumFontSize,
+                onFontSizeChanged: _setFontSize,
+                onFontSizeChangeEnd: _saveFontSize,
+                child: SongLyrics(
+                  song: widget.song,
+                  fontSize: fontSize,
+                  showChords: showChords,
+                ),
               ),
             ),
           ),

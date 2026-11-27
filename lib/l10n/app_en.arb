@@ -373,6 +373,10 @@
   "@chorus": {
     "description": "Chorus label"
   },
+  "refrain": "Refrain",
+  "@refrain": {
+    "description": "Refrain label"
+  },
   "bridge": "Bridge",
   "@bridge": {
     "description": "Bridge label"

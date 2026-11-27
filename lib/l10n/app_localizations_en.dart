@@ -280,6 +280,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get chorus => 'Chorus';
 
   @override
+  String get refrain => 'Refrain';
+
+  @override
   String get bridge => 'Bridge';
 
   @override

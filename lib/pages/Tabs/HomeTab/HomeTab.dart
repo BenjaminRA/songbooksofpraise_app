@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:songbooksofpraise_app/Providers/TabNavigatorProvider.dart';
 import 'package:songbooksofpraise_app/components/AppBarWithProvider.dart';
 import 'package:songbooksofpraise_app/components/PullToRefresh.dart';
+import 'package:songbooksofpraise_app/helpers/routeAwareMixin.dart';
 import 'package:songbooksofpraise_app/pages/RootPage.dart';
 import 'package:songbooksofpraise_app/pages/Tabs/HomeTab/components/ExploreSection.dart';
 import 'package:songbooksofpraise_app/pages/Tabs/HomeTab/components/RecentlyPlayedSection.dart';
@@ -16,19 +17,12 @@ class HomeTab extends StatefulWidget {
   State<HomeTab> createState() => _HomeTabState();
 }
 
-class _HomeTabState extends State<HomeTab> {
+class _HomeTabState extends State<HomeTab> with RouteAwareMixin {
   Key _refreshKey = UniqueKey();
-  int? _previousTabIndex;
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    final tabIndex = context.watch<TabNavigatorProvider>().tabIndex;
-    if (_previousTabIndex != null && _previousTabIndex != 0 && tabIndex == 0) {
-      _refreshKey = UniqueKey();
-    }
-    _previousTabIndex = tabIndex;
+  Future<void> onBackFromAnotherTab() async {
+    _refreshHome();
   }
 
   void _refreshHome() {

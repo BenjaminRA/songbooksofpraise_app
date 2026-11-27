@@ -373,6 +373,10 @@
   "@chorus": {
     "description": "Etiqueta de coro"
   },
+  "refrain": "Estribillo",
+  "@refrain": {
+    "description": "Etiqueta de estribillo"
+  },
   "bridge": "Puente",
   "@bridge": {
     "description": "Etiqueta de puente"
